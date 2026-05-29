@@ -204,6 +204,63 @@
   .rate:active{transform:scale(.96);}
   .rate.r1{border-color:rgba(255,92,108,.4);} .rate.r2{border-color:rgba(255,207,92,.4);} .rate.r3{border-color:rgba(46,207,115,.4);}
 
+  /* ---- Lernbereich: Kapitelübersicht ---- */
+  .lesson-card{display:flex;gap:13px;align-items:center;background:linear-gradient(120deg,var(--panel),var(--panel-soft));
+    border:1px solid var(--line);border-radius:15px;padding:14px 15px;margin-bottom:10px;cursor:pointer;
+    box-shadow:var(--shadow);transition:.18s;text-align:left;width:100%;color:var(--ink);font-family:inherit;}
+  .lesson-card:active{transform:scale(.985);border-color:var(--accent);}
+  .lesson-card .lic{flex:0 0 auto;width:46px;height:46px;border-radius:13px;background:var(--panel-soft);
+    border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:23px;}
+  .lesson-card .ltxt{flex:1;min-width:0;}
+  .lesson-card .ltxt h3{margin:0 0 3px;font-size:15px;font-weight:700;line-height:1.25;}
+  .lesson-card .ltxt p{margin:0;font-size:12px;color:var(--muted);line-height:1.4;}
+  .lesson-card .lchev{flex:0 0 auto;color:var(--muted);font-size:20px;}
+  .lesson-card.done .lic{background:var(--green-bg);border-color:rgba(46,207,115,.4);}
+  .lesson-card .ldone{color:var(--green);font-size:13px;font-weight:800;}
+
+  /* ---- Lernbereich: Lesemodus ---- */
+  .lesson-intro{font-size:15px;line-height:1.6;color:var(--ink);margin:0 0 18px;}
+  .lesson-h{font-size:16px;font-weight:800;margin:26px 0 10px;color:var(--ink);line-height:1.3;
+    padding-bottom:7px;border-bottom:1px solid var(--line);}
+  .lesson-h:first-of-type{margin-top:4px;}
+  .lesson-p{font-size:14.5px;line-height:1.6;color:var(--ink);margin:0 0 14px;}
+  /* Hinweis-Boxen */
+  .box{border-radius:13px;padding:13px 15px;margin:0 0 14px;border:1px solid var(--line);background:var(--panel);}
+  .box .box-h{font-size:10.5px;text-transform:uppercase;letter-spacing:.12em;font-weight:800;margin-bottom:6px;display:flex;align-items:center;gap:6px;}
+  .box p{margin:0;font-size:14px;line-height:1.55;color:var(--ink);}
+  .box.exam{background:rgba(54,197,240,.09);border-color:rgba(54,197,240,.32);} .box.exam .box-h{color:var(--accent2);}
+  .box.trap{background:var(--red-bg);border-color:rgba(255,92,108,.32);} .box.trap .box-h{color:var(--red);}
+  .box.mix{background:rgba(176,123,255,.1);border-color:rgba(176,123,255,.34);} .box.mix .box-h{color:#b07bff;}
+  .box.tip{background:rgba(255,207,92,.1);border-color:rgba(255,207,92,.32);} .box.tip .box-h{color:var(--gold);}
+  .box.mnemo{background:var(--green-bg);border-color:rgba(46,207,115,.32);} .box.mnemo .box-h{color:var(--green);}
+  .box.high{background:linear-gradient(120deg,rgba(255,138,61,.13),rgba(255,138,61,.04));border-color:rgba(255,138,61,.4);padding:11px 15px;}
+  .box.high .box-h{color:var(--accent);margin-bottom:0;}
+  .box.high p{margin-top:6px;}
+  /* Tabellen im Lernbereich */
+  .lesson-table{width:100%;border-collapse:collapse;margin:0 0 16px;font-size:13.5px;
+    border:1px solid var(--line);border-radius:12px;overflow:hidden;display:table;}
+  .lesson-table th,.lesson-table td{text-align:left;padding:9px 11px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.45;}
+  .lesson-table thead th{background:var(--panel-soft);font-weight:800;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);}
+  .lesson-table tbody tr:last-child td{border-bottom:none;}
+  .lesson-table td:first-child{font-weight:700;}
+  .table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 0 16px;}
+  .table-scroll .lesson-table{margin:0;min-width:420px;}
+  /* Aufzähl-Listen */
+  .lesson-list{margin:0 0 14px;padding:0;list-style:none;}
+  .lesson-list .ll-h{font-size:13.5px;font-weight:800;margin-bottom:7px;color:var(--ink);}
+  .lesson-list li{position:relative;padding:4px 0 4px 22px;font-size:14px;line-height:1.5;color:var(--ink);}
+  .lesson-list li::before{content:"›";position:absolute;left:6px;top:4px;color:var(--accent);font-weight:800;}
+  /* Zusammenfassung */
+  .box.summary{background:var(--panel-soft);border-color:var(--line);margin-top:22px;}
+  .box.summary .box-h{color:var(--accent);}
+  .box.summary li{position:relative;padding:5px 0 5px 24px;font-size:14px;line-height:1.5;}
+  .box.summary li::before{content:"✓";position:absolute;left:4px;top:5px;color:var(--green);font-weight:800;}
+  .box.summary ul{margin:0;padding:0;list-style:none;}
+  /* Lern-Footer (Kapitel abschließen / üben) */
+  .lesson-foot{display:flex;flex-direction:column;gap:10px;margin-top:24px;}
+  .lesson-progress{height:4px;border-radius:3px;background:var(--line);overflow:hidden;margin:18px 0 6px;}
+  .lesson-progress i{display:block;height:100%;background:var(--accent);width:0;transition:width .3s;}
+
   /* ---- Results ---- */
   .result-hero{text-align:center;padding:26px 18px;}
   .ring{width:150px;height:150px;margin:0 auto 18px;position:relative;}
@@ -309,6 +366,13 @@
       <div class="stat warn"><div class="num" id="s-mastered">0</div><div class="lbl">Gemeistert</div></div>
     </div>
 
+    <div class="section-title">Lernbereich</div>
+    <button class="lesson-card" id="openLearn" style="background:linear-gradient(120deg,rgba(255,138,61,.16),var(--panel-soft));border-color:rgba(255,138,61,.4);">
+      <span class="lic" style="background:var(--accent);border-color:var(--accent);">📖</span>
+      <span class="ltxt"><h3>Lerninhalte lesen</h3><p>7 Themenkapitel + Prüfungsfallen, Must-know &amp; 30-Minuten-Blitz</p></span>
+      <span class="lchev">›</span>
+    </button>
+
     <div class="section-title">Modul</div>
     <div class="mod-row" id="modRow"></div>
     <div class="section-title">Lernmodi</div>
@@ -378,6 +442,27 @@
       <div class="progress-wrap"><div class="progress-meta"><span>Schwierige Fragen</span><span id="diff-count"></span></div></div>
     </div>
     <div id="diff-slot"></div>
+  </div>
+
+  <!-- ===== LERNBEREICH: KAPITELÜBERSICHT ===== -->
+  <div id="view-learn" class="hidden">
+    <div class="quiz-head"><button class="mini-back" id="learnBack" aria-label="Zurück zum Menü">✕</button>
+      <div class="progress-wrap"><div class="progress-meta"><span>Lerninhalte</span><span id="learn-count"></span></div></div>
+    </div>
+    <p style="font-size:13px;color:var(--muted);line-height:1.5;margin:0 0 16px;">Jedes Kapitel erklärt die Inhalte praxisnah, hebt Prüfungsfallen hervor und schließt mit einer kompakten Zusammenfassung.</p>
+    <div id="learn-list"></div>
+  </div>
+
+  <!-- ===== LERNBEREICH: LESEMODUS ===== -->
+  <div id="view-lesson" class="hidden">
+    <div class="quiz-head">
+      <button class="mini-back" id="lessonBack" aria-label="Zurück zur Übersicht">‹</button>
+      <div class="progress-wrap">
+        <div class="progress-meta"><span id="lesson-cat"></span><span id="lesson-idx"></span></div>
+        <div class="lesson-progress" style="margin:8px 0 0;"><i id="lesson-scrollbar"></i></div>
+      </div>
+    </div>
+    <div id="lesson-slot"></div>
   </div>
 
 </div>
@@ -1643,6 +1728,465 @@ const QUESTIONS = [
 
 ];
 
+/* ============ LERNINHALTE (aus PRÜFUNGSVORBEREITUNG · STS & SORA) ============ */
+/* Box-Typen: text | exam(★) | trap(⚠) | mix(↔) | tip(◆) | mnemo(✦) | high(▲) | table | list | summary */
+const LESSONS = [
+{id:"L1", cat:"Spezielle Kategorie", icon:"🛡️", title:"SORA, Volumen & Risiko",
+ sub:"Kernkapitel · höchste Prüfungsdichte (40 Fragen)",
+ intro:"Hier dreht sich alles um SORA, das Betriebsvolumen mit seinen Zonen, Boden- und Luftrisiko sowie die Frage, welcher Einsatz in welche Kategorie fällt. Diese Begriffe werden am häufigsten und am gemeinsten abgefragt.",
+ blocks:[
+  {h:"1.1 Die drei UAS-Kategorien – wann welche?",
+   t:"Der EU-Rechtsrahmen kennt drei Betriebskategorien. Die Prüfung testet vor allem die Abgrenzung – die Einordnung eines konkreten Einsatzes."},
+  {table:[["Kategorie","Kennzeichen"],
+    ["Offen (Open)","Geringes Risiko, keine Genehmigung, < 25 kg, max. 120 m, VLOS, kein Überflug von Menschenmengen"],
+    ["Speziell (Specific)","Erhöhtes Risiko → Betriebsgenehmigung, Erklärung (STS) oder LUC. Z. B. 6 kg C3 über besiedeltem Gebiet, 30 kg bei 180 m, Transport gefährlicher Güter / Pestizide"],
+    ["Zulassungspflichtig (Certified)","Höchstes Risiko, wie bemannte Luftfahrt zugelassen. Z. B. Transport von Personen"]]},
+  {type:"trap", t:"Transport von Personen = zulassungspflichtig. Transport gefährlicher Güter / Pestizide = speziell. Diese beiden werden gern vertauscht. Merke: Güter = speziell, Menschen = zulassungspflichtig."},
+  {type:"exam", t:"Bei Einordnungsfragen mit Zahlen (6 kg / 30 kg / 1,8 kg / 180 m) ist fast immer die spezielle Kategorie richtig, sobald die offene Kategorie verlassen wird (über 120 m, dicht besiedelt, keine passende C-Klasse) oder erhöhtes Risiko vorliegt."},
+  {h:"1.2 SORA – die Risikobewertungs-Methodik",
+   t:"SORA = Specific Operations Risk Assessment. Eine standardisierte Methodik, um das Risiko eines Einsatzes objektiv zu beurteilen – für Menschen am Boden und für andere Luftfahrzeuge. Vorgegeben im AMC-Material zu Artikel 11 der VO (EU) 2019/947."},
+  {type:"high", t:"Wozu dient SORA? Objektive, standardisierte Risikobeurteilung für Menschen und Luftfahrzeuge. · Was bedeutet SORA? Specific Operations Risk Assessment. · Wer gibt SORA vor? Das AMC-Material zur VO (EU) 2019/947 (Art. 11)."},
+  {type:"mix", t:"SORA = Methodik der Risikobewertung. SAIL = das resultierende Vertrauens-/Integritätsniveau. PDRA = fertige Risikobewertung aus der Schublade. Diese drei werden ständig verwechselt."},
+  {h:"1.3 PDRA, STS, AMC – die Werkzeuge zur Genehmigung"},
+  {table:[["Begriff","Kernaussage"],
+    ["PDRA – Predefined Risk Assessment","Vorgefertigte Risikobeurteilung im AMC-Material; erleichtert den Antrag auf Betriebsgenehmigung."],
+    ["STS – Standardszenario","Erklärung gegenüber dem LBA reicht (kein voller Antrag). OM trotzdem nötig."],
+    ["AMC – Acceptable Means of Compliance","Begleitmaterial zur Verordnung, Soft Law – Mittel zum Nachweis der Erfüllung."],
+    ["SAIL – Specific Assurance and Integrity Level","Beschreibt das Risiko, dass Person / bemanntes Lfz von einem außer Kontrolle geratenen UAS getroffen wird."]]},
+  {type:"mnemo", t:"P-D-R-A = PreDefined Risk Assessment, die fertige Risikoanalyse aus der Schublade. STS = Selbst-erklären (Erklärung statt Antrag)."},
+  {type:"trap", t:"Ein PDRA ist kein Gerät, keine Notfall-Priorisierung und keine reine Erklärungs-Option (das wäre STS). PDRA-S ist das Spiegelbild eines Standardszenarios – gleiche Einschränkungen, aber ohne Pflicht zur C-Klassifizierung. PDRA-G ist generischer."},
+  {h:"1.4 Genehmigungen, Registrierung & grenzüberschreitender Betrieb"},
+  {table:[["Frage","Richtige Antwort"],
+    ["Wo registriert sich der Betreiber?","Im Mitgliedstaat des Hauptsitzes / Wohnsitzes (Staat A), nicht im Einsatzstaat."],
+    ["Grenzüberschreitend (Betriebsgenehmigung)","Antrag beim Zielland; dessen Behörde teilt der Heimatbehörde mit, ob die Maßnahmen ausreichen."],
+    ["Fluggenehmigung","Einflug in geografische UAS-Gebiete (Geozonen) nach nationalen Bestimmungen, gilt nur national."],
+    ["Betriebsgenehmigung","Genehmigung für den Betrieb in der speziellen Kategorie (nicht automatisch EU-weit gültig)."]]},
+  {type:"mix", t:"Fluggenehmigung ≠ Betriebsgenehmigung. Fluggenehmigung betrifft nur Geozonen (national). Betriebsgenehmigung erlaubt den Betrieb in der speziellen Kategorie und gilt nicht automatisch EU-weit."},
+  {type:"tip", t:"Praxisfall: Französischer Betreiber fliegt in Deutschland ohne C-Klasse: (1) Betriebsgenehmigung in Frankreich beantragen, (2) in Frankreich registrieren, (3) grenzüberschreitenden Betrieb in Deutschland anzeigen und Bestätigung abwarten."},
+  {h:"1.5 Das Betriebsvolumen und seine Zonen",
+   t:"Konzentrische Bereiche: innen die Fluggeografie, außen die Sicherheitspuffer."},
+  {type:"high"},
+  {table:[["Zone","Teil des Betriebsvolumens?"],
+    ["Fluggeografie (Flight Geography) – Volumen für Normalverfahren","Ja"],
+    ["Contingency-/Sicherheitsbereich – für unvorhergesehene Ereignisse","Ja"],
+    ["Bodenrisikopuffer (GRB) – schützt Dritte, falls UAS das Volumen verlässt","Nein (außen)"],
+    ["Luftrisikopuffer – Sicherheitsabstand zum Luftraum","Nein (außen)"]]},
+  {type:"exam", t:"Betriebsvolumen = Fluggeografie + Sicherheits-/Contingency-Bereich. Alles mit Puffer (Boden-/Luftrisikopuffer) liegt außerhalb und gehört nicht dazu."},
+  {type:"mnemo", t:"Volumen = Flug + Sicherheit. Alles mit Puffer steht außen vor."},
+  {t:"Kontrollierter Bodenbereich (Controlled Ground Area): Bereich, in dem nur beteiligte Personen anwesend sind. Er umfasst Fluggeografie + Contingency-Gebiet + Bodenrisikopuffer. Überwachbar durch Umzäunung oder Hilfspersonal. Fluggeografisches Gebiet = Projektion des Volumens auf die Erdoberfläche (Volumen ist 3D, Gebiet ist die 2D-Grundfläche)."},
+  {type:"trap", t:"Welche Sicherheitszonen trennen das UAS über kontrolliertem Bodenbereich von Unbeteiligten? → Bodenrisikopuffer und Contingency-Bereich. Nicht mit der Definition des Betriebsvolumens verwechseln."},
+  {h:"1.6 Risiko, Bodenrisiko und Luftrisiko"},
+  {table:[["Begriff","Merksatz"],
+    ["Risiko","= Eintrittswahrscheinlichkeit × Schadensausmaß (Multiplikation)."],
+    ["Bodenrisiko","Risiko, dass eine Person vom UAS getroffen wird bei Kontrollverlust."],
+    ["Luftrisiko","Risiko, das vom UAS für andere Luftfahrzeuge ausgeht."],
+    ["Bodenrisikopuffer","Bereich um das Volumen, der das Risiko für Dritte minimiert, falls das UAS austritt."]]},
+  {type:"list", h:"Bodenrisiko verringern (Mehrfachauswahl)", items:["Praktisches Training, v. a. im manuellen Modus ohne GPS","UAS mit möglichst geringer Startmasse","Geofencing und Fail-Safe-Funktionen","Fliegen zu Zeiten mit wenigen Unbeteiligten"]},
+  {type:"list", h:"Luftrisiko / Kollision vermeiden", items:["See and avoid: nach anderen Luftfahrzeugen Ausschau halten","Bei näherndem bemanntem Lfz: Steigen, Sinken, Landen, Richtungswechsel","Kollisionswahrscheinlichkeit am stärksten gesenkt durch weiße Blinklichter (Strobe Lights)"]},
+  {type:"mix", t:"Strategische Risikominderung wirkt vor dem Flug (Planung). Taktische Risikominderung wirkt während des Flugs. VLOS selbst ist bereits eine taktische Risikominderung."},
+  {type:"mnemo", t:"Strategisch = Start vorbereiten (vorher). Taktisch = im Tun (während des Flugs)."},
+  {h:"1.7 Robustheit, OSO & Verantwortung des Fernpiloten",
+   t:"Robustheit = Integritätslevel (wie gut funktioniert die Maßnahme) + Maß an Gewissheit/Assurance (wie gut nachgewiesen). Sie bestimmt die Anforderung an ein OSO (Operational Safety Objective)."},
+  {type:"list", h:"Der Fernpilot ist verantwortlich dafür, dass", items:["aktuelle Informationen über alle Geozonen eingeholt wurden","sich das UAS in einem sicheren Zustand befindet","die Betriebsumgebung mit den genehmigten/erklärten Beschränkungen vereinbar ist"]},
+  {type:"exam", t:"Wer stellt sicher, dass die Betriebsumgebung mit den Beschränkungen vereinbar ist? Antwort immer: der Fernpilot (vor und während des Flugs)."},
+  {h:"1.8 Datenschutz beim UAS-Betrieb",
+   t:"Beim UAS-Betrieb gilt die Panoramafreiheit nicht; der höchstpersönliche Lebensbereich ist zu beachten. Luftaufnahmen sind datenschutzrechtlich strenger zu bewerten."},
+  {type:"trap", t:"Die Panoramafreiheit (Recht, öffentlich Sichtbares zu fotografieren) greift aus der Drohnenperspektive nicht – eine beliebte Fangfrage."},
+  {type:"summary", items:[
+    "SORA = Specific Operations Risk Assessment; Methodik aus AMC zu Art. 11 VO (EU) 2019/947.",
+    "Betriebsvolumen = Fluggeografie + Sicherheits-/Contingency-Bereich; Puffer liegen außen.",
+    "Kontrollierter Bodenbereich = Fluggeografie + Contingency + Bodenrisikopuffer.",
+    "Risiko = Wahrscheinlichkeit × Schadensausmaß. Bodenrisiko = Person; Luftrisiko = Lfz.",
+    "PDRA = vorgefertigte Risikobewertung; STS = nur Erklärung; AMC = Soft Law.",
+    "Personen = zulassungspflichtig; gefährliche Güter = speziell.",
+    "Registrierung im Heimatstaat; Fluggenehmigung gilt nur national.",
+    "Strategisch = vor dem Flug; taktisch = während; VLOS ist taktisch.",
+    "Verantwortung für sichere Betriebsumgebung liegt beim Fernpiloten."]}
+ ]},
+
+{id:"L2", cat:"Standardszenarien", icon:"📐", title:"Standardszenarien (STS-01 & STS-02)",
+ sub:"Zahlen, Klassen C5/C6, Erklärung vs. Genehmigung (40 Fragen)",
+ intro:"Hier zählen konkrete Zahlen, die genauen Bedingungen beider Szenarien und der Unterschied zwischen Erklärung und Genehmigung. Zahlen werden gnadenlos abgefragt – lerne sie auswendig.",
+ blocks:[
+  {h:"2.1 Was ist ein Standardszenario (STS)?",
+   t:"Ein von der EU vorgegebenes Standard-Einsatzprofil. Statt voller Betriebsgenehmigung genügt eine Erklärung gegenüber dem LBA, dass die Parameter eingehalten werden. Ein Betriebshandbuch (OM) ist trotzdem erforderlich. Bedingungen in der DVO (EU) 2019/947."},
+  {type:"trap", t:"„Ein STS braucht keine Erklärung” ist falsch. Umgekehrt: Die Erleichterung ist, dass eine Erklärung statt eines Antrags reicht; das OM bleibt Pflicht."},
+  {type:"list", h:"Was brauchst du, um in DE mit STS zu starten? (Mehrfachauswahl)", items:["Eingangsbestätigung des LBA","Kopie der abgegebenen Erklärung","Bestätigung der Vollständigkeit der Erklärung durch das LBA"]},
+  {t:"Grenzüberschreitend (Erklärung): dem Zielstaat B eine Kopie der eingereichten Erklärung, der Empfangsbestätigung und der Vollständigkeitsbestätigung vorlegen."},
+  {h:"2.2 Kompetenznachweise und Gültigkeit"},
+  {table:[["Thema","Regel"],
+    ["STS-02 Kompetenzen","Theorieprüfung STS + Onlinelehrgang A1/A3 + praktische Prüfung STS-02."],
+    ["Wo erwerben?","Kompetenznachweise können in beliebigen Mitgliedstaaten erworben werden."],
+    ["Gültigkeit nach 5 Jahren","Nur Theorie verlängern/erneuern. Praxisnachweise haben kein Ablaufdatum."]]},
+  {type:"trap", t:"Nach 5 Jahren wird nur die Theorie erneuert. Wer auch die Praxis ankreuzt, fällt in die Falle – Praxisnachweise verfallen nicht."},
+  {h:"2.3 STS-01 gegen STS-02 – die große Vergleichstabelle"},
+  {type:"high"},
+  {table:[["Merkmal","STS-01","STS-02"],
+    ["Sichtverbindung","VLOS","BVLOS möglich"],
+    ["Umgebung","Besiedeltes Gebiet möglich (kontrollierter Boden)","Kontroll. Bodenbereich vollständig in dünn besiedelter Umgebung"],
+    ["UAS-Klasse","C5","C6"],
+    ["Max. Höhe","120 m (Objekt-Ausnahme s. u.)","120 m"],
+    ["Max. Entfernung","VLOS","2 km mit Beobachter / 1 km ohne; Abstand Pilot–Beobachter max. 1 km"],
+    ["Mindestsicht","–","5 km"],
+    ["Bodenrisikopuffer","ungefesselt ≥ 10 m; gefesselt Leinenlänge + 5 m","nach Herstellerangabe zum FTS"],
+    ["Contingency-Gebiet","–","≥ 10 m über die Fluggeografie hinaus"],
+    ["Max. Bodengeschw. (ungef.)","< 5 m/s","–"]]},
+  {type:"mnemo", t:"STS-01 = C5 = VLOS (näher dran). STS-02 = C6 = BVLOS (weiter weg, braucht Geocaging und ggf. Luftraumbeobachter). 01→C5, 02→C6."},
+  {type:"trap", t:"Verwechslungsgefahr: 10 m Bodenrisikopuffer (STS-01 ungef.) vs. 10 m Contingency (STS-02) vs. Leinenlänge + 5 m (STS-01 gefesselt) vs. 5 km Mindestsicht vs. 5 m/s. Achte genau, wonach gefragt wird."},
+  {t:"C5-Objekt-Ausnahme (STS-01): Bei einer Inspektion an einem hohen Objekt darf im horizontalen Abstand von 50 m zum Objekt mit Zustimmung der zuständigen Stelle bis 145 m über Grund geflogen werden."},
+  {h:"2.4 Klassen C5 und C6 – technische Anforderungen"},
+  {table:[["Anforderung","C5","C6"],
+    ["MTOM / Größe","< 25 kg, < 3 m","< 25 kg, < 3 m"],
+    ["FTS (Flugabbruchsystem)","Pflicht; unabhängig von der Flugsteuerung","Pflicht; unabhängig von Flugsteuerung und Geocaging"],
+    ["Geocaging","–","Pflicht; verhindert Verlassen des Volumens"],
+    ["Datenübermittlung an Piloten","–","geogr. Position, Flughöhe, Geschwindigkeit"]]},
+  {type:"mix", t:"FTS = Flugabbruch (beendet Flug, z. B. per Fallschirm). Geocaging = hält das UAS innerhalb des Volumens. Ein Fallschirm reduziert die Aufpralldynamik, beendet den Flug aber nicht intelligent."},
+  {h:"2.5 Luftraumbeobachter und DAA",
+   t:"Der Luftraumbeobachter scannt den Luftraum, erkennt Gefahren (v. a. bemannten Verkehr), kennt die Position des UAS und alarmiert den Piloten. Entscheidend: korrekte Platzierung, Anzahl, definierte Kommunikation. DAA = Detect and Avoid; ein technisches Mittel ist der ADS-B-Empfänger."},
+  {type:"tip", t:"In STS-02 muss der Pilot dem Beobachter unverzüglich Abweichungen von Flugbahn und Zeitplan melden. Ein Fallschirmsystem dient dazu, die Aufpralldynamik zu reduzieren."},
+  {type:"summary", items:[
+    "STS = Erklärung statt Antrag, OM bleibt Pflicht; Bedingungen in VO (EU) 2019/947.",
+    "Start braucht: Eingangsbestätigung + Kopie der Erklärung + Vollständigkeitsbestätigung.",
+    "STS-01 = C5 = VLOS; STS-02 = C6 = BVLOS (Geocaging, ggf. Beobachter).",
+    "Zahlen: 10 m GRB, Leine+5 m, 5 m/s, 5 km Sicht, 1 km Beobachter, 2/1 km Reichweite, 10 m Contingency.",
+    "C5-Höhenausnahme: 50 m horizontal → bis 145 m über Grund.",
+    "FTS unabhängig von Flugsteuerung; Geocaging hält im Volumen; Fallschirm mindert Aufprall.",
+    "DAA = Detect and Avoid; ADS-B-Empfänger als technisches Mittel.",
+    "Nach 5 Jahren nur Theorie; Praxis kein Ablaufdatum; Nachweise in jedem Mitgliedstaat."]}
+ ]},
+
+{id:"L3", cat:"Betriebsverfahren", icon:"⚙️", title:"Betriebsverfahren",
+ sub:"Verfahren, ERP, Vorflug-Check, Verhalten (16 Fragen)",
+ intro:"Regelt den geordneten Ablauf vor und während des Flugs: Normal-, Sicherheits- und Notfallverfahren, ERP, Vorflug-Checks und richtiges Verhalten in Störsituationen. Viel zu Reihenfolgen und Verantwortlichkeiten.",
+ blocks:[
+  {h:"3.1 Die drei Verfahrensebenen – Reihenfolge merken!"},
+  {type:"high"},
+  {table:[["Bereich","Verfahren","Wann?"],
+    ["1. Fluggeografischer Bereich","Normalverfahren","Alles läuft planmäßig"],
+    ["2. Contingency-Bereich","Sicherheitsverfahren (Kontingenz)","Erste Abweichung / unvorhergesehen"],
+    ["3. Bodenrisikobereich","Notfallverfahren","Kontrollverlust / Schaden unvermeidbar"]]},
+  {type:"exam", t:"Korrekte Reihenfolge: Normalverfahren → Sicherheitsverfahren (Kontingenz) → Notfallverfahren. Entspricht den Zonen von innen nach außen."},
+  {type:"mnemo", t:"N–S–N: Normal, Sicherheit, Notfall – je weiter außen die Zone, desto ernster die Lage."},
+  {h:"3.2 Der Notfallplan (ERP – Emergency Response Plan)"},
+  {type:"list", items:["ERP = Emergency Response Plan","Greift bei Kontrollverlust des UAS (unvermeidliches Schadensereignis)","Zweck bei BVLOS: festgelegte Prozesskette reduziert Schäden auf ein Minimum","Beim Erstellen berücksichtigen: Größe, Art, Komplexität der Tätigkeiten + Struktur des Betreibers"]},
+  {type:"mix", t:"Der ERP greift erst, wenn der Schaden unvermeidlich ist (Kontrollverlust). Das Sicherheits-/Kontingenzverfahren greift früher, bei der ersten Abweichung."},
+  {h:"3.3 Vorflug-Check: MEUH-Konzept und Checklisten"},
+  {table:[["Buchstabe","Prüfinhalt"],
+    ["M – Meteorology","Wind, Temperatur, Sicht, Niederschlag"],
+    ["E – Environment","Umgebung, Hindernisse, Geozonen, EMI/Interferenzen"],
+    ["U – UAS","Lufttüchtigkeit, Betriebsgrenzen, Akku"],
+    ["H – Human Limitations","Fitness, Stress, Müdigkeit"]]},
+  {type:"list", h:"Vorflug-Kontrollpunkte (Mehrfachauswahl)", items:["AIP und NOTAM auf Beschränkungen prüfen","Betriebsgrenzen und Lufttüchtigkeit des UAS prüfen","Meteorologische Bedingungen vor Ort prüfen","EMI am C2-Link erkennen"]},
+  {type:"list", h:"Gute Checkliste", items:["Klarheit","ergonomischer, logischer, durchdachter Ablauf","wenige, wesentliche Prüfpunkte","einfache Lesbarkeit/Nutzbarkeit"]},
+  {t:"Die Lufttüchtigkeit prüft der Pilot mittels Checkliste; deren Prüfpunkte basieren auf Herstellervorgaben. Betriebsgrenzen gemäß Hersteller dürfen nicht überschritten werden."},
+  {h:"3.4 Verhalten in besonderen Situationen"},
+  {table:[["Situation","Richtiges Verhalten"],
+    ["Unbeteiligte betreten kontroll. Bodenbereich","UAS unverzüglich landen, Überflug von Personen vermeiden."],
+    ["Viele Vögel im Betriebsbereich","Landen oder gar nicht starten; erst fortsetzen, wenn die Vögel weg sind."],
+    ["Test der Sicherheits-/Notverfahren vor STS","Im Rahmen der offenen Kategorie A3."],
+    ["Vor STS-02-Flug einstellen","Geocaging (programmierbares Flugvolumen)."],
+    ["Vor STS-01 prüfen/aktivieren","Remote-ID + FTS-Funktionsfähigkeit."]]},
+  {type:"tip", t:"Bei Gefahren (Personen, Vögel, Wetter) lautet die Prüfungsantwort fast immer: landen bzw. nicht starten und Gefährdung vermeiden – nie „weiterfliegen und beobachten”."},
+  {type:"summary", items:[
+    "Verfahrensreihenfolge: Normal → Sicherheit (Kontingenz) → Notfall.",
+    "ERP = Emergency Response Plan; greift bei Kontrollverlust / unvermeidlichem Schaden.",
+    "MEUH = Meteorology, Environment, UAS, Human Limitations.",
+    "Vorflug: AIP/NOTAM, Betriebsgrenzen/Lufttüchtigkeit, Wetter, EMI am C2-Link.",
+    "Checkliste: klar, logisch, wenige Punkte; basiert auf Herstellervorgaben.",
+    "Gefahr (Personen/Vögel) → landen oder nicht starten.",
+    "Verfahrenstests im Rahmen der offenen Kategorie A3.",
+    "STS-02: Geocaging einstellen; STS-01: Remote-ID + FTS prüfen."]}
+ ]},
+
+{id:"L4", cat:"UAS & Flugleistung", icon:"🔋", title:"UAS & Flugleistung",
+ sub:"Bauarten, Schwerpunkt, Nutzlast, Akkus & Rechnen (30 Fragen)",
+ intro:"Kombiniert Flugmechanik (Schwerpunkt, Nutzlast, Bauarten) mit viel Elektrotechnik rund um Akkus. Erwarte Rechenaufgaben (Watt, Amperestunden, Reihen-/Parallelschaltung). Rechnen üben lohnt sich!",
+ blocks:[
+  {h:"4.1 UAS-Bauarten und ihr Betriebsbereich"},
+  {table:[["Bauart","Stärken","Schwächen / Hinweis"],
+    ["Starrflügler","Langstrecke, effiziente Akkunutzung","Langsamflug schwierig; am anfälligsten bei Schwerpunktverlagerung"],
+    ["Multikopter","Langsamflug, enge Räume, gleicht Wind gut aus","wenig effizient → eher Kurzstrecke"],
+    ["Hubschrauber / VTOL","Mischformen","jede Kategorie hat eigene Stärken/Schwächen"]]},
+  {type:"exam", t:"„Welche Kategorie ist bei Schwerpunktverlagerung am anfälligsten?” → Flugzeug/Starrflügler, nicht der Multikopter."},
+  {h:"4.2 Schwerpunkt (CG) und Nutzlast"},
+  {type:"list", items:["Schwerpunkt = Center of Gravity (CG)","Starrflügler schwanzlastig (CG hinten): Anstellwinkel ↑, mehr Leistung nötig","Außen angebrachte große Nutzlast: mehr Widerstand → mehr Leistungsbedarf","Reichweite mit Nutzlast immer geringer als ohne","MTOM darf nie überschritten werden; bestimmt einzig durch Herstellerangabe","Zuladung = MTOM − Leermasse"]},
+  {h:"4.3 Akkus – Grundbegriffe und Li-Po"},
+  {type:"high"},
+  {table:[["Begriff","Aussage"],
+    ["Kapazität","Maximaldauer für definierte Stromstärke (Ah/mAh)."],
+    ["C-Rate","Max. Faktor für Lade-/Entladestrom, bezogen auf Kapazität."],
+    ["C-Rate überschritten","Lebensdauer verkürzt sich (Maximalwerte!)."],
+    ["Kennzeichnung S","Zellen in Reihe → Spannung addiert sich."],
+    ["Kennzeichnung P","Zellen parallel → Kapazität/Ladung addiert sich."],
+    ["Li-Po-Eigenschaft","Hohe Energiedichte, aber wenige Ladezyklen."],
+    ["Lebensdauer","ca. 300–500 Ladezyklen (bis 80 % Restkapazität)."],
+    ["Idealer Bereich","10 °C bis 40 °C."],
+    ["Memory-Effekt","Kapazitätsverlust durch häufige Teilentladung."]]},
+  {type:"list", h:"Lagerung und Pflege", items:["Lagerung: feuerfest, ca. 65–75 % Ladung (Storage-Charge)","Laden stets feuerfest und unter Aufsicht","Winter/0 °C: Batterien vorwärmen","Lebensdauer beeinflusst durch Kälte, Hitze, Nutzung, Überladung, Lagerungsfehler, Tiefentladung, Kurzschluss"]},
+  {type:"trap", t:"Bei der Lagerungsfrage sind „im Kühlschrank” und „Tiefentladung ohne Folgen” falsch. Richtig: feuerfest + 65–75 %. Tiefentladung schädigt Li-Po-Akkus."},
+  {h:"4.4 Elektrotechnische Rechnungen – Prüfungsklassiker"},
+  {type:"high"},
+  {table:[["Aufgabe","Lösungsweg","Ergebnis"],
+    ["Leistung P","P = U × I (Volt × Ampere)","Watt (W)"],
+    ["5.000 mAh bei 5 A","5 Ah / 5 A","1 Stunde"],
+    ["2× 6 V / 5 Ah parallel","Spannung bleibt 6 V, Ladung 5+5","10 Ah"],
+    ["2× 6 V / 5 Ah in Reihe","Ladung bleibt 5 Ah, Spannung 6+6","12 V"]]},
+  {type:"mnemo", t:"Reihe (S) addiert Spannung (Volt), Parallel (P) addiert Kapazität (Ah). Reihe → höhere Spannung; Parallel → mehr „Power-Reserve” (Ah)."},
+  {t:"Elektrischer Strom kann Erwärmungs-, magnetischen und chemischen Effekt verursachen. „Kühlungs-”, „aerodynamischer” oder „Auflade”-Effekt sind erfunden."},
+  {type:"summary", items:[
+    "Starrflügler = Langstrecke/effizient, anfälligste Bauart bei Schwerpunktverlagerung; Multikopter = Langsamflug.",
+    "CG = Center of Gravity; schwanzlastig → größerer Anstellwinkel, mehr Leistung.",
+    "MTOM nie überschreiten (nur Herstellerangabe); Zuladung = MTOM − Leermasse.",
+    "Kapazität, C-Rate (Maximalwert!), S = Reihe (Volt), P = parallel (Ah).",
+    "Li-Po: hohe Energiedichte, 300–500 Zyklen, ideal 10–40 °C, Memory-Effekt.",
+    "Lagern: feuerfest, 65–75 %; laden unter Aufsicht; Winter vorwärmen.",
+    "P = U × I; 5000 mAh @ 5 A = 1 h; parallel 5+5 = 10 Ah; Reihe 6+6 = 12 V.",
+    "Stromeffekte: Erwärmung, magnetisch, chemisch."]}
+ ]},
+
+{id:"L5", cat:"Luftraum & Information", icon:"🗺️", title:"Luftraum & Information",
+ sub:"Lufträume, AIP/NOTAM, Maßstäbe (20 Fragen)",
+ intro:"Luftraumklassen, das Luftfahrthandbuch (AIP), NOTAM/AIC und Kartenmaßstäbe. Viele reine Abkürzungs- und Fakten-Fragen – ideal zum schnellen Punkten.",
+ blocks:[
+  {h:"5.1 Luftraumklassen"},
+  {table:[["Frage","Antwort"],
+    ["Kontrollierte Lufträume","A, B, C, D, E (Alpha–Echo)"],
+    ["Kein VFR erlaubt in …","A (Alpha)"],
+    ["IFR erlaubt in …","A, B, C, D, E, G"],
+    ["Reservierter Luftraum (Einflugverbot)","TSA (Temporary Segregated Area)"]]},
+  {type:"mix", t:"A (Alpha): kein VFR, nur IFR. Merke: „Alpha = ausschließlich Instrumentenflug”. G ist unkontrolliert, taucht aber bei der IFR-Aufzählung mit auf. Staatliche Souveränität: jeder Staat entscheidet über den Luftraum über seinem Hoheitsgebiet."},
+  {h:"5.2 Das Luftfahrthandbuch (AIP) und Informationsdienste"},
+  {type:"high"},
+  {table:[["Abkürzung","Bedeutung / Wichtig"],
+    ["AIP","Aeronautical Information Publication; Herausgeber DE: DFS; 3 Teile."],
+    ["ENR","En-Route-Teil; enthält Flugbeschränkungs-, Gefahren- und Luftsperrgebiete."],
+    ["NOTAM","Notice to Airmen; temporäre, kurzfristige, kodifizierte Änderungsmitteilung."],
+    ["AIC","Aeronautical Information Circular; Infos, die weder in AIP noch NOTAM passen."],
+    ["SUP","Supplement; kurzfristige Infos (neben NOTAM)."]]},
+  {t:"Infos zu Luftsperr-, Gefahren- und Flugbeschränkungsgebieten holst du in der AIP des Staates, in dem du fliegst."},
+  {type:"mix", t:"NOTAM = sehr kurzfristig/temporär. AIC = Rundschreiben für alles, was weder AIP noch NOTAM ist. AIP = das dauerhafte Handbuch. NOTAM-Zeile B) (z. B. „B) 2411141000”) gibt an, ab wann das NOTAM wirksam wird."},
+  {h:"5.3 Flugbeschränkungsgebiete (R)"},
+  {type:"list", items:["Kennzeichnung ICAO-Karte 1:500.000: Ländercode + „R” + Ordnungsnummer, z. B. ED-R 112A","In R-Gebieten dürfen UAS unter bestimmten Bedingungen (z. B. mit Genehmigung) betrieben werden"]},
+  {h:"5.4 Kartenmaßstäbe – Rechenfragen"},
+  {table:[["Aufgabe","Rechnung","Ergebnis"],
+    ["3 cm = 30 km real","30 km / 3 cm = 10 km/cm = 1.000.000 cm","1:1.000.000"],
+    ["1 cm bei 1:500.000","500.000 cm = 5.000 m","5 km"]]},
+  {type:"tip", t:"Bei 1:500.000 → 1 cm = 5 km. Bei 1:1.000.000 → 1 cm = 10 km. Nullen umrechnen: 500.000 cm = 5 km."},
+  {type:"summary", items:[
+    "Kontrollierte Lufträume: A, B, C, D, E. In A kein VFR. IFR in A, B, C, D, E, G.",
+    "TSA = reservierter, gesperrter Luftraum. Staatliche Souveränität über eigenen Luftraum.",
+    "AIP = Aeronautical Information Publication, 3 Teile, Herausgeber DFS; ENR enthält R/D/P-Gebiete.",
+    "NOTAM = kurzfristig; AIC = Rundschreiben; SUP für Kurzfristiges.",
+    "NOTAM-Zeile B) = Beginn der Wirksamkeit (Datum/Zeit).",
+    "R-Gebiet: Ländercode + R + Nummer (z. B. ED-R 112A); UAS mit Genehmigung möglich.",
+    "1:500.000 → 1 cm = 5 km; 1:1.000.000 → 1 cm = 10 km."]}
+ ]},
+
+{id:"L6", cat:"Meteorologie", icon:"🌦️", title:"Meteorologie",
+ sub:"METAR/TAF, Wind, Druck, Nebel, Vereisung (40 Fragen)",
+ intro:"Das umfangreichste Faktenkapitel. Wetter-Meldungen (METAR/TAF/SPECI), Wind, Druck, Temperatur/Dichte, Nebel, Vereisung und Umrechnungen. Viele Fragen wiederholen sich mit denselben Zahlen – purer Punktelieferant.",
+ blocks:[
+  {h:"6.1 Wettermeldungen – die Abkürzungen"},
+  {type:"high"},
+  {table:[["Meldung","Inhalt"],
+    ["METAR – Meteorological Aerodrome Report","Standardisierte Kurz-Wetterbeobachtung eines Flugplatzes."],
+    ["TAF – Terminal Aerodrome Forecast","Flugplatz-Vorhersage mit Gültigkeitszeitraum."],
+    ["SPECI – Sonderwettermeldung","Wenn Schwellenwerte seit der letzten Meldung durchschritten werden."]]},
+  {t:"TAF-Gültigkeit lesen: „0512/0612” = gültig vom 05., 12:00 UTC bis 06., 12:00 UTC. Die Luftfahrt nutzt immer UTC. Eine Flugwetterberatung ist immer Bestandteil der Flugvorbereitung."},
+  {h:"6.2 Wind"},
+  {table:[["Frage","Antwort"],
+    ["Wind in 100 m über Grund","ca. 50 % stärker als am Boden."],
+    ["Nahe der Erdoberfläche","Oberflächenreibung reduziert die Windgeschwindigkeit."],
+    ["Wind in der Höhe","nimmt zu, dreht ca. 30° nach rechts (weniger Reibung, mehr Corioliskraft)."],
+    ["Wind aus NO, schwach","045/05KT"]]},
+  {type:"tip", t:"kt → m/s: Faktor 0,5 (30 kt ≈ 15 m/s). 10 kt = 18,5 km/h (1 kt ≈ 1,85 km/h)."},
+  {h:"6.3 Land-/Seewind, Föhn & Lee"},
+  {type:"list", items:["Landwind nachts: Land kühlt ab → Wind vom Land zur See","Föhn: auf der Lee-Seite (windabgewandt) Turbulenzen durch Rotoren","Lee = windabgewandt; Luv = windzugewandt","Lee-Wellen: Wind nimmt über dem Kamm an Geschwindigkeit zu, ändert Richtung nur leicht"]},
+  {type:"mix", t:"Lee = windabgewandt; Luv = windzugewandt. Landwind weht nachts vom Land, Seewind tagsüber von der See – Tageszeit nicht verwechseln."},
+  {h:"6.4 Temperatur, Druck & Dichte"},
+  {type:"high"},
+  {table:[["Größe","Verhalten / Wert"],
+    ["Temperaturgradient (ISA)","0,65 K pro 100 m, linear bis Tropopause (11 km)."],
+    ["Dichte mit Höhe","sinkt → Propeller müssen sich schneller drehen."],
+    ["Dichte vs. Druck/Temp.","steigt mit Druck; sinkt mit steigender Temperatur."],
+    ["Höchste Temperatur am Tag","am späten Nachmittag."],
+    ["10 °C in °F","50 °F (°F = °C × 1,8 + 32)."]]},
+  {type:"mnemo", t:"Temperaturgradient 0,65 K / 100 m kommt mehrfach. Heiß/leicht: warme Luft ist dünner (geringere Dichte)."},
+  {h:"6.5 Nebel, Vereisung, Thermik & Gewitter"},
+  {table:[["Phänomen","Kernaussage"],
+    ["Nebel vs. Dunst","Nebel: Sichtweite unter 1 km."],
+    ["Nebel am wahrscheinlichsten","kurz nach Sonnenaufgang."],
+    ["Strahlungsnebel","nachts, wenn Energie ungehindert abstrahlt."],
+    ["Vereisung – größte Gefahr","0 °C bis −15 °C."],
+    ["Gewitter (Cb)","Böenwalzen, Auf-/Abwinde, Starkregen, Blitze → Betrieb sofort beenden."]]},
+  {type:"trap", t:"Vereisungsgefahr am größten zwischen 0 °C und −15 °C – nicht bei beliebig tiefen Temperaturen. Nebel kurz nach Sonnenaufgang am wahrscheinlichsten, nicht mittags. Hoch (H) dreht auf der Nordhalbkugel im Uhrzeigersinn, Tief (L) dagegen."},
+  {type:"summary", items:[
+    "METAR = Beobachtung; TAF = Vorhersage; SPECI = Sondermeldung bei Schwellenwert.",
+    "Zeit immer UTC; TAF „0512/0612” = 05. 12:00 bis 06. 12:00 UTC.",
+    "Wind +50 % in 100 m; in der Höhe stärker + 30° nach rechts; Reibung bremst am Boden.",
+    "kt→m/s Faktor 0,5; 10 kt = 18,5 km/h; NO-Wind = 045/05KT.",
+    "Landwind nachts vom Land; Föhn-Lee → Rotor-Turbulenzen.",
+    "ISA-Gradient 0,65 K/100 m; Dichte sinkt mit Höhe/Temperatur, steigt mit Druck; 10 °C = 50 °F.",
+    "Nebel < 1 km Sicht, nach Sonnenaufgang; Vereisung 0 bis −15 °C.",
+    "Hoch rechtsherum, Tief linksherum (Nordhalbkugel); Gewitter (Cb) → sofort beenden."]}
+ ]},
+
+{id:"L7", cat:"Menschliches Leistungsvermögen", icon:"🧠", title:"Menschliches Leistungsvermögen",
+ sub:"Stress, Sehen, Kommunikation (20 Fragen)",
+ intro:"Human Factors: Stress, Müdigkeit, Wahrnehmung, Sehen und Kommunikation. Oft Definitions- und Listenfragen. Hier punktet, wer die Modelle (I'M-SAFE, Aviate-Navigate-Communicate, Scantechnik) parat hat.",
+ blocks:[
+  {h:"7.1 Stress, Müdigkeit & betrieblicher Druck"},
+  {type:"list", items:["Stressbewältigung = erlernte Systeme, um Stress zu bewältigen","Stress hängt ab von subjektiver Einschätzung der Fähigkeiten und Wahrnehmung der Anforderungen","Müdigkeit (ICAO): Schlafverlust, längeres Wachsein, Arbeitsbelastung, zirkadiane Phase","Betrieblicher Druck: lange Arbeitszeiten, hohe Belastung, hohe Anforderungen der Vorgesetzten","Geringes Stresslevel durch Training mit vielen Wiederholungen"]},
+  {h:"7.2 I'M-SAFE-Checkliste & Alkohol"},
+  {table:[["Buchstabe","Bedeutung"],
+    ["I","Illness – Krankheit"],["M","Medication – Medikamente"],["S","Stress"],
+    ["A","Alcohol – Alkohol"],["F","Fatigue – Müdigkeit"],["E","Emotion – Emotionen"]]},
+  {type:"mnemo", t:"I'M SAFE = Illness, Medication, Stress, Alcohol, Fatigue, Emotion. Trifft auch nur ein Punkt zu, bist du nicht „safe”. Alkoholabbau verläuft linear – nicht beschleunigbar."},
+  {h:"7.3 Sehen, Wahrnehmung & Entfernungsschätzung"},
+  {type:"high"},
+  {table:[["Frage","Antwort"],
+    ["Wichtigster Sinn zur Orientierung","Sehen"],
+    ["Dunkeladaptation des Auges","30 Minuten"],
+    ["Bei Nacht am besten wahrgenommene Farbe","grün"],
+    ["Entfernungen verlässlich nur bis","ca. 1 m"],
+    ["Ungenaueste Schätzmethode","Faustformel"],
+    ["Höhenabschätzung beeinflusst durch","Sonnenstand und Luftfeuchtigkeit"]]},
+  {type:"list", h:"Luftraum-Scantechnik", items:["Luftraum in Segmente einteilen, jedes Segment kurz fokussieren","Beim Scan 10° über und unter der Flugbahn berücksichtigen"]},
+  {h:"7.4 Kommunikation & Prioritätenregel"},
+  {type:"list", items:["Fachsprachen: geringes Risiko von Mehrdeutigkeit, begrenzter Wortschatz","Feedback = Bestätigung des Empfängers über den Erhalt einer Nachricht","Prioritätenregel: fliegen – navigieren – kommunizieren (Aviate – Navigate – Communicate)"]},
+  {type:"exam", t:"Die Reihenfolge fliegen → navigieren → kommunizieren ist heilig: zuerst Kontrolle, dann Kurs, zuletzt Reden. Wer „kommunizieren” vorzieht, wählt falsch."},
+  {type:"summary", items:[
+    "Stressbewältigung = erlernte Systeme; Stress hängt von subjektiver Selbst-/Aufgaben-Einschätzung ab.",
+    "Müdigkeit (ICAO): Schlafverlust, Wachsein, Arbeitsbelastung, zirkadiane Phase.",
+    "I'M SAFE: Illness, Medication, Stress, Alcohol, Fatigue, Emotion; Alkoholabbau linear.",
+    "Sehen wichtigster Sinn; Dunkeladaptation 30 min; nachts grün; verlässlich nur bis ~1 m.",
+    "Scan: Segmente kurz fokussieren, 10° über/unter Flugbahn.",
+    "Feedback = Empfangsbestätigung; Fachsprache eindeutig, begrenzter Wortschatz.",
+    "Prioritäten: fliegen – navigieren – kommunizieren."]}
+ ]},
+
+{id:"L8", cat:"_extra", icon:"🪤", title:"Top-Prüfungsfallen & häufige Fehler",
+ sub:"Die gemeinsten Verwechslungen aller Kapitel",
+ intro:"Prüfer bauen Antworten gezielt so, dass nahe beieinanderliegende Begriffe oder Zahlen verwechselt werden. Wer diese Paare beherrscht, vermeidet die häufigsten Fehler.",
+ blocks:[
+  {h:"Top-Verwechslungen (immer wieder geprüft)"},
+  {table:[["Falle / Paar","So merkst du es dir"],
+    ["Betriebsvolumen vs. Bodenrisikopuffer","Volumen = Flug + Sicherheit/Contingency. Puffer liegen AUSSEN."],
+    ["Fluggenehmigung vs. Betriebsgenehmigung","Flug = Geozonen, national. Betrieb = spezielle Kategorie."],
+    ["Personen vs. gefährliche Güter","Personen → zulassungspflichtig. Güter/Pestizide → speziell."],
+    ["SORA vs. SAIL vs. PDRA","SORA = Methodik; SAIL = Risikoniveau; PDRA = fertige Risikobewertung."],
+    ["STS vs. Betriebsgenehmigung","STS = Erklärung (OM Pflicht). Sonst = Antrag/Genehmigung."],
+    ["Strategisch vs. taktisch","Strategisch = VOR dem Flug; taktisch = WÄHREND (VLOS ist taktisch)."],
+    ["FTS vs. Geocaging","FTS beendet den Flug; Geocaging hält im Volumen; Fallschirm mindert Aufprall."],
+    ["STS-01 (C5/VLOS) vs. STS-02 (C6/BVLOS)","01↔C5, 02↔C6. STS-02 braucht ggf. Beobachter."],
+    ["Reihe (S) vs. Parallel (P)","S addiert Spannung (V); P addiert Kapazität (Ah)."],
+    ["METAR vs. TAF vs. SPECI","Beobachtung / Vorhersage / Sondermeldung."],
+    ["NOTAM vs. AIC vs. AIP","NOTAM kurzfristig; AIC Rundschreiben; AIP dauerhaftes Handbuch."],
+    ["Lee vs. Luv","Lee = windabgewandt (Turbulenz); Luv = windzugewandt."],
+    ["Land- vs. Seewind","Landwind nachts (vom Land); Seewind tags (von der See)."],
+    ["Notfall- vs. Sicherheitsverfahren","Notfall = Kontrollverlust; Sicherheit = erste Abweichung."]]},
+  {h:"Zahlen, die gern vertauscht werden"},
+  {table:[["Zahl","Gehört zu"],
+    ["10 m","Bodenrisikopuffer STS-01 (ungef.) UND Contingency STS-02 (≥10 m)"],
+    ["Leine + 5 m","Bodenrisikopuffer STS-01 gefesselt"],
+    ["< 5 m/s","Max. Bodengeschwindigkeit ungefesselt STS-01"],
+    ["5 km","Mindestsicht STS-02"],
+    ["1 km / 2 km","Beobachterabstand 1 km; Reichweite 2 km (mit) / 1 km (ohne)"],
+    ["145 m","C5-Höhenausnahme bei 50 m horizontalem Abstand"],
+    ["0,65 K / 100 m","ISA-Temperaturgradient"],
+    ["0 bis −15 °C","größte Vereisungsgefahr"],
+    ["10–40 °C","idealer Li-Po-Betriebsbereich"],
+    ["300–500","Li-Po-Ladezyklen"],
+    ["30 min","Dunkeladaptation des Auges"],
+    ["1 m","verlässliche Entfernungsschätzung / max. Abmessung über Menschenmenge"]]},
+  {type:"trap", t:"Bei Mehrfachauswahl (MULTI) sind meist mehrere oder fast alle Optionen richtig (Akku-Faktoren, DAA-Funktionen, Vorflug-Punkte). Vorsicht, nicht nur eine anzukreuzen. Erfundene Begriffe (Kühlungseffekt, aerodynamischer Stromeffekt) sind immer falsch."},
+  {type:"exam", t:"Prüfer achten auf: (1) das genaue Wort („Volumen” vs. „Puffer”, „Beobachtung” vs. „Vorhersage”), (2) Tageszeiten (Nebel, Land-/Seewind, Temperaturmaximum), (3) richtige Stelle für Genehmigung/Registrierung, (4) ob nur Theorie oder auch Praxis erneuert wird."}
+ ]},
+
+{id:"L9", cat:"_extra", icon:"⭐", title:"Was man unbedingt wissen muss",
+ sub:"Die unverzichtbare Basis zum Bestehen",
+ intro:"Wenn die Zeit knapp ist, konzentriere dich auf diese Punkte – die häufigsten und sichersten Punktelieferanten der Prüfung.",
+ blocks:[
+  {type:"list", h:"Die unverzichtbaren Fakten", items:[
+    "Kategorien: offen / speziell / zulassungspflichtig. Personen → zulassungspflichtig; Güter → speziell.",
+    "SORA = Specific Operations Risk Assessment (AMC zu Art. 11 VO 2019/947).",
+    "Betriebsvolumen = Fluggeografie + Sicherheits-/Contingency-Bereich. Puffer außen.",
+    "Kontrollierter Bodenbereich = Fluggeografie + Contingency + Bodenrisikopuffer.",
+    "Risiko = Wahrscheinlichkeit × Schadensausmaß. Bodenrisiko = Person; Luftrisiko = Lfz.",
+    "PDRA = fertige Risikobewertung; STS = Erklärung (OM Pflicht); AMC = Soft Law.",
+    "STS-01 = C5 = VLOS; STS-02 = C6 = BVLOS (Geocaging, ggf. Beobachter).",
+    "FTS beendet den Flug; Geocaging hält im Volumen.",
+    "Strategisch = vor dem Flug, taktisch = während (VLOS ist taktisch).",
+    "Verfahrensreihenfolge: Normal → Sicherheit → Notfall.",
+    "ERP = Emergency Response Plan (greift bei Kontrollverlust).",
+    "MEUH = Meteorology, Environment, UAS, Human Limitations.",
+    "Akkus: S = Reihe (Volt), P = parallel (Ah); P = U × I; Li-Po 10–40 °C, 300–500 Zyklen.",
+    "Lufträume: A–E kontrolliert; in A kein VFR; IFR in A,B,C,D,E,G; TSA gesperrt.",
+    "AIP (DFS, 3 Teile, ENR enthält R-Gebiete); NOTAM kurzfristig; Zeile B) = Wirksamkeitsbeginn.",
+    "Karten: 1:500.000 → 1 cm = 5 km; 1:1.000.000 → 1 cm = 10 km.",
+    "Wetter: METAR = Beobachtung, TAF = Vorhersage, SPECI = Sondermeldung; alles in UTC.",
+    "Wind: +50 % in 100 m; kt→m/s ×0,5; in der Höhe +30° nach rechts.",
+    "Temperatur: ISA 0,65 K/100 m; Dichte sinkt mit Höhe/Wärme; 10 °C = 50 °F.",
+    "Nebel < 1 km Sicht, nach Sonnenaufgang; Vereisung 0 bis −15 °C; Gewitter (Cb) → sofort landen.",
+    "Human Factors: I'M SAFE; fliegen–navigieren–kommunizieren; Dunkeladaptation 30 min; nachts grün.",
+    "Registrierung im Heimatstaat; grenzüberschreitend: Antrag/Anzeige beim Zielland.",
+    "Verlängerung nach 5 Jahren: nur Theorie; Praxis ohne Ablaufdatum."]},
+  {type:"tip", t:"Strategie im Test: Frage zweimal lesen, Schlüsselwort unterstreichen („Volumen”, „Vorhersage”, „nachts”, „spezielle Kategorie”). Bei Unsicherheit erfundene/unsinnige Optionen ausschließen, dann zwischen den plausibelsten wählen."}
+ ]},
+
+{id:"L10", cat:"_extra", icon:"⏱️", title:"Schnellwiederholung – die letzten 30 Minuten",
+ sub:"Blitz-Durchlauf der wahrscheinlichsten Fragen",
+ intro:"30 Minuten vor der Prüfung: nichts Neues mehr lernen, sondern diese Blitz-Liste durchgehen.",
+ blocks:[
+  {table:[["Stichwort","Antwort"],
+    ["SORA","Specific Operations Risk Assessment"],
+    ["SAIL","Risiko, getroffen zu werden, durch außer Kontrolle geratenes UAS"],
+    ["PDRA","vorgefertigte Risikobewertung (Antragserleichterung)"],
+    ["Betriebsvolumen","Fluggeografie + Sicherheits-/Contingency-Bereich"],
+    ["Kontroll. Bodenbereich","Fluggeografie + Contingency + Bodenrisikopuffer"],
+    ["Risiko","Wahrscheinlichkeit × Schadensausmaß"],
+    ["Transport Personen","zulassungspflichtige Kategorie"],
+    ["Transport Pestizide","spezielle Kategorie"],
+    ["STS-01","C5, VLOS, GRB ≥ 10 m, < 5 m/s"],
+    ["STS-02","C6, BVLOS, Sicht 5 km, Beobachter ≤ 1 km, Contingency ≥ 10 m"],
+    ["C5-Höhenausnahme","50 m horizontal → bis 145 m"],
+    ["FTS","beendet Flug, unabhängig von Flugsteuerung"],
+    ["Geocaging","hält UAS im Betriebsvolumen (C6)"],
+    ["Verfahrensreihenfolge","Normal → Sicherheit → Notfall"],
+    ["ERP","Emergency Response Plan (Kontrollverlust)"],
+    ["MEUH","Meteorology, Environment, UAS, Human Limitations"],
+    ["Reihe (S) / Parallel (P)","S = Volt addiert / P = Ah addiert"],
+    ["P = U × I","Leistung in Watt"],
+    ["5000 mAh @ 5 A","1 Stunde"],
+    ["Li-Po Lagerung","feuerfest, 65–75 %"],
+    ["Li-Po Ideal / Zyklen","10–40 °C / 300–500"],
+    ["Kein VFR in","Luftraum A"],
+    ["IFR erlaubt in","A, B, C, D, E, G"],
+    ["AIP Herausgeber DE","DFS (3 Teile)"],
+    ["NOTAM Zeile B)","Beginn der Wirksamkeit"],
+    ["1:500.000","1 cm = 5 km"],
+    ["METAR / TAF / SPECI","Beobachtung / Vorhersage / Sondermeldung"],
+    ["TAF Zeit","immer UTC"],
+    ["kt → m/s","× 0,5"],
+    ["10 kt","18,5 km/h"],
+    ["Wind 100 m","+50 % stärker"],
+    ["ISA-Gradient","0,65 K / 100 m"],
+    ["10 °C","50 °F"],
+    ["Nebel","Sicht < 1 km, nach Sonnenaufgang"],
+    ["Vereisung","0 bis −15 °C"],
+    ["Gewitter (Cb)","sofort landen/beenden"],
+    ["Landwind","nachts, vom Land"],
+    ["I'M SAFE","Illness, Medication, Stress, Alcohol, Fatigue, Emotion"],
+    ["Prioritäten","fliegen – navigieren – kommunizieren"],
+    ["Dunkeladaptation","30 Minuten"],
+    ["Nachtfarbe","grün"],
+    ["Registrierung","im Heimatstaat"],
+    ["Verlängerung n. 5 J.","nur Theorie"]]},
+  {type:"mnemo", t:"Letzter Anker vor dem Start: „01-C5-VLOS / 02-C6-BVLOS”, „Normal-Sicherheit-Notfall”, „fliegen-navigieren-kommunizieren”, „Reihe-Volt / Parallel-Ah”. Tief durchatmen – du kannst das. Viel Erfolg!"}
+ ]}
+];
+
+
 /* ============ PERSISTENZ ============ */
 const STORE_KEY="sts_trainer_v1";
 let memStore=null;
@@ -1650,16 +2194,17 @@ function hasLS(){try{const k="__t";localStorage.setItem(k,"1");localStorage.remo
 const LS=hasLS();
 function loadState(){let raw=null;if(LS){try{raw=localStorage.getItem(STORE_KEY);}catch(e){}}else raw=memStore;if(raw){try{return JSON.parse(raw);}catch(e){}}return null;}
 function saveState(){const raw=JSON.stringify(state);if(LS){try{localStorage.setItem(STORE_KEY,raw);}catch(e){}}else memStore=raw;}
-function freshState(){const cards={};QUESTIONS.forEach(q=>{cards[q.id]={ef:2.5,interval:0,due:0,seen:0,correct:0,streak:0,wrong:0};});return {cards,theme:"dark",globalSeen:0,globalCorrect:0,clock:0};}
+function freshState(){const cards={};QUESTIONS.forEach(q=>{cards[q.id]={ef:2.5,interval:0,due:0,seen:0,correct:0,streak:0,wrong:0};});return {cards,theme:"dark",globalSeen:0,globalCorrect:0,clock:0,readLessons:{}};}
 let state=loadState()||freshState();
 if(!state.activeModule)state.activeModule="ALLE";
+if(!state.readLessons)state.readLessons={};
 const MODULES=["Spezielle Kategorie","Standardszenarien","Betriebsverfahren","UAS & Flugleistung","Luftraum & Information","Meteorologie","Menschliches Leistungsvermögen"];
 function POOL(){return state.activeModule==="ALLE"?QUESTIONS:QUESTIONS.filter(q=>q.cat===state.activeModule);}
 QUESTIONS.forEach(q=>{if(!state.cards[q.id])state.cards[q.id]={ef:2.5,interval:0,due:0,seen:0,correct:0,streak:0,wrong:0};});
 
 /* ============ DOM-Helfer ============ */
 const $=s=>document.querySelector(s);
-const views=["home","quiz","flash","results","diff"];
+const views=["home","quiz","flash","results","diff","learn","lesson"];
 function show(v){
   views.forEach(x=>$("#view-"+x).classList.toggle("hidden",x!==v));
   // Untere Navigationsleiste nur im Quiz zeigen
@@ -1945,6 +2490,113 @@ $("#fileInput").onchange=(e)=>{const f=e.target.files[0];if(!f)return;const r=ne
 
 /* ============ RESET ============ */
 $("#resetBtn").onclick=()=>{if(confirm("Gesamten Lernfortschritt wirklich zurücksetzen?")){const th=state.theme;const am=state.activeModule;state=freshState();state.theme=th;state.activeModule=am;saveState();renderModules();updateDash();toast("Fortschritt zurückgesetzt ↺");}};
+
+/* ============ LERNBEREICH ============ */
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+const BOX_META={
+  exam:["★","Prüfer achten besonders darauf"],
+  trap:["⚠","Prüfungsfalle"],
+  mix:["↔","Häufige Verwechslung"],
+  tip:["◆","Prüfungs-Tipp"],
+  mnemo:["✦","Merksatz / Eselsbrücke"],
+  high:["▲","Hohe Prüfungswahrscheinlichkeit"]
+};
+function lessonProgress(){const total=LESSONS.length;const done=LESSONS.filter(l=>state.readLessons[l.id]).length;return{done,total};}
+function openLearn(){
+  show("learn");
+  const p=lessonProgress();
+  $("#learn-count").textContent=`${p.done} / ${p.total} gelesen`;
+  const list=$("#learn-list");list.innerHTML="";
+  LESSONS.forEach((l,i)=>{
+    const done=!!state.readLessons[l.id];
+    const b=document.createElement("button");
+    b.className="lesson-card"+(done?" done":"");
+    b.innerHTML=`<span class="lic">${l.icon}</span>
+      <span class="ltxt"><h3>${esc(l.title)}</h3><p>${esc(l.sub)}</p></span>
+      <span class="${done?'ldone':'lchev'}">${done?'✓':'›'}</span>`;
+    b.onclick=()=>openLesson(i);
+    list.appendChild(b);
+  });
+}
+function renderBlock(b){
+  // Tabelle
+  if(b.table){
+    const head=b.table[0],rows=b.table.slice(1);
+    let h=`<thead><tr>${head.map(c=>`<th>${esc(c)}</th>`).join("")}</tr></thead>`;
+    let body=`<tbody>${rows.map(r=>`<tr>${r.map(c=>`<td>${esc(c)}</td>`).join("")}</tr>`).join("")}</tbody>`;
+    const wide=head.length>=3;
+    return `<div class="${wide?'table-scroll':''}"><table class="lesson-table">${h}${body}</table></div>`;
+  }
+  // Zusammenfassung
+  if(b.type==="summary"){
+    return `<div class="box summary"><div class="box-h">✓ Das musst du sicher können</div><ul>${b.items.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>`;
+  }
+  // Aufzähl-Liste
+  if(b.type==="list"){
+    const head=b.h?`<div class="ll-h">${esc(b.h)}</div>`:"";
+    return `<ul class="lesson-list">${head}${b.items.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`;
+  }
+  // Hinweis-Boxen
+  if(BOX_META[b.type]){
+    const[ic,label]=BOX_META[b.type];
+    const body=b.t?`<p>${esc(b.t)}</p>`:"";
+    return `<div class="box ${b.type}"><div class="box-h">${ic} ${label}</div>${body}</div>`;
+  }
+  // Überschrift + optionaler Fließtext
+  let out="";
+  if(b.h)out+=`<div class="lesson-h">${esc(b.h)}</div>`;
+  if(b.t)out+=`<p class="lesson-p">${esc(b.t)}</p>`;
+  return out;
+}
+let curLesson=0;
+function openLesson(i){
+  curLesson=i;
+  const l=LESSONS[i];
+  show("lesson");
+  $("#lesson-cat").textContent=l.icon+"  "+(l.cat==="_extra"?"Extra":l.cat);
+  $("#lesson-idx").textContent=`${i+1} / ${LESSONS.length}`;
+  $("#lesson-scrollbar").style.width="0%";
+  const slot=$("#lesson-slot");
+  let html=`<h2 class="qtext" style="margin:0 0 6px;">${esc(l.title)}</h2>`;
+  html+=`<p class="lesson-intro">${esc(l.intro)}</p>`;
+  html+=l.blocks.map(renderBlock).join("");
+  // Footer: Modul üben + Navigation
+  const moduleExists=MODULES.includes(l.cat);
+  html+=`<div class="lesson-foot">`;
+  if(moduleExists){
+    html+=`<button class="ghost" id="lessonPractice">🎯 Dieses Modul jetzt üben</button>`;
+  }
+  html+=`<button class="ghost" id="lessonDone">${state.readLessons[l.id]?'✓ Als gelesen markiert':'Als gelesen markieren'}</button>`;
+  const prev=i>0, next=i<LESSONS.length-1;
+  html+=`<div class="row-btns">`;
+  html+=`<button class="ghost" id="lessonPrev" ${prev?'':'disabled'}>‹ Vorheriges</button>`;
+  html+=`<button class="ghost" id="lessonNext" ${next?'':'disabled'}>Nächstes ›</button>`;
+  html+=`</div></div>`;
+  slot.innerHTML=html;
+
+  if(moduleExists)$("#lessonPractice").onclick=()=>{state.activeModule=l.cat;saveState();renderModules();updateDash();startMode("sequential");};
+  $("#lessonDone").onclick=()=>{
+    state.readLessons[l.id]=!state.readLessons[l.id];saveState();
+    $("#lessonDone").textContent=state.readLessons[l.id]?'✓ Als gelesen markiert':'Als gelesen markieren';
+    if(state.readLessons[l.id])toast("Kapitel als gelesen markiert ✓");
+  };
+  if(prev)$("#lessonPrev").onclick=()=>openLesson(i-1);
+  if(next)$("#lessonNext").onclick=()=>openLesson(i+1);
+  window.scrollTo(0,0);
+}
+// Lesefortschrittsbalken
+window.addEventListener("scroll",()=>{
+  if($("#view-lesson").classList.contains("hidden"))return;
+  const h=document.documentElement;
+  const max=h.scrollHeight-h.clientHeight;
+  const pct=max>0?Math.min(100,Math.round(h.scrollTop/max*100)):0;
+  const bar=$("#lesson-scrollbar");if(bar)bar.style.width=pct+"%";
+  // ab 92 % gescrollt automatisch als gelesen markieren
+  if(pct>=92){const l=LESSONS[curLesson];if(l&&!state.readLessons[l.id]){state.readLessons[l.id]=true;saveState();const db=$("#lessonDone");if(db)db.textContent="✓ Als gelesen markiert";}}
+},{passive:true});
+$("#openLearn").onclick=openLearn;
+$("#learnBack").onclick=()=>{show("home");updateDash();};
+$("#lessonBack").onclick=()=>openLearn();
 
 /* ============ MODE-BUTTONS ============ */
 document.querySelectorAll(".mode-card").forEach(b=>b.onclick=()=>startMode(b.dataset.mode));
