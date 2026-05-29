@@ -53,20 +53,26 @@
     text-size-adjust:100%;
   }
   html,body{margin:0;padding:0;overflow-x:hidden;width:100%;}
-  body{
+  /* Hintergrund als separate fixe Ebene (statt background-attachment:fixed am body).
+     Behebt auf macOS/Chrome das blockierte Mausrad-Scrollen. */
+  body::before{
+    content:"";
+    position:fixed; inset:0; z-index:-1; pointer-events:none;
     background:
       radial-gradient(1200px 600px at 88% -8%, rgba(63,205,242,.12), transparent 55%),
       radial-gradient(1000px 560px at 0% 108%, rgba(255,147,71,.11), transparent 55%),
       radial-gradient(900px 500px at 50% 50%, rgba(63,205,242,.03), transparent 70%),
       var(--bg);
-    background-attachment:fixed;
+    transition:background .4s;
+  }
+  body{
+    background:var(--bg);
     color:var(--ink);
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
     min-height:100vh; min-height:100dvh;          /* dvh = dynamische Viewport-Höhe auf iOS */
     transition:background .4s,color .3s;
     -webkit-font-smoothing:antialiased;
     letter-spacing:.01em;
-    overscroll-behavior-y:contain;
   }
   .app{
     max-width:780px; margin:0 auto;
@@ -149,6 +155,7 @@
   .mode-card.c1 .glow{background:var(--accent);} .mode-card.c2 .glow{background:var(--accent2);}
   .mode-card.c3 .glow{background:var(--green);} .mode-card.c4 .glow{background:var(--gold);}
   .mode-card.c5 .glow{background:#b07bff;} .mode-card.c6 .glow{background:var(--red);}
+  .mode-card.c7 .glow{background:linear-gradient(135deg,var(--accent),var(--accent2));}
 
   .row-btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;}
   .ghost{
@@ -335,6 +342,20 @@
   .ring .pct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:34px;font-weight:800;}
   .verdict{font-size:21px;font-weight:800;margin:6px 0;}
   .verdict.pass{color:var(--green);} .verdict.fail{color:var(--gold);}
+  /* ---- Prüfungs-Auswertung: Falsche Fragen ---- */
+  .rev-card{margin-top:18px;text-align:left;}
+  .rev-head{font-size:16px;font-weight:800;margin:0 0 14px;}
+  .rev-head span{color:var(--muted);font-weight:600;}
+  .rev-item{border:1px solid var(--line);border-radius:var(--r-md);padding:14px 15px;margin-bottom:12px;background:var(--panel-soft);}
+  .rev-item:last-child{margin-bottom:0;}
+  .rev-q{font-size:12px;color:var(--muted);font-weight:700;margin-bottom:5px;letter-spacing:.02em;}
+  .rev-qt{font-size:15px;font-weight:700;line-height:1.4;margin-bottom:10px;}
+  .rev-line{display:flex;gap:10px;font-size:13.5px;line-height:1.45;margin:4px 0;align-items:flex-start;}
+  .rev-line span{flex:0 0 96px;color:var(--muted);font-weight:600;}
+  .rev-line b{font-weight:700;}
+  .rev-line.bad b{color:var(--red);}
+  .rev-line.good b{color:var(--green);}
+  .rev-why{font-size:13px;color:var(--muted);line-height:1.5;margin-top:9px;padding-top:9px;border-top:1px solid var(--line-soft);}
 
   /* ---- Difficult ---- */
   .diff-item{display:flex;gap:12px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:13px 14px;margin-bottom:9px;}
@@ -412,9 +433,160 @@
   a:focus-visible,button:focus-visible,.opt:focus-visible,.mode-card:focus-visible,.mod-btn:focus-visible,[tabindex]:focus-visible{
     outline:3px solid var(--accent2);outline-offset:2px;border-radius:8px;
   }
+  /* ===== Zugriffsschutz / Passwort-Gate ===== */
+  .gate{
+    position:fixed; inset:0; z-index:9999;
+    display:flex; align-items:safe center; justify-content:center;
+    padding:calc(20px + var(--sat)) 20px calc(20px + var(--sab));
+    background:
+      radial-gradient(1000px 560px at 80% -10%, rgba(63,205,242,.14), transparent 55%),
+      radial-gradient(900px 520px at 0% 110%, rgba(255,147,71,.13), transparent 55%),
+      var(--bg);
+    backdrop-filter:blur(2px);
+    overflow-y:auto;                 /* falls die Karte hoeher als der Bildschirm ist: scrollbar */
+    -webkit-overflow-scrolling:touch;
+  }
+  body.unlocked .gate{ display:none; }
+  /* App bleibt verborgen, bis freigeschaltet wurde */
+  body:not(.unlocked) .app{ display:none; }
+  .gate-card{
+    width:100%; max-width:360px; text-align:center;
+    background:linear-gradient(135deg,var(--panel),var(--panel-soft));
+    border:1px solid var(--line); border-radius:var(--r-xl);
+    box-shadow:var(--shadow-lg); padding:30px 24px 24px;
+  }
+  .gate-logo{
+    width:58px;height:58px;margin:0 auto 14px;border-radius:16px;
+    display:flex;align-items:center;justify-content:center;
+    font-weight:800;letter-spacing:.04em;color:var(--accent-ink);
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    box-shadow:var(--glow-accent);
+  }
+  .gate-title{font-size:22px;font-weight:800;margin:0 0 6px;}
+  .gate-sub{font-size:14px;color:var(--muted);margin:0 0 20px;line-height:1.45;}
+  #gateForm{display:flex;flex-direction:column;gap:10px;}
+  .gate-pw-wrap{position:relative;display:flex;align-items:center;}
+  .gate-pw-wrap #gatePw{padding-right:48px;}
+  .gate-eye{
+    position:absolute;right:6px;top:50%;transform:translateY(-50%);
+    width:38px;height:38px;display:flex;align-items:center;justify-content:center;
+    background:transparent;border:none;cursor:pointer;font-size:18px;line-height:1;
+    border-radius:10px;opacity:.75;transition:opacity .2s,background .2s;
+  }
+  .gate-eye:hover,.gate-eye:active{opacity:1;background:rgba(127,127,127,.14);}
+  #gatePw{
+    width:100%;padding:13px 15px;font-size:16px;
+    background:var(--bg2);color:var(--ink);
+    border:1px solid var(--line);border-radius:var(--r-md);outline:none;
+    transition:border-color .2s,box-shadow .2s;
+  }
+  #gatePw:focus{border-color:var(--accent2);box-shadow:0 0 0 3px rgba(63,205,242,.18);}
+  #gateBtn{
+    width:100%;padding:13px 16px;font-size:15px;font-weight:700;cursor:pointer;
+    color:var(--accent-ink);border:none;border-radius:var(--r-md);
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    box-shadow:var(--glow-accent);transition:transform .1s,filter .2s;
+  }
+  #gateBtn:active{transform:scale(.98);}
+  #gateBtn:disabled{filter:saturate(.4) brightness(.8);cursor:default;}
+  .gate-err{min-height:18px;margin-top:12px;font-size:13px;color:var(--red);font-weight:600;}
+  .gate-card.shake{animation:gateShake .4s;}
+  @keyframes gateShake{0%,100%{transform:translateX(0);}20%{transform:translateX(-9px);}40%{transform:translateX(8px);}60%{transform:translateX(-6px);}80%{transform:translateX(4px);}}
+  .gate-remember{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:16px;font-size:13px;color:var(--muted);cursor:pointer;}
+  .gate-remember input{width:16px;height:16px;accent-color:var(--accent);}
 </style>
 </head>
 <body data-theme="dark">
+
+<!-- ===== ZUGRIFFSSCHUTZ (lokal, ohne Backend) ===== -->
+<div id="gate" class="gate" aria-hidden="false">
+  <div class="gate-card">
+    <div class="gate-logo">STS</div>
+    <h1 class="gate-title">STS Trainer</h1>
+    <p class="gate-sub">Bitte Passwort eingeben, um fortzufahren.</p>
+    <form id="gateForm" autocomplete="off">
+      <div class="gate-pw-wrap">
+        <input id="gatePw" type="password" inputmode="text" placeholder="Passwort" aria-label="Passwort"
+               autocomplete="current-password" autocapitalize="off" autocorrect="off" spellcheck="false">
+        <button type="button" id="gateToggle" class="gate-eye" aria-label="Passwort anzeigen" aria-pressed="false">👁️</button>
+      </div>
+      <button type="submit" id="gateBtn">Freischalten</button>
+    </form>
+    <div id="gateErr" class="gate-err" role="alert"></div>
+    <label class="gate-remember"><input type="checkbox" id="gateRemember" checked> Auf diesem Gerät merken</label>
+  </div>
+</div>
+
+<script>
+/* =====================================================================
+   ZUGRIFFSSCHUTZ – vollstaendig lokal im Browser, ohne Backend/Server.
+   ---------------------------------------------------------------------
+   Hinweis: Ein client-seitiger Schutz ist KEINE echte Sicherheit – der
+   Quelltext ist im Browser immer einsehbar. Er haelt nur Gelegenheits-
+   zugriffe ab. Passwort aendern: GATE_PASSWORD unten anpassen.
+   Standard-Passwort dieser Datei: STS2025
+   ===================================================================== */
+(function(){
+  "use strict";
+  var GATE_PASSWORD="STS2025";              // <-- hier Passwort aendern
+  var GATE_LS_KEY="sts_trainer_gate_v2";    // merkt Freischaltung pro Geraet
+  var GATE_TOKEN="unlocked";
+  var body=document.body;
+
+  // Theme schon vor dem Freischalten anwenden (damit das Gate passend aussieht)
+  try{
+    var raw=localStorage.getItem("sts_trainer_v1");
+    if(raw){var st=JSON.parse(raw);if(st&&(st.theme==="light"||st.theme==="dark"))body.dataset.theme=st.theme;}
+  }catch(e){}
+
+  // Bereits auf diesem Geraet freigeschaltet?
+  try{ if(localStorage.getItem(GATE_LS_KEY)===GATE_TOKEN){ body.classList.add("unlocked"); return; } }catch(e){}
+
+  var form=document.getElementById("gateForm");
+  var pw=document.getElementById("gatePw");
+  var err=document.getElementById("gateErr");
+  var card=document.querySelector(".gate-card");
+  var remember=document.getElementById("gateRemember");
+  var btn=document.getElementById("gateBtn");
+  var toggle=document.getElementById("gateToggle");
+
+  // Passwort ein-/ausblenden
+  if(toggle){
+    toggle.addEventListener("click",function(){
+      var show=pw.type==="password";
+      pw.type=show?"text":"password";
+      toggle.textContent=show?"🙈":"👁️";
+      toggle.setAttribute("aria-pressed",show?"true":"false");
+      toggle.setAttribute("aria-label",show?"Passwort verbergen":"Passwort anzeigen");
+      pw.focus();
+    });
+  }
+
+  function fail(msg){
+    err.textContent=msg||"Falsches Passwort. Bitte erneut versuchen.";
+    card.classList.remove("shake");void card.offsetWidth;card.classList.add("shake");
+    pw.value="";pw.focus();
+    btn.disabled=false;
+  }
+  function unlock(){
+    if(remember&&remember.checked){try{localStorage.setItem(GATE_LS_KEY,GATE_TOKEN);}catch(e){}}
+    body.classList.add("unlocked");
+    window.scrollTo(0,0);
+  }
+
+  form.addEventListener("submit",function(ev){
+    ev.preventDefault();
+    var val=(pw.value||"").trim();           // fuehrende/abschliessende Leerzeichen ignorieren
+    if(!val){fail("Bitte ein Passwort eingeben.");return;}
+    if(val===GATE_PASSWORD) unlock();
+    else fail();
+  });
+
+  setTimeout(function(){try{pw.focus();}catch(e){}},80);
+})();
+</script>
+
+
 <div class="app">
 
   <!-- TOP BAR -->
@@ -455,6 +627,7 @@
       <button class="mode-card c6" data-mode="wrong"><span class="glow"></span><span class="ic">🎯</span><h3>Falsche üben</h3><p>Nur zuletzt falsch beantwortete Fragen.</p></button>
       <button class="mode-card c5" data-mode="flash"><span class="glow"></span><span class="ic">🃏</span><h3>Karteikarten</h3><p>Frage vorne, Lösung hinten.</p></button>
       <button class="mode-card c4" data-mode="exam"><span class="glow"></span><span class="ic">⏱️</span><h3>Prüfung</h3><p>Test ohne Zwischen-Feedback, Auswertung am Ende (75 % zum Bestehen).</p></button>
+      <button class="mode-card c7" data-mode="simExam"><span class="glow"></span><span class="ic">🎓</span><h3>Prüfungssimulation</h3><p>60 Fragen · 90 Min · realistische Verteilung über alle Themen. Jeder Start neu generiert.</p></button>
     </div>
 
     <div class="section-title">Fortschritt</div>
@@ -506,6 +679,7 @@
         <button class="ghost" id="r-home">🏠 Menü</button>
       </div>
     </div>
+    <div id="r-review"></div>
   </div>
 
   <!-- ===== DIFFICULT ===== -->
@@ -2354,17 +2528,52 @@ function pickSRS(excludeN){
 
 /* ============ QUIZ-ENGINE ============ */
 let session=null;
+/* Prüfungssimulation: ziehe `total` Fragen aus dem GESAMTEN Fragenpool,
+   proportional zur Fragenzahl je Themenbereich (Kapitel). Largest-Remainder-
+   Verfahren für eine faire, realistische Verteilung. Bei jedem Aufruf neu. */
+function buildSimExam(total){
+  const all=QUESTIONS.slice();
+  // Fragen nach Themenbereich (cat) gruppieren – Reihenfolge wie in MODULES
+  const groups={};
+  all.forEach(q=>{(groups[q.cat]=groups[q.cat]||[]).push(q);});
+  const cats=Object.keys(groups);
+  const N=all.length;
+  total=Math.min(total,N);
+  // Ideal-Anteil + Abrundung, Rest per größtem Nachkommaanteil verteilen
+  const alloc=cats.map(cat=>{
+    const ideal=groups[cat].length/N*total;
+    return {cat,base:Math.floor(ideal),frac:ideal-Math.floor(ideal),avail:groups[cat].length};
+  });
+  let assigned=alloc.reduce((s,a)=>s+a.base,0);
+  let rest=total-assigned;
+  alloc.sort((a,b)=>b.frac-a.frac);
+  for(let i=0;rest>0&&i<alloc.length;i++){
+    if(alloc[i].base<alloc[i].avail){alloc[i].base++;rest--;}
+  }
+  // Falls noch Rest übrig (durch Verfügbarkeitsgrenzen): reihum auffüllen
+  while(rest>0){let placed=false;
+    for(const a of alloc){if(rest<=0)break;if(a.base<a.avail){a.base++;rest--;placed=true;}}
+    if(!placed)break;
+  }
+  // Aus jeder Gruppe zufällig die zugeteilte Anzahl ziehen
+  let picked=[];
+  alloc.forEach(a=>{picked=picked.concat(shuffle(groups[a.cat].slice()).slice(0,a.base));});
+  return shuffle(picked);
+}
+// Beide prüfungsartigen Modi (klassische „Prüfung" + „Prüfungssimulation")
+function isExamMode(){return session&&(session.mode==="exam"||session.mode==="simExam");}
 function startMode(mode){
   let list,timed=false,limit=0;
   if(mode==="sequential")list=POOL().slice();
   else if(mode==="random")list=shuffle(POOL().slice());
   else if(mode==="wrong"){list=POOL().filter(q=>state.cards[q.id].wrong>0&&state.cards[q.id].streak===0);if(!list.length){toast("Keine falschen Fragen – stark! 🎉");return;}list=shuffle(list);}
   else if(mode==="exam"){const p=POOL();const cnt=Math.min(20,p.length);list=shuffle(p.slice()).slice(0,cnt);timed=true;limit=Math.max(5,cnt)*45;}
+  else if(mode==="simExam"){list=buildSimExam(60);timed=true;limit=90*60;}
   else if(mode==="srs")list=null;
   else if(mode==="flash"){startFlash();return;}
   // SRS-Session-Länge: 20, aber nie mehr als der gewählte Pool hergibt (sonst irreführender Zähler)
   const srsMax=Math.min(20,POOL().length);
-  session={mode,list,idx:0,correct:0,wrong:0,wrongList:[],timed,limit,timeLeft:limit,answered:false,srsCount:0,srsMax,curN:null,picks:[]};
+  session={mode,list,idx:0,correct:0,wrong:0,wrongList:[],wrongDetail:{},timed,limit,timeLeft:limit,answered:false,srsCount:0,srsMax,curN:null,picks:[]};
   show("quiz");
   $("#q-timer").classList.toggle("hidden",!timed);
   if(timed)startTimer();
@@ -2381,7 +2590,7 @@ function renderQuiz(){
   else{cur=session.idx+1;total=session.list.length;}
   $("#q-counter").textContent=`${cur} / ${total}`;
   // Im Prüfungsmodus keinen laufenden Punktestand zeigen (echtes Prüfungsgefühl, kein Zwischen-Feedback)
-  $("#q-score").textContent=session.mode==="exam"?"":`✓ ${session.correct} · ✗ ${session.wrong}`;
+  $("#q-score").textContent=isExamMode()?"":`✓ ${session.correct} · ✗ ${session.wrong}`;
   $("#q-bar").style.width=Math.round((cur-1)/total*100)+"%";
 
   // Antwort-Reihenfolge pro Anzeige mischen (verhindert Positions-Auswendiglernen).
@@ -2432,7 +2641,7 @@ function updateNav(){
     main.disabled=false;
     main.dataset.act="next";
   }else{
-    main.textContent=session.mode==="exam"?"Weiter →":"Antwort prüfen";
+    main.textContent=isExamMode()?"Weiter →":"Antwort prüfen";
     main.disabled=session.picks.length===0;
     main.dataset.act="check";
   }
@@ -2470,11 +2679,11 @@ function arrEq(a,b){return a.length===b.length&&a.slice().sort().every((v,i)=>v=
 function evaluate(q){
   session.answered=true;
   const good=arrEq(session.picks,q.a);
-  if(good)session.correct++;else{session.wrong++;if(!session.wrongList.includes(q.id))session.wrongList.push(q.id);}
+  if(good)session.correct++;else{session.wrong++;if(!session.wrongList.includes(q.id))session.wrongList.push(q.id);session.wrongDetail=session.wrongDetail||{};session.wrongDetail[q.id]=session.picks.slice();}
   // In der Prüfungssimulation NICHT den Lern-/SRS-Fortschritt verändern (reiner Test)
-  if(session.mode!=="exam")gradeCard(q.id,good);
+  if(!isExamMode())gradeCard(q.id,good);
   // Prüfungssimulation: kein sofortiges Feedback (echtes Prüfungsgefühl) – direkt zur nächsten Frage
-  if(session.mode==="exam"){advance();return;}
+  if(isExamMode()){advance();return;}
   document.querySelectorAll(".opt").forEach(btn=>{
     const i=+btn.dataset.i;btn.disabled=true;btn.classList.remove("sel");
     if(q.a.includes(i))btn.classList.add("correct");
@@ -2525,9 +2734,40 @@ function finishSession(){
   setTimeout(()=>{ring.style.transition="stroke-dashoffset 1s";ring.style.strokeDashoffset=off;},60);
   $("#r-pct").textContent=pct+"%";
   const pass=pct>=75;const v=$("#r-verdict");
-  if(session.mode==="exam"){v.textContent=pass?"Bestanden ✓":"Noch nicht bestanden";v.className="verdict "+(pass?"pass":"fail");$("#r-detail").textContent=`${session.correct} von ${total} richtig · Prüfungssimulation`;}
+  const timedOut=session.timed&&session.timeLeft<=0;
+  if(isExamMode()){
+    const label=session.mode==="simExam"?"Prüfungssimulation":"Prüfung";
+    v.textContent=pass?"Bestanden ✓":"Noch nicht bestanden";
+    v.className="verdict "+(pass?"pass":"fail");
+    $("#r-detail").textContent=`${session.correct} von ${total} richtig · ${label}`+(timedOut?" · ⏱️ Zeit abgelaufen":"");
+  }
   else{v.textContent=pct>=75?"Sehr gut!":pct>=50?"Solide – weiter üben":"Dranbleiben!";v.className="verdict "+(pct>=50?"pass":"fail");$("#r-detail").textContent=`${session.correct} von ${total} richtig beantwortet`;}
   $("#r-retry").style.display=session.wrongList.length?"":"none";
+  renderResultReview();
+}
+/* Optional: Übersicht der falsch beantworteten Fragen mit korrekter Antwort.
+   Nur in den prüfungsartigen Modi (dort gibt es kein Sofort-Feedback). */
+function renderResultReview(){
+  const box=$("#r-review");if(!box)return;box.innerHTML="";
+  if(!isExamMode()||!session.wrongList||!session.wrongList.length)return;
+  const det=session.wrongDetail||{};
+  let items="";
+  session.wrongList.forEach(id=>{
+    const q=QUESTIONS.find(x=>x.id===id);if(!q)return;
+    const picks=det[id]||[];
+    const correctTxt=q.a.map(i=>esc(q.o[i])).join(" · ");
+    const yourTxt=picks.length?picks.map(i=>esc(q.o[i])).join(" · "):"– (keine Antwort)";
+    items+=`<div class="rev-item">
+      <div class="rev-q">${esc(q.cat)} · Frage ${q.n}</div>
+      <div class="rev-qt">${esc(q.q)}</div>
+      <div class="rev-line bad"><span>Deine Antwort</span><b>${yourTxt}</b></div>
+      <div class="rev-line good"><span>Richtig</span><b>${correctTxt}</b></div>
+      <div class="rev-why">${esc(q.why)}</div>
+    </div>`;
+  });
+  box.innerHTML=`<div class="card rev-card">
+    <h3 class="rev-head">Falsch beantwortete Fragen <span>(${session.wrongList.length})</span></h3>
+    ${items}</div>`;
 }
 $("#r-retry").onclick=()=>{const wl=session.wrongList.slice();session={mode:"wrong",list:shuffle(QUESTIONS.filter(q=>wl.includes(q.id))),idx:0,correct:0,wrong:0,wrongList:[],timed:false,answered:false,picks:[]};show("quiz");$("#q-timer").classList.add("hidden");renderQuiz();};
 $("#r-home").onclick=()=>{show("home");updateDash();};
