@@ -1,0 +1,1958 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0e1726">
+<title>STS Trainer · Spezielle Kategorie</title>
+<style>
+  :root{
+    --bg:#0e1726; --bg2:#13203a; --panel:#172642; --panel-soft:#1d2f52;
+    --ink:#eaf1fb; --muted:#8ea3c4; --line:#27395e;
+    --accent:#ff8a3d; --accent2:#36c5f0;
+    --green:#2ecf73; --green-bg:rgba(46,207,115,.14);
+    --red:#ff5c6c; --red-bg:rgba(255,92,108,.14);
+    --gold:#ffcf5c; --shadow:0 18px 50px -24px rgba(0,0,0,.8);
+    /* Safe-Area-Insets (iPhone Notch / Dynamic Island / Home-Indicator) */
+    --sat:env(safe-area-inset-top,0px);
+    --sab:env(safe-area-inset-bottom,0px);
+    --sal:env(safe-area-inset-left,0px);
+    --sar:env(safe-area-inset-right,0px);
+    --navh:72px; /* Höhe der unteren Navigationsleiste */
+  }
+  [data-theme="light"]{
+    --bg:#eef1f6; --bg2:#e3e8f1; --panel:#ffffff; --panel-soft:#f4f6fb;
+    --ink:#16202f; --muted:#5d6b82; --line:#dce2ec;
+    --accent:#e0631a; --accent2:#1d8fc4;
+    --green:#1f9d57; --green-bg:rgba(31,157,87,.12);
+    --red:#d83a4a; --red-bg:rgba(216,58,74,.12);
+    --gold:#c8941d; --shadow:0 18px 50px -28px rgba(20,30,50,.4);
+    --theme-color:#eef1f6;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html{
+    -webkit-text-size-adjust:100%;   /* iOS: kein automatisches Hochskalieren */
+    text-size-adjust:100%;
+  }
+  html,body{margin:0;padding:0;overflow-x:hidden;width:100%;}
+  body{
+    background:
+      radial-gradient(circle at 85% -10%, rgba(54,197,240,.10), transparent 40%),
+      radial-gradient(circle at 5% 110%, rgba(255,138,61,.10), transparent 45%),
+      var(--bg);
+    color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
+    min-height:100vh; min-height:100dvh;          /* dvh = dynamische Viewport-Höhe auf iOS */
+    transition:background .4s;
+    -webkit-font-smoothing:antialiased;
+    overscroll-behavior-y:contain;
+  }
+  .app{
+    max-width:780px; margin:0 auto;
+    /* Safe-Area links/rechts + Platz unten für die Navigationsleiste */
+    padding:
+      calc(14px + var(--sat))
+      calc(16px + var(--sar))
+      calc(28px + var(--sab))
+      calc(16px + var(--sal));
+  }
+  /* Wenn die untere Nav sichtbar ist, mehr Abstand unten lassen */
+  body.has-nav .app{ padding-bottom:calc(var(--navh) + var(--sab) + 24px); }
+
+  /* ---- Top bar ---- */
+  .topbar{
+    display:flex; align-items:center; gap:12px;
+    padding:14px 16px; margin-bottom:18px;
+    background:linear-gradient(120deg,var(--panel),var(--panel-soft));
+    border:1px solid var(--line); border-radius:16px;
+    box-shadow:var(--shadow); position:relative; overflow:hidden;
+  }
+  .topbar::before{
+    content:""; position:absolute; inset:0;
+    background:repeating-linear-gradient(45deg,transparent,transparent 18px,rgba(255,255,255,.015) 18px,rgba(255,255,255,.015) 19px);
+    pointer-events:none;
+  }
+  .logo{
+    width:44px;height:44px;border-radius:12px;flex:0 0 auto;
+    background:conic-gradient(from 200deg,var(--accent),var(--accent2),var(--accent));
+    display:flex;align-items:center;justify-content:center;
+    font-weight:800;font-size:18px;color:#0c1322;letter-spacing:-1px;
+    box-shadow:0 0 24px -6px var(--accent2);
+  }
+  .brand{flex:1;min-width:0;}
+  .brand h1{font-size:17px;margin:0;letter-spacing:.3px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .brand p{font-size:11px;margin:2px 0 0;color:var(--muted);text-transform:uppercase;letter-spacing:.16em;}
+  .icon-btn{
+    background:var(--panel-soft);border:1px solid var(--line);color:var(--ink);
+    min-width:44px;height:44px;border-radius:11px;cursor:pointer;font-size:18px;
+    display:flex;align-items:center;justify-content:center;transition:.2s;flex:0 0 auto;
+  }
+  .icon-btn:active{transform:scale(.93);}
+
+  /* ---- Dashboard ---- */
+  .stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;}
+  .stat{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 8px;text-align:center;}
+  .stat .num{font-size:25px;font-weight:800;line-height:1;}
+  .stat .lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-top:6px;}
+  .stat.ok .num{color:var(--green);} .stat.warn .num{color:var(--gold);} .stat.acc .num{color:var(--accent2);}
+
+  .section-title{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.16em;margin:24px 4px 12px;font-weight:700;}
+
+  .mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .mode-card{
+    background:linear-gradient(160deg,var(--panel),var(--panel-soft));
+    border:1px solid var(--line);border-radius:16px;padding:18px 15px;cursor:pointer;
+    transition:.18s;text-align:left;position:relative;overflow:hidden;
+    -webkit-user-select:none;user-select:none;
+  }
+  .mode-card:active{transform:scale(.97);border-color:var(--accent);}
+  .mode-card .ic{font-size:25px;margin-bottom:10px;display:block;}
+  .mode-card h3{margin:0 0 4px;font-size:15px;font-weight:700;}
+  .mode-card p{margin:0;font-size:12.5px;color:var(--muted);line-height:1.45;}
+  .mode-card .glow{position:absolute;top:-30px;right:-30px;width:90px;height:90px;border-radius:50%;opacity:.18;filter:blur(8px);}
+  .mode-card.c1 .glow{background:var(--accent);} .mode-card.c2 .glow{background:var(--accent2);}
+  .mode-card.c3 .glow{background:var(--green);} .mode-card.c4 .glow{background:var(--gold);}
+  .mode-card.c5 .glow{background:#b07bff;} .mode-card.c6 .glow{background:var(--red);}
+
+  .row-btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;}
+  .ghost{
+    flex:1;min-width:150px;background:var(--panel);border:1px solid var(--line);
+    color:var(--ink);padding:14px;border-radius:12px;cursor:pointer;font-size:14px;
+    font-weight:600;transition:.18s;min-height:48px;font-family:inherit;
+  }
+  .ghost:active{transform:scale(.97);border-color:var(--accent2);}
+
+  /* ---- Quiz head ---- */
+  .quiz-head{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+  .progress-wrap{flex:1;min-width:0;}
+  .progress-meta{display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted);margin-bottom:5px;font-weight:600;}
+  .bar{height:8px;background:var(--panel-soft);border-radius:99px;overflow:hidden;border:1px solid var(--line);}
+  .bar>i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:99px;transition:width .4s;}
+  .timer{font-size:15px;font-weight:800;padding:8px 12px;border-radius:11px;background:var(--panel-soft);border:1px solid var(--line);min-width:66px;text-align:center;}
+  .timer.danger{color:var(--red);border-color:var(--red);animation:pulse 1s infinite;}
+  @keyframes pulse{50%{opacity:.55;}}
+  .mini-back{
+    background:var(--panel-soft);border:1px solid var(--line);color:var(--ink);
+    min-width:44px;height:44px;border-radius:11px;cursor:pointer;font-size:18px;flex:0 0 auto;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .mini-back:active{transform:scale(.93);}
+
+  /* ---- Card / Quiz ---- */
+  .card{
+    background:var(--panel);border:1px solid var(--line);border-radius:18px;
+    padding:22px 18px;box-shadow:var(--shadow);animation:slideIn .35s cubic-bezier(.2,.8,.2,1);
+  }
+  @keyframes slideIn{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
+  .qtag{font-size:11px;color:var(--accent);font-weight:700;text-transform:uppercase;letter-spacing:.14em;margin-bottom:9px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+  .multi-pill{background:rgba(255,207,92,.15);color:var(--gold);border:1px solid rgba(255,207,92,.4);padding:2px 9px;border-radius:20px;font-size:9.5px;}
+  .qtext{font-size:19px;font-weight:700;line-height:1.36;margin:0 0 20px;}
+
+  .opt{
+    display:flex;gap:13px;align-items:flex-start;width:100%;text-align:left;
+    background:var(--panel-soft);border:1.5px solid var(--line);border-radius:13px;
+    padding:15px 15px;margin-bottom:11px;cursor:pointer;font-size:16px;color:var(--ink);
+    transition:.14s;line-height:1.42;font-family:inherit;min-height:54px;
+    -webkit-user-select:none;user-select:none;
+  }
+  .opt:active:not(:disabled){transform:scale(.985);}
+  .opt:disabled{cursor:default;}
+  .opt .mark{
+    flex:0 0 auto;width:24px;height:24px;border-radius:7px;border:2px solid var(--muted);
+    display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;margin-top:0;transition:.2s;
+    color:var(--muted);position:relative;
+  }
+  /* Bei Auswahl/Bewertung: Ziffer ausblenden, Symbol via ::after zeigen */
+  .opt.sel .mark,.opt.correct .mark,.opt.wrong .mark{font-size:0;}
+  .opt.sel .mark::after,.opt.correct .mark::after,.opt.wrong .mark::after{font-size:14px;}
+  .opt.sel{border-color:var(--accent2);}
+  .opt.sel .mark{border-color:var(--accent2);background:var(--accent2);color:#06121d;}
+  .opt.sel .mark::after{content:"✓";}
+  .opt.correct{border-color:var(--green);background:var(--green-bg);}
+  .opt.correct .mark{border-color:var(--green);background:var(--green);color:#04210f;}
+  .opt.correct .mark::after{content:"✓";}
+  .opt.wrong{border-color:var(--red);background:var(--red-bg);}
+  .opt.wrong .mark{border-color:var(--red);background:var(--red);color:#2a0307;}
+  .opt.wrong .mark::after{content:"✕";}
+
+  /* ---- Feedback ---- */
+  .feedback{margin-top:18px;border-radius:14px;overflow:hidden;animation:slideIn .3s;border:1px solid var(--line);}
+  .fb-head{padding:14px 16px;font-weight:800;font-size:15px;display:flex;align-items:center;gap:8px;}
+  .fb-head.ok{background:var(--green-bg);color:var(--green);}
+  .fb-head.no{background:var(--red-bg);color:var(--red);}
+  .fb-body{padding:6px 16px 16px;}
+  .fb-block{margin-top:14px;}
+  .fb-block .h{font-size:10px;text-transform:uppercase;letter-spacing:.13em;font-weight:800;margin-bottom:5px;color:var(--muted);}
+  .fb-block .h.acc{color:var(--accent);}
+  .fb-block p{margin:0;font-size:14.5px;line-height:1.55;color:var(--ink);}
+  .fb-block.tip{background:rgba(255,207,92,.1);border:1px solid rgba(255,207,92,.3);border-radius:11px;padding:12px 14px;}
+  .fb-block.tip .h{color:var(--gold);}
+
+  /* ---- Flashcard ---- */
+  .flip{perspective:1600px;cursor:pointer;margin-bottom:8px;-webkit-user-select:none;user-select:none;}
+  .flip-inner{position:relative;transition:transform .55s cubic-bezier(.4,.2,.2,1);transform-style:preserve-3d;min-height:300px;}
+  .flip.flipped .flip-inner{transform:rotateY(180deg);}
+  .flip-face{position:absolute;inset:0;-webkit-backface-visibility:hidden;backface-visibility:hidden;border-radius:18px;border:1px solid var(--line);
+    background:var(--panel);box-shadow:var(--shadow);padding:24px 20px;display:flex;flex-direction:column;justify-content:center;}
+  .flip-back{transform:rotateY(180deg);background:linear-gradient(160deg,var(--panel),var(--panel-soft));overflow-y:auto;justify-content:flex-start;}
+  .flip-hint{text-align:center;font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.13em;margin-top:8px;}
+  .rate-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;margin-top:14px;}
+  .rate{padding:15px 6px;border-radius:12px;border:1px solid var(--line);background:var(--panel-soft);cursor:pointer;font-weight:700;font-size:13px;color:var(--ink);transition:.18s;min-height:52px;font-family:inherit;}
+  .rate:active{transform:scale(.96);}
+  .rate.r1{border-color:rgba(255,92,108,.4);} .rate.r2{border-color:rgba(255,207,92,.4);} .rate.r3{border-color:rgba(46,207,115,.4);}
+
+  /* ---- Results ---- */
+  .result-hero{text-align:center;padding:26px 18px;}
+  .ring{width:150px;height:150px;margin:0 auto 18px;position:relative;}
+  .ring svg{transform:rotate(-90deg);}
+  .ring .pct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:34px;font-weight:800;}
+  .verdict{font-size:21px;font-weight:800;margin:6px 0;}
+  .verdict.pass{color:var(--green);} .verdict.fail{color:var(--gold);}
+
+  /* ---- Difficult ---- */
+  .diff-item{display:flex;gap:12px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:13px 14px;margin-bottom:9px;}
+  .diff-badge{flex:0 0 auto;width:36px;height:36px;border-radius:10px;background:var(--red-bg);color:var(--red);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;border:1px solid rgba(255,92,108,.3);}
+  .diff-q{flex:1;font-size:13.5px;line-height:1.4;min-width:0;}
+  .diff-rate{font-size:11px;color:var(--muted);font-weight:700;white-space:nowrap;text-align:right;}
+  .empty{text-align:center;color:var(--muted);padding:36px 20px;font-size:14.5px;line-height:1.6;}
+
+  /* ---- Untere sticky Navigationsleiste (Touch-Bedienung) ---- */
+  .navbar{
+    position:fixed;left:0;right:0;bottom:0;z-index:50;
+    display:flex;gap:10px;align-items:stretch;
+    padding:10px calc(14px + var(--sar)) calc(10px + var(--sab)) calc(14px + var(--sal));
+    background:linear-gradient(to top,var(--bg) 72%,rgba(14,23,38,0));
+    border-top:1px solid transparent;
+    transform:translateY(130%);transition:transform .3s;
+  }
+  [data-theme="light"] .navbar{background:linear-gradient(to top,var(--bg) 72%,rgba(238,241,246,0));}
+  body.has-nav .navbar{transform:translateY(0);}
+  .navbar .nbtn{
+    flex:1;min-height:54px;border-radius:14px;border:1px solid var(--line);
+    background:var(--panel);color:var(--ink);font-weight:700;font-size:15px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;gap:7px;transition:.16s;font-family:inherit;
+  }
+  .navbar .nbtn:active{transform:scale(.96);}
+  .navbar .nbtn:disabled{opacity:.4;cursor:not-allowed;}
+  .navbar .nbtn.prev{flex:0 0 56px;font-size:20px;}
+  .navbar .nbtn.primary{
+    background:linear-gradient(90deg,var(--accent),var(--accent2));color:#08121f;border:none;
+    box-shadow:0 8px 22px -10px var(--accent2);
+  }
+
+  .toast{position:fixed;left:50%;bottom:calc(var(--navh) + var(--sab) + 16px);transform:translateX(-50%) translateY(160%);
+    background:var(--ink);color:var(--bg);padding:13px 22px;border-radius:12px;font-weight:700;font-size:13.5px;
+    box-shadow:0 12px 30px -10px rgba(0,0,0,.6);transition:transform .35s;z-index:99;max-width:88vw;text-align:center;}
+  .toast.show{transform:translateX(-50%) translateY(0);}
+
+  .mod-row{display:flex;flex-wrap:wrap;gap:8px;}
+  .mod-btn{flex:1 1 auto;min-height:46px;padding:10px 14px;border-radius:12px;border:1px solid var(--line);
+    background:var(--panel);color:var(--ink);font-weight:600;font-size:13.5px;cursor:pointer;transition:.16s;font-family:inherit;white-space:nowrap;}
+  .mod-btn:active{transform:scale(.96);}
+  .mod-btn.active{background:linear-gradient(90deg,var(--accent),var(--accent2));color:#08121f;border-color:transparent;box-shadow:0 8px 22px -12px var(--accent2);}
+  .mod-btn .cnt{opacity:.7;font-weight:700;font-size:11px;margin-left:5px;}
+  .hidden{display:none !important;}
+
+  /* ===== Kleine Smartphones (Hochformat) ===== */
+  @media(max-width:560px){
+    .mode-grid{grid-template-columns:1fr 1fr;gap:10px;}
+    .qtext{font-size:18px;}
+    .opt{font-size:16px;}            /* >=16px verhindert iOS-Auto-Zoom */
+    .brand h1{font-size:16px;}
+  }
+  @media(max-width:380px){
+    .mode-grid{grid-template-columns:1fr;}
+    .stat .num{font-size:21px;}
+    .stat .lbl{font-size:9px;}
+  }
+
+  /* ===== Querformat auf niedrigen Höhen ===== */
+  @media(max-height:520px) and (orientation:landscape){
+    .app{padding-top:calc(8px + var(--sat));}
+    .ring{width:110px;height:110px;}
+    .flip-inner{min-height:200px;}
+    .mode-grid{grid-template-columns:repeat(3,1fr);}
+  }
+
+  @media(prefers-reduced-motion:reduce){
+    *{animation:none !important;transition:none !important;}
+  }
+
+  /* Sichtbarer Fokusrahmen nur bei Tastatur-Navigation (nicht bei Maus-Klick) */
+  a:focus-visible,button:focus-visible,.opt:focus-visible,.mode-card:focus-visible,.mod-btn:focus-visible,[tabindex]:focus-visible{
+    outline:3px solid var(--accent2);outline-offset:2px;border-radius:8px;
+  }
+</style>
+</head>
+<body data-theme="dark">
+<div class="app">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="logo">STS</div>
+    <div class="brand">
+      <h1>STS Trainer</h1>
+      <p>Fernpilot · STS</p>
+    </div>
+    <button class="icon-btn" id="themeBtn" aria-label="Hell/Dunkel umschalten">🌙</button>
+    <button class="icon-btn" id="resetBtn" aria-label="Fortschritt zurücksetzen">↺</button>
+  </div>
+
+  <!-- ===== HOME ===== -->
+  <div id="view-home">
+    <div class="stat-grid">
+      <div class="stat acc"><div class="num" id="s-answered">0</div><div class="lbl">Beantwortet</div></div>
+      <div class="stat ok"><div class="num" id="s-acc">–</div><div class="lbl">Erfolg</div></div>
+      <div class="stat warn"><div class="num" id="s-mastered">0</div><div class="lbl">Gemeistert</div></div>
+    </div>
+
+    <div class="section-title">Modul</div>
+    <div class="mod-row" id="modRow"></div>
+    <div class="section-title">Lernmodi</div>
+    <div class="mode-grid">
+      <button class="mode-card c1" data-mode="srs"><span class="glow"></span><span class="ic">🧠</span><h3>Intelligent</h3><p>Spaced Repetition – schwache Fragen häufiger.</p></button>
+      <button class="mode-card c2" data-mode="sequential"><span class="glow"></span><span class="ic">📋</span><h3>Der Reihe nach</h3><p>Alle 40 Fragen in fester Reihenfolge.</p></button>
+      <button class="mode-card c3" data-mode="random"><span class="glow"></span><span class="ic">🔀</span><h3>Zufall</h3><p>Alle Fragen gemischt.</p></button>
+      <button class="mode-card c6" data-mode="wrong"><span class="glow"></span><span class="ic">🎯</span><h3>Falsche üben</h3><p>Nur zuletzt falsch beantwortete Fragen.</p></button>
+      <button class="mode-card c5" data-mode="flash"><span class="glow"></span><span class="ic">🃏</span><h3>Karteikarten</h3><p>Frage vorne, Lösung hinten.</p></button>
+      <button class="mode-card c4" data-mode="exam"><span class="glow"></span><span class="ic">⏱️</span><h3>Prüfung</h3><p>Test ohne Zwischen-Feedback, Auswertung am Ende (75 % zum Bestehen).</p></button>
+    </div>
+
+    <div class="section-title">Fortschritt</div>
+    <div class="row-btns">
+      <button class="ghost" id="showDiff">⚠️ Schwierige Fragen</button>
+      <button class="ghost" id="exportBtn">💾 Exportieren</button>
+      <button class="ghost" id="importBtn">📂 Importieren</button>
+    </div>
+    <input type="file" id="fileInput" accept="application/json" class="hidden">
+  </div>
+
+  <!-- ===== QUIZ ===== -->
+  <div id="view-quiz" class="hidden">
+    <div class="quiz-head">
+      <button class="mini-back" id="quizBack" aria-label="Zurück zum Menü">✕</button>
+      <div class="progress-wrap">
+        <div class="progress-meta"><span id="q-counter">1 / 40</span><span id="q-score">✓ 0 · ✗ 0</span></div>
+        <div class="bar"><i id="q-bar" style="width:0%"></i></div>
+      </div>
+      <div class="timer hidden" id="q-timer">15:00</div>
+    </div>
+    <div id="quiz-slot"></div>
+  </div>
+
+  <!-- ===== FLASH ===== -->
+  <div id="view-flash" class="hidden">
+    <div class="quiz-head">
+      <button class="mini-back" id="flashBack" aria-label="Zurück zum Menü">✕</button>
+      <div class="progress-wrap">
+        <div class="progress-meta"><span id="f-counter">1 / 40</span><span>Karteikarten</span></div>
+        <div class="bar"><i id="f-bar" style="width:0%"></i></div>
+      </div>
+    </div>
+    <div id="flash-slot"></div>
+  </div>
+
+  <!-- ===== RESULTS ===== -->
+  <div id="view-results" class="hidden">
+    <div class="card result-hero">
+      <div class="ring">
+        <svg width="150" height="150" viewBox="0 0 150 150"><circle cx="75" cy="75" r="64" stroke="var(--line)" stroke-width="13" fill="none"/>
+        <circle id="r-ring" cx="75" cy="75" r="64" stroke="var(--green)" stroke-width="13" fill="none" stroke-linecap="round" stroke-dasharray="402" stroke-dashoffset="402"/></svg>
+        <div class="pct" id="r-pct">0%</div>
+      </div>
+      <div class="verdict" id="r-verdict">–</div>
+      <p id="r-detail" style="color:var(--muted);margin:0;"></p>
+      <div class="row-btns" style="margin-top:22px;">
+        <button class="ghost" id="r-retry">🔁 Falsche wiederholen</button>
+        <button class="ghost" id="r-home">🏠 Menü</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== DIFFICULT ===== -->
+  <div id="view-diff" class="hidden">
+    <div class="quiz-head"><button class="mini-back" id="diffBack" aria-label="Zurück zum Menü">✕</button>
+      <div class="progress-wrap"><div class="progress-meta"><span>Schwierige Fragen</span><span id="diff-count"></span></div></div>
+    </div>
+    <div id="diff-slot"></div>
+  </div>
+
+</div>
+
+<!-- Untere Touch-Navigation (nur im Quiz sichtbar) -->
+<div class="navbar" id="navbar">
+  <button class="nbtn prev" id="navPrev" aria-label="Zurück">‹</button>
+  <button class="nbtn primary" id="navMain">Antwort prüfen</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============ DATEN: alle 40 Fragen ============ */
+const QUESTIONS = [
+{cat:"Spezielle Kategorie",id:"k1-1",n:1,multi:false,q:"Das Betriebsvolumen besteht aus …",
+ o:["Flugbereich und Bodenrisikopuffer","Flugbereich, Sicherheitsbereich und Bodenrisikopuffer","Flugbereich und Sicherheitsbereich","Flugbereich, Sicherheitsbereich, Bodenrisikopuffer und Luftrisikopuffer"],
+ a:[2],
+ why:"Das Betriebsvolumen (Operational Volume) ist die Summe aus Fluggeografie (Flugbereich) und dem angrenzenden Sicherheits-/Contingency-Bereich.",
+ no:"Boden- und Luftrisikopuffer liegen außerhalb des Betriebsvolumens – sie sind Sicherheitsabstände drumherum, nicht Teil davon.",
+ tip:"Volumen = Flug + Sicherheit. Alles mit „Puffer\" steht außen vor."},
+{cat:"Spezielle Kategorie",id:"k1-2",n:2,multi:false,q:"Ein PDRA …",
+ o:["ist eine Priorisierungsmethode für den Notfall und hilft bei der Erstellung eines Notfallplans.","ist ein portables Detektionsgerät zur Erfüllung der Luftrisikominderung im Rahmen der TMPR.","kann mit Abgabe einer Erklärung gegenüber dem LBA genutzt werden und erfordert lediglich vorgegebene Parameter nebst OM.","ist eine vorgefertigte Risikobeurteilung im AMC-Material. Sie dient der Antragserleichterung für eine Betriebsgenehmigung."],
+ a:[3],
+ why:"PDRA = Predefined Risk Assessment: eine von der EASA vorgefertigte Risikobewertung im AMC/GM, die du als Basis für den Genehmigungsantrag nutzt.",
+ no:"Es ist weder ein Gerät noch eine reine Erklärungs-Option (das wäre ein STS) noch eine Notfall-Priorisierung.",
+ tip:"P-D-R-A = „PreDefined Risk Assessment\" – fertige Risikoanalyse aus der Schublade."},
+{cat:"Spezielle Kategorie",id:"k1-3",n:3,multi:false,q:"Grenzüberschreitender Betrieb in der speziellen Kategorie …",
+ o:["erfordert keine weiteren Maßnahmen, da eine Betriebsgenehmigung EU-weit gültig ist.","erfordert eine weitere Genehmigung im Ausland; der SORA ist erneut durchzuführen und das OM zu übersenden.","erfordert eine Erklärung gegenüber der ausländischen Behörde mit Angaben zum Betriebsort.","erfordert eine Antragsstellung bei der ausländischen Behörde, die der deutschen Behörde mitteilt, ob die Maßnahmen zufriedenstellend sind."],
+ a:[3],
+ why:"Eine Betriebsgenehmigung gilt nicht automatisch EU-weit. Du beantragst die Bestätigung beim Zielland; dessen Behörde stimmt sich mit der Heimatbehörde ab.",
+ no:"„EU-weit ohne Maßnahmen\" ist falsch. Ein kompletter neuer SORA ist nicht nötig; eine bloße Erklärung reicht nur bei STS.",
+ tip:"Genehmigung gilt national → fürs Ausland: beim Zielland anfragen, Behörden stimmen sich ab."},
+{cat:"Spezielle Kategorie",id:"k1-4",n:4,multi:false,q:"Eine Fluggenehmigung …",
+ o:["ist eine ausschließlich privatrechtliche Zustimmung ohne Bezug zum Luftverkehrsrecht.","ist eine Genehmigung für den Betrieb in der speziellen Kategorie.","ist eine Genehmigung für den Einflug in geografische UAS-Gebiete nach nationalen Bestimmungen und gilt nur national.","ist eine Genehmigung für den Einflug in geografische UAS-Gebiete nach europäischen Bestimmungen und gilt EU-weit."],
+ a:[2],
+ why:"Die Fluggenehmigung regelt den Einflug in geografische UAS-Gebiete (Geozonen). Diese werden national festgelegt, also gilt sie nur national.",
+ no:"Den Betrieb in der speziellen Kategorie regelt die Betriebsgenehmigung – nicht die Fluggenehmigung. EU-weite Geltung ist falsch.",
+ tip:"Fluggenehmigung = nur für Geozonen, national. Nicht mit Betriebsgenehmigung verwechseln."},
+{cat:"Spezielle Kategorie",id:"k1-5",n:5,multi:false,q:"AMC sind …",
+ o:["Messverfahren zur Erfüllung der Anforderungen aus den technischen OSOs.","Bestandteil der Verordnung und geben die Anforderungen als „Hard Law\" wieder.","alternative Nachweisverfahren, die durch die nationalen Luftfahrtbehörden erarbeitet wurden.","als Begleitmaterial zur Verordnung erhältlich und dienen als „Soft Law\" zum Nachweis der Erfüllung."],
+ a:[3],
+ why:"AMC = Acceptable Means of Compliance: von der EASA herausgegebenes Begleitmaterial („Soft Law\"), das einen anerkannten Weg zur Erfüllung der Verordnung beschreibt.",
+ no:"AMC sind kein „Hard Law\" (das ist die Verordnung), keine Messverfahren und nicht von den nationalen Behörden, sondern von der EASA.",
+ tip:"Verordnung = Hard Law (Pflicht). AMC = Soft Law (anerkannter Lösungsweg)."},
+{cat:"Spezielle Kategorie",id:"k1-6",n:6,multi:false,q:"Die Robustheit …",
+ o:["wird durch Eintrittswahrscheinlichkeit und Schadensausmaß bestimmt und legt das Risikolevel fest.","wird durch Integritätslevel und Maß an Gewissheit definiert und bestimmt die Anforderung an eine Maßnahme oder ein OSO.","gibt den Grad der Anforderung der ausschließlich technischen OSOs an das UAS wieder."],
+ a:[1],
+ why:"Robustheit setzt sich aus Integrität (wie gut die Maßnahme wirkt) und Assurance/Gewissheit (wie gut der Nachweis ist) zusammen und legt das Niveau low/medium/high fest.",
+ no:"Wahrscheinlichkeit × Schaden ergibt das Risiko, nicht die Robustheit. Robustheit betrifft außerdem nicht nur technische OSOs.",
+ tip:"Robustheit = Integrität + Gewissheit. „Wie gut wirkt es – und wie gut beweise ich es?\""},
+{cat:"Spezielle Kategorie",id:"k1-7",n:7,multi:false,q:"Das SAIL-Level …",
+ o:["ist eine alternative Nachweismethode zum SORA in DE, NL und FR.","beschreibt ausschließlich das Risiko einer Kollision mit bemannten Luftfahrzeugen.","beschreibt ausschließlich das Risiko, dass eine Person durch ein außer Kontrolle geratenes UAS getroffen wird.","beschreibt das Risiko, dass eine Person oder ein bemanntes Luftfahrzeug durch ein außer Kontrolle geratenes UAS getroffen wird."],
+ a:[3],
+ why:"SAIL = Specific Assurance and Integrity Level. Es fasst Boden- und Luftrisiko zusammen und drückt das Gesamt-Betriebsrisiko aus.",
+ no:"„Nur Boden\" oder „nur Luft\" greift zu kurz. Eine eigenständige Alternativmethode zum SORA ist es nicht – SAIL ist ein Ergebnis im SORA.",
+ tip:"SAIL bündelt Boden + Luft zu einer Stufe (I–VI). „Person ODER bemanntes Lfz\"."},
+{cat:"Spezielle Kategorie",id:"k1-8",n:8,multi:false,q:"Beim Betrieb eines UAS …",
+ o:["gilt die Panoramafreiheit NICHT und ich muss den höchstpersönlichen Lebensbereich beachten.","muss ich lediglich die Bildrechte wahren.","muss ich nur den höchstpersönlichen Lebensbereich beachten.","gilt nur die Panoramafreiheit NICHT."],
+ a:[0],
+ why:"Die Panoramafreiheit erlaubt Aufnahmen nur von öffentlich zugänglichen Standorten aus – aus der Luft greift sie nicht. Zusätzlich ist der höchstpersönliche Lebensbereich geschützt. Beides gilt.",
+ no:"Die Optionen, die jeweils nur einen Punkt nennen, sind unvollständig – es müssen beide Aspekte beachtet werden.",
+ tip:"Aus der Luft: keine Panoramafreiheit + Privatsphäre schützen → immer beides."},
+{cat:"Spezielle Kategorie",id:"k1-9",n:9,multi:false,q:"Was versteht man unter „Bodenrisiko\"?",
+ o:["Das Risiko, dass der Fernpilot von Dritten gestört wird.","Das Risiko, dass eine Person vom UAS getroffen wird, wenn die Kontrolle verloren geht.","Das Risiko des Ausfalls der Bodenkontrollstation bzw. Steuerung.","Das Risiko, das von Hindernissen am Boden für das UAS ausgeht."],
+ a:[1],
+ why:"Bodenrisiko (Ground Risk) = Gefahr, dass eine Person am Boden vom UAS getroffen und verletzt wird, falls die Kontrolle verloren geht.",
+ no:"Es geht nicht um Störung des Piloten, Ausfall der Bodenstation oder Hindernisse – sondern um die Gefahr für Personen am Boden.",
+ tip:"Bodenrisiko = „Wen trifft es unten, wenn die Drohne runterkommt?\""},
+{cat:"Spezielle Kategorie",id:"k1-10",n:10,multi:false,q:"Wie wird der kontrollierte Bodenbereich definiert?",
+ o:["Bereich, in dem das UAS betrieben wird und der Betreiber sicherstellen kann, dass nur beteiligte Personen anwesend sind.","Bereich, der nur den fluggeografischen Bereich darstellt und in dem keine Sicherheits-/Notfallverfahren nötig sind.","Bereich, in dem der Betreiber sicherstellen kann, dass anwesende unbeteiligte Personen nicht gefährdet werden.","Bereich außerhalb des Betriebsvolumens, in dem Notfallverfahren greifen und ein gesicherter Absturz erfolgt."],
+ a:[0],
+ why:"Kontrollierter Bodenbereich = Bereich, in dem der Betreiber garantieren kann, dass sich nur beteiligte Personen aufhalten.",
+ no:"„Unbeteiligte nicht gefährden\" ist zu schwach – es dürfen gar keine Unbeteiligten da sein. Die anderen vermischen den Begriff mit Fluggeografie/Absturzzone.",
+ tip:"Kontrolliert = „nur Beteiligte zugelassen\"."},
+{cat:"Spezielle Kategorie",id:"k1-11",n:11,multi:false,q:"Risiko wird definiert als …",
+ o:["Multiplikation der eingetretenen Ereignisse der letzten 12 Monate mit dem Schadensausmaß.","die Eintrittswahrscheinlichkeit eines Ereignisses.","die Multiplikation der Eintrittswahrscheinlichkeit mit dem Schadensausmaß eines Ereignisses.","die Anzahl möglicher Ereignisse beim Betrieb eines UAS."],
+ a:[2],
+ why:"Klassische Definition: Risiko = Eintrittswahrscheinlichkeit × Schadensausmaß. Beide Faktoren zusammen.",
+ no:"Wahrscheinlichkeit allein oder bloße Anzahl ist nicht das Risiko. Die letzten 12 Monate spielen keine Rolle.",
+ tip:"Risiko = Wahrscheinlichkeit × Schaden. Zwei Faktoren, multipliziert."},
+{cat:"Spezielle Kategorie",id:"k1-12",n:12,multi:false,q:"Was ist der Bodenrisikopuffer und wozu dient er?",
+ o:["Bereich, der das Betriebsvolumen umgibt, um das Risiko für Dritte zu minimieren, falls das UAS das Volumen verlässt.","Bereich, der die Fluggeografie umgibt, falls die Sicherheitsverfahren angewendet werden.","Bereich, in dem sich keine unbeteiligten Personen aufhalten.","Bereich innerhalb der Fluggeografie zur Risikominimierung für Dritte."],
+ a:[0],
+ why:"Der Bodenrisikopuffer umgibt das Betriebsvolumen und fängt den Fall ab, dass das UAS das Volumen verlässt – er schützt unbeteiligte Dritte am Boden.",
+ no:"Er umgibt das Betriebsvolumen (nicht die Fluggeografie) und liegt außerhalb, nicht innerhalb. Keine reine „menschenleere Zone\".",
+ tip:"Puffer = Auffangzone außen ums Volumen für „Drohne bricht aus\"."},
+{cat:"Spezielle Kategorie",id:"k1-13",n:13,multi:false,q:"Sicherzustellen, dass die Betriebsumgebung mit den Beschränkungen vereinbar ist, liegt in der Verantwortung des …",
+ o:["Luftraumbeobachters","Betreibers","Auftraggebers","Fernpiloten"],
+ a:[3],
+ why:"Vor und während des Flugs ist der Fernpilot dafür verantwortlich, dass die reale Betriebsumgebung zu den genehmigten/erklärten Beschränkungen passt.",
+ no:"Der Betreiber stellt nur den organisatorischen Rahmen, der Luftraumbeobachter unterstützt, der Auftraggeber hat keine luftrechtliche Rolle.",
+ tip:"Vor Ort entscheidet der Fernpilot: „Realität = Genehmigung?\""},
+{cat:"Spezielle Kategorie",id:"k1-14",n:14,multi:false,q:"Welche Sicherheitszonen trennen das UAS über kontrolliertem Bodenbereich von Unbeteiligten?",
+ o:["Bodenrisikopuffer und Luftrisikopuffer.","Bodenrisikopuffer und Contingency-Bereich.","Fluggeografischer Bereich und Contingency-Bereich.","Fluggeografischer Bereich und Bodenrisikopuffer."],
+ a:[1],
+ why:"Als Sicherheitspolster liegen der Contingency-Bereich (innen) und der Bodenrisikopuffer (außen) zwischen UAS und Unbeteiligten.",
+ no:"Der fluggeografische Bereich ist die Sollzone, keine Trennzone. Ein „Luftrisikopuffer\" als Trennung zu Personen am Boden existiert hier nicht.",
+ tip:"Trennung = Contingency (innen) + Bodenpuffer (außen)."},
+{cat:"Spezielle Kategorie",id:"k1-15",n:15,multi:true,q:"Wie kann im Allgemeinen das Bodenrisiko verringert werden?",
+ o:["Durch praktisches Training des Fernpiloten, v.a. im manuellen Modus ohne GPS.","Durch ein UAS mit möglichst wenig Startmasse.","Durch Geofencing und Fail-Safe-Funktionen.","Durch Fliegen zu Zeiten mit wenigen unbeteiligten Personen."],
+ a:[0,1,2,3],
+ why:"Alle vier wirken: Training (Notfall beherrschen), geringe Masse (weniger Aufprallenergie), Geofencing/Fail-Safe (Ausbrechen verhindern), Flugzeitwahl (weniger Menschen exponiert).",
+ no:"Es gibt keine falsche Option – die Frage zielt darauf, dass mehrere Maßnahmen zusammenwirken.",
+ tip:"Bodenrisiko senken: leichter, geübter, gesicherter, menschenleerer → alles ankreuzen."},
+{cat:"Spezielle Kategorie",id:"k1-16",n:16,multi:true,q:"Der Fernpilot ist verantwortlich dafür, dass …",
+ o:["aktuelle Informationen über alle Geozonen eingeholt wurden.","sich das UAS in einem sicheren Zustand befindet.","Verfahren und Beschränkungen passend zum Betrieb festgelegt wurden.","die Betriebsumgebung mit den Beschränkungen vereinbar ist."],
+ a:[0,1,3],
+ why:"Der Fernpilot prüft Geozonen-Infos, den technischen Zustand und die Vereinbarkeit der Umgebung – operative Pflichten vor/während des Flugs.",
+ no:"Das Festlegen von Verfahren und Beschränkungen ist Aufgabe des Betreibers (organisatorisch), nicht des Fernpiloten.",
+ tip:"Fernpilot = ausführen & prüfen (Geozonen, Technik, Umgebung). Festlegen = Betreiber."},
+{cat:"Spezielle Kategorie",id:"k1-17",n:17,multi:false,q:"Was bedeutet die Abkürzung SORA?",
+ o:["Search Operations Rescue Aircraft","Specific Operations Risk Assessment","Special Open Rules of the Air","Specific Operations and Response Analysis"],
+ a:[1],
+ why:"SORA = Specific Operations Risk Assessment – die strukturierte Risikobewertungsmethode der speziellen Kategorie.",
+ no:"Die übrigen Auflösungen sind erfundene Begriffe.",
+ tip:"S-O-R-A: Specific Operations Risk Assessment."},
+{cat:"Spezielle Kategorie",id:"k1-18",n:18,multi:false,q:"Was unterscheidet PDRA „S\" (z.B. PDRA-S01) von PDRA „G\" (z.B. PDRA-G01)?",
+ o:["Es gibt keine konkreten Unterschiede, nur eine Terminologie.","„S\" gilt als Spiegelbild des Standardszenarios – gleiche Einschränkungen, aber ohne Pflicht zur C-Klassifizierung.","„S\" gilt als „sicherer\" (safe) gegenüber den „gefährlicheren\" mit „G\".","„G\" gilt als Spiegelbild des Standardszenarios, hat aber andere Einschränkungen."],
+ a:[1],
+ why:"„S\" steht für die an ein Standardszenario angelehnten PDRAs: gleiche Betriebseinschränkungen wie das STS, aber ohne strikte C-Klassen-Pflicht. „G\" steht für generische PDRAs.",
+ no:"„Kein Unterschied\" und „S=safe/G=gefährlich\" sind falsch. Die G-Option vertauscht die Buchstaben.",
+ tip:"S = Standardszenario-Spiegel (ohne C-Klassen-Pflicht). G = generisch."},
+{cat:"Spezielle Kategorie",id:"k1-19",n:19,multi:false,q:"Hauptsitz in Mitgliedstaat A, Tätigkeit in B – wo muss als Betreiber registriert sein?",
+ o:["in beiden Mitgliedstaaten A und B.","in einem beliebigen EASA-Mitgliedstaat.","in Mitgliedstaat A.","in Mitgliedstaat B."],
+ a:[2],
+ why:"Ein UAS-Betreiber registriert sich im Mitgliedstaat seines Hauptgeschäftssitzes – hier A. Die Registrierung gilt dann EU-weit.",
+ no:"Doppelregistrierung ist unzulässig. „Beliebig\" oder „Staat B\" ist falsch – maßgeblich ist der Sitzstaat.",
+ tip:"Registrierung folgt dem Hauptsitz. Genau einmal, im Heimatstaat."},
+{cat:"Spezielle Kategorie",id:"k1-20",n:20,multi:false,q:"Transport gefährlicher Güter (z.B. Pestizide) – in welcher Kategorie?",
+ o:["In der speziellen Kategorie.","In der offenen Kategorie.","In der zulassungspflichtigen Kategorie.","In keiner der genannten Kategorien."],
+ a:[0],
+ why:"Gefahrgut ist in der offenen Kategorie verboten und in der speziellen Kategorie (mit Risikobewertung/Genehmigung) möglich – z.B. Pestizid-Sprühen.",
+ no:"Offen: ausgeschlossen. „Zulassungspflichtig\" wäre erst bei sehr hohem Risiko. „Keine\" ist falsch.",
+ tip:"Gefahrgut & Pestizide → raus aus „offen\", rein in „speziell\"."},
+{cat:"Spezielle Kategorie",id:"k1-21",n:21,multi:false,q:"In welcher Kategorie ist der Transport von Personen zulässig?",
+ o:["Nur in der bemannten Luftfahrt.","In der zulassungspflichtigen Kategorie.","In der offenen Kategorie.","In der speziellen Kategorie."],
+ a:[1],
+ why:"Personentransport mit UAS ist nur in der zulassungspflichtigen (certified) Kategorie zulässig – höchste Sicherheitsanforderungen.",
+ no:"Offen und speziell erlauben keinen Personentransport. „Nur bemannt\" stimmt nicht, da es genau dafür die certified-Kategorie gibt.",
+ tip:"Menschen transportieren → certified/zulassungspflichtig. Höchste Stufe."},
+{cat:"Spezielle Kategorie",id:"k1-22",n:22,multi:false,q:"Besiedeltes Gebiet, 6 kg, C3, Fotos – diese Art Einsatz kann durchgeführt werden …",
+ o:["in der offenen Kategorie A3 mit einer Fluggenehmigung.","in der speziellen Kategorie.","in der offenen Kategorie A3.","in der offenen Kategorie A2."],
+ a:[1],
+ why:"A3 verlangt Abstand zu besiedelten Gebieten (mind. 150 m). Da hier in besiedeltem Gebiet geflogen wird, ist die offene Kategorie ausgeschlossen → spezielle Kategorie.",
+ no:"A3 verbietet besiedelte Gebiete (auch mit Fluggenehmigung, die nur Geozonen betrifft). A2 ist für C3/6 kg nicht zulässig.",
+ tip:"Besiedelt + C3/schwer → offen scheidet aus → spezielle Kategorie."},
+{cat:"Spezielle Kategorie",id:"k1-23",n:23,multi:true,q:"Französischer Betreiber, UAS ohne C-Klasse, spezielle Kat., Flug in Deutschland – was tun?",
+ o:["Betriebsgenehmigung in Frankreich beantragen.","Bei der deutschen Behörde den grenzüberschreitenden Betrieb zusätzlich anzeigen und Bestätigung abwarten.","Betriebsgenehmigung in Deutschland beantragen.","Sich als Betreiber in Frankreich registrieren lassen.","Sich als Betreiber in Deutschland registrieren lassen.","Bei der französischen Behörde den grenzüberschreitenden Betrieb zur deutschen Genehmigung anzeigen."],
+ a:[0,1,3],
+ why:"Registrierung und Betriebsgenehmigung im Heimatstaat Frankreich. Für Deutschland zeigt er den grenzüberschreitenden Betrieb bei der deutschen Behörde an und wartet die Bestätigung ab.",
+ no:"Eine separate deutsche Genehmigung/Registrierung ist nicht nötig. Die Anzeige läuft beim Zielland Deutschland, nicht bei Frankreich.",
+ tip:"Heimat = FR (Reg.+Genehmigung). Zielland = DE (anzeigen, Bestätigung abwarten)."},
+{cat:"Spezielle Kategorie",id:"k1-24",n:24,multi:false,q:"Genehmigungsfähiger Antrag, Überflug Menschenmenge – max. charakteristische Abmessung?",
+ o:["max. 3 m","max. 1 m","mind. 8 m"],
+ a:[1],
+ why:"Für den Überflug von Menschenansammlungen ist die charakteristische Abmessung auf max. 1 m begrenzt – kleine Geräte verursachen weniger Verletzungen.",
+ no:"3 m wäre zu groß; „mind. 8 m\" ist eine Mindest- statt Höchstangabe und ergibt keinen Sinn.",
+ tip:"Über Menschenmenge: maximal 1 Meter."},
+{cat:"Spezielle Kategorie",id:"k1-25",n:25,multi:false,q:"Wie wird das Contingency-Volumen definiert?",
+ o:["Als angrenzender Bereich (Adjacent Area) für unvorhergesehene Ereignisse.","Als Bereich innerhalb der Fluggeografie für unvorhergesehene Ereignisse.","Als Bereich außerhalb der Fluggeografie für unvorhergesehene Ereignisse.","Als Bereich innerhalb des Bodenrisikopuffers für unvorhergesehene Ereignisse."],
+ a:[2],
+ why:"Das Contingency-Volumen liegt außerhalb der Fluggeografie (aber innerhalb des Betriebsvolumens). Dort greifen die Contingency-Verfahren.",
+ no:"„Innerhalb der Fluggeografie\" ist falsch (dort gelten Normalverfahren). Adjacent Area und Bodenrisikopuffer sind andere Bereiche.",
+ tip:"Fluggeografie = normal · Contingency = direkt außen drum für „unvorhergesehen\"."},
+{cat:"Spezielle Kategorie",id:"k1-26",n:26,multi:true,q:"Wie kann ein kontrollierter Bodenbereich überwacht werden?",
+ o:["Durch eine Umzäunung.","Mittels der Kamera des eingesetzten UAS.","Durch Hilfspersonal, das das Gebiet vollständig beobachtet.","Eine Überwachung ist nicht erforderlich."],
+ a:[0,2],
+ why:"Wirksam durch physische Barrieren (Umzäunung) oder Hilfspersonal, das den Bereich lückenlos beobachtet und Unbeteiligte fernhält.",
+ no:"Die UAS-Kamera kann das Gebiet nicht zuverlässig vollständig überwachen. „Nicht erforderlich\" ist falsch – aktive Kontrolle ist Pflicht.",
+ tip:"Kontrolle = Zaun oder Personal. Drohnenkamera allein reicht nicht."},
+{cat:"Spezielle Kategorie",id:"k1-27",n:27,multi:false,q:"Was ist die Fluggeografie?",
+ o:["Luftraumvolumen, in dem der Flugbetrieb ohne Verfahren geplant wird.","Luftraumvolumen, in dem der Flugbetrieb nach Notverfahren geplant wird.","Luftraumvolumen, in dem der Flugbetrieb nach Normalverfahren geplant wird.","Luftraumvolumen, in dem der Flugbetrieb nach Sicherheitsverfahren (Contingency) geplant wird."],
+ a:[2],
+ why:"Die Fluggeografie ist die Sollzone, in der der Flug nach Normalverfahren stattfindet – der geplante „normale\" Flugraum.",
+ no:"„Ohne Verfahren\" ist falsch (Normalverfahren gelten). Not- und Contingency-Verfahren greifen erst außerhalb.",
+ tip:"Fluggeografie = der Normalflug-Raum. Normal = Fluggeografie."},
+{cat:"Spezielle Kategorie",id:"k1-28",n:28,multi:false,q:"Wann werden taktische Risikominderungsmaßnahmen angewendet?",
+ o:["während des Flugbetriebs.","nach dem Flugbetrieb.","vor dem Flugbetrieb.","vor, während und nach dem Flugbetrieb."],
+ a:[0],
+ why:"Taktische Maßnahmen wirken während des Flugs – z.B. Ausweichen, see and avoid, Reaktion auf annähernden Verkehr (in Echtzeit).",
+ no:"„Vor dem Flug\" = strategische Maßnahmen. „Nach dem Flug\" oder „immer\" trifft nicht zu.",
+ tip:"Taktisch = Tat im Moment → während des Flugs."},
+{cat:"Spezielle Kategorie",id:"k1-29",n:29,multi:false,q:"Wann werden strategische Risikominderungsmaßnahmen angewendet?",
+ o:["vor dem Flugbetrieb.","vor, während und nach dem Flugbetrieb.","nach dem Flugbetrieb.","während des Flugbetriebs."],
+ a:[0],
+ why:"Strategische Maßnahmen werden vor dem Flug festgelegt – z.B. Zeit-/Ortswahl, Luftraumstruktur, Geofencing-Planung.",
+ no:"Während des Flugs wirken die taktischen Maßnahmen. „Nach dem Flug\" oder „immer\" trifft nicht zu.",
+ tip:"Strategie = vorher planen. Gegenstück zu „taktisch = während\"."},
+{cat:"Spezielle Kategorie",id:"k1-30",n:30,multi:false,q:"Wie kann „Sehen und vermeiden\" (see and avoid) beschrieben werden?",
+ o:["Ich halte nur nach anderen UAS Ausschau und beobachte den Luftraum.","Ich halte nach Hindernissen Ausschau und beobachte die Betriebsumgebung.","Ich halte nach anderen Luftfahrzeugen Ausschau und beobachte den umgebenden Luftraum.","Ich halte nach unbeteiligten Personen Ausschau und beobachte die Betriebsumgebung."],
+ a:[2],
+ why:"See and avoid zielt auf die Vermeidung von Luftkollisionen: nach anderen Luftfahrzeugen Ausschau halten und ausweichen.",
+ no:"„Nur andere UAS\" ist zu eng – auch bemannte Lfz zählen. Hindernisse/Personen am Boden betreffen das Bodenrisiko.",
+ tip:"See & avoid = Luftverkehr beobachten (alle Lfz, nicht nur Drohnen)."},
+{cat:"Spezielle Kategorie",id:"k1-31",n:31,multi:false,q:"Was sollte der Fernpilot bei einem sich annähernden bemannten Luftfahrzeug tun?",
+ o:["Sofort Notverfahren einleiten und ein FTS sofort auslösen.","Durch Steigen oder Sinken ausweichen und Gefährdung/Kollision vermeiden.","Durch geeignete Maßnahmen (Steigen, Sinken, Landen, Richtungswechsel) ausweichen und Gefährdung/Kollision vermeiden.","Das UAS sofort immer landen."],
+ a:[2],
+ why:"Der Fernpilot soll mit allen geeigneten Maßnahmen ausweichen – bemannter Verkehr hat Vorrang, eine Gefährdung ist unbedingt zu vermeiden.",
+ no:"„Nur Steigen/Sinken\" ist zu eng. FTS sofort auslösen oder „immer sofort landen\" ist nicht in jeder Lage die sicherste Reaktion.",
+ tip:"Bemannter Verkehr = Vorrang. Mit allen geeigneten Mitteln ausweichen."},
+{cat:"Spezielle Kategorie",id:"k1-32",n:32,multi:false,q:"Wie wird das Luftrisiko definiert?",
+ o:["Als Gefahr durch Sauerstoffmangel.","Als Risiko, das von bemannten Luftfahrzeugen für das UAS ausgeht.","Als Risiko, das vom UAS für andere Luftfahrzeuge ausgeht.","Als Gefahr durch Vereisung."],
+ a:[2],
+ why:"Luftrisiko (Air Risk) = Gefahr einer Kollision in der Luft, also das Risiko, das vom UAS für andere Luftfahrzeuge ausgeht.",
+ no:"Sauerstoffmangel/Vereisung sind keine UAS-Risikobegriffe. Die Blickrichtung ist „UAS → andere Lfz\", nicht umgekehrt.",
+ tip:"Boden = Drohne trifft Person · Luft = Drohne trifft Luftfahrzeug."},
+{cat:"Spezielle Kategorie",id:"k1-33",n:33,multi:false,q:"Wodurch wird die Kollisionswahrscheinlichkeit mit bemanntem Lfz am größten verringert?",
+ o:["Nutzung von weißen Blinklichtern (Strobe Lights)","Nutzung eines nach unten abstrahlenden grünen Blinklichts","Regelmäßige akustische Signale","Nutzung neonleuchtender Farben am UAS"],
+ a:[0],
+ why:"Weiße Blinklichter (Strobes) sind auch über große Distanz und bei Tageslicht für Piloten gut erkennbar – beste Sichtbarkeit.",
+ no:"Nach unten/grünes Licht hilft dem Verkehr oberhalb kaum. Akustik und Farben sind aus Cockpit-Entfernung wirkungslos.",
+ tip:"Weiße Strobes = am weitesten sichtbar für bemannten Verkehr."},
+{cat:"Spezielle Kategorie",id:"k1-34",n:34,multi:false,q:"Wozu dient SORA?",
+ o:["Methodik für eine objektive und standardisierte Beurteilung des Risikos für Menschen und Luftfahrzeuge.","Methodik für eine objektive und standardisierte Beurteilung des Risikos für Luftfahrzeuge.","Methodik für eine subjektive Beurteilung des Risikos für Menschen und Luftfahrzeuge.","Methodik für eine objektive und standardisierte Beurteilung des Risikos für Menschen."],
+ a:[0],
+ why:"SORA liefert eine objektive und standardisierte Risikobeurteilung und deckt beide Risikoarten ab: Bodenrisiko (Menschen) und Luftrisiko (Luftfahrzeuge).",
+ no:"„Nur Luftfahrzeuge\"/„nur Menschen\" greift zu kurz. „Subjektiv\" ist falsch – der Sinn von SORA ist die objektive Bewertung.",
+ tip:"SORA = objektiv + standardisiert, deckt Boden (Menschen) + Luft (Luftfahrzeuge) ab."},
+{cat:"Spezielle Kategorie",id:"k1-35",n:35,multi:false,q:"Die Risikobewertung nach SORA ist …",
+ o:["vorgegeben durch die Gemeinsamen Grundsätze des Bundes und der Länder.","vorgegeben durch § 21h der Luftverkehrs-Ordnung.","vorgegeben durch das AMC-Material zu Artikel 11 der Verordnung (EU) 2019/947.","vorgegeben durch das AMC-Material zu Artikel 15 der Verordnung (EU) 2019/947."],
+ a:[2],
+ why:"SORA ist im AMC-Material zu Artikel 11 der Verordnung (EU) 2019/947 beschrieben – Art. 11 regelt die Risikobewertung.",
+ no:"Artikel 15 betrifft Geozonen. Nationale Grundsätze oder § 21h LuftVO sind nicht die Rechtsgrundlage für SORA.",
+ tip:"SORA → AMC zu Artikel 11 der 2019/947. (Art. 15 = Geozonen.)"},
+{cat:"Spezielle Kategorie",id:"k1-36",n:36,multi:false,q:"Wie wird das fluggeografische Gebiet (Flight Geography Area) definiert?",
+ o:["Als Projektion des fluggeografischen Volumens auf die Erdoberfläche.","Als Projektion des fluggeografischen Volumens in den Bodenrisikopuffer.","Als Projektion des fluggeografischen Volumens in den kontrollierten Bodenbereich.","Als Projektion des fluggeografischen Volumens in die Luft."],
+ a:[0],
+ why:"Das fluggeografische Gebiet ist die Projektion des fluggeografischen Volumens auf die Erdoberfläche – die „Grundfläche\" des Flugraums.",
+ no:"Eine Projektion „in den Puffer\", „in den Bodenbereich\" oder „in die Luft\" ist falsch – Bezug ist immer die Erdoberfläche.",
+ tip:"Volumen (3D) → Schatten auf den Boden = Gebiet (2D)."},
+{cat:"Spezielle Kategorie",id:"k1-37",n:37,multi:false,q:"Der kontrollierte Bodenbereich umfasst welche Bereiche?",
+ o:["Die Fluggeografie.","Das Kontingenzgebiet und den Bodenrisikopuffer.","Die Fluggeografie, das Kontingenzgebiet und den Bodenrisikopuffer.","Die Fluggeografie und das Kontingenzgebiet."],
+ a:[2],
+ why:"Der kontrollierte Bodenbereich ist die Projektion des gesamten Betriebsvolumens plus Puffer: Fluggeografie + Contingency + Bodenrisikopuffer.",
+ no:"Alle anderen Optionen lassen mindestens einen der drei Teilbereiche weg.",
+ tip:"Kontrollierter Boden = Flug + Contingency + Puffer (alle drei)."},
+{cat:"Spezielle Kategorie",id:"k1-38",n:38,multi:false,q:"30 kg MTOM, 180 m Flughöhe – welche Bedingungen müssen erfüllt sein?",
+ o:["Der Betreiber hat eine Betriebserklärung abgegeben.","Der Betreiber hat eine Betriebsgenehmigung bzw. ein LUC.","Der Betreiber hat eine Fluggenehmigung.","Der Betreiber hält die Vorgaben der offenen Kategorie ein."],
+ a:[1],
+ why:"30 kg und 180 m sprengen die offene Kategorie (max. 25 kg, 120 m). Spezielle Kategorie → Betriebsgenehmigung bzw. LUC nötig.",
+ no:"Eine Betriebserklärung (STS) reicht nicht. Die Fluggenehmigung betrifft nur Geozonen. Offen ist wegen Masse und Höhe ausgeschlossen.",
+ tip:"Über 25 kg / über 120 m → offen scheidet aus → Betriebsgenehmigung oder LUC."},
+{cat:"Spezielle Kategorie",id:"k1-39",n:39,multi:false,q:"1,8 kg ohne Klassenkennzeichnung, dicht besiedelt, VLOS, bis 80 m – was gilt?",
+ o:["Geht in der offenen Kategorie A3.","Geht in der offenen Kategorie A2.","Geht mit Betriebserklärung in der speziellen Kategorie.","Geht mit Betriebsgenehmigung oder LUC in der speziellen Kategorie."],
+ a:[3],
+ why:"In dicht besiedeltem Gebiet ist die offene Kategorie ausgeschlossen. Ohne C-Klasse greift kein STS per Erklärung → spezielle Kategorie mit Betriebsgenehmigung oder LUC.",
+ no:"A3 verlangt Abstand zu besiedelten Gebieten; A2 ist ohne passende C-Klasse nicht erlaubt. STS setzt i.d.R. ein C-klassifiziertes UAS voraus.",
+ tip:"Dicht besiedelt + ohne C-Klasse → keine Erklärung möglich → Genehmigung/LUC."},
+{cat:"Spezielle Kategorie",id:"k1-40",n:40,multi:false,q:"Welche Betriebsart stellt an sich bereits eine (taktische) Risikominderung dar?",
+ o:["VFR","VLOS","BVLOS","IFR","Special VFR"],
+ a:[1],
+ why:"VLOS (Visual Line of Sight) bedeutet ständiger Sichtkontakt. Dadurch kann der Fernpilot in Echtzeit ausweichen – eine eingebaute taktische Risikominderung.",
+ no:"VFR, IFR, Special VFR sind Flugregeln der bemannten Luftfahrt. BVLOS (außer Sicht) erhöht das Risiko und erfordert zusätzliche Maßnahmen.",
+ tip:"VLOS = ich sehe = ich kann ausweichen → taktische Minderung inklusive."},
+/* ===================== MODUL 2: STANDARDSZENARIEN ===================== */
+{cat:"Standardszenarien",id:"k2-1",n:1,multi:false,q:"Ein Standardszenario …",
+ o:["bedarf lediglich der Abgabe einer Erklärung gegenüber dem Luftfahrt-Bundesamt, dass die vorgegebenen Parameter des STS eingehalten werden. Ein OM ist weiterhin erforderlich.","beschreibt ein Betriebsszenario im OM eines Betreibers, für das eine generische Genehmigung durch die zuständige Behörde erteilt werden kann.","ist eine vorgefertigte Risikobeurteilung nach SORA zur Verfahrenserleichterung, bedarf jedoch weiterhin der Genehmigung durch die zuständige Luftfahrtbehörde. Ein OM ist weiterhin erforderlich.","ist ein vorgefertigtes Szenario, das unter Einhaltung der Parameter des STS in der offenen Kategorie genutzt werden kann. Ein OM ist nicht erforderlich."],
+ a:[0],
+ why:"Ein STS erlaubt den Betrieb auf Basis einer reinen Betriebserklärung gegenüber dem LBA (keine Einzelgenehmigung nötig), sofern die vorgegebenen Parameter eingehalten werden. Ein Betriebshandbuch (OM) ist dabei weiterhin Pflicht.",
+ no:"Ein STS braucht gerade keine Einzelgenehmigung (das wäre der Genehmigungsweg). Es gehört zur speziellen, nicht zur offenen Kategorie, und ein OM ist trotzdem erforderlich.",
+ tip:"STS = Erklärung statt Genehmigung – aber OM bleibt Pflicht."},
+{cat:"Standardszenarien",id:"k2-2",n:2,multi:false,q:"Die Nutzung eines Standardszenarios erfordert …",
+ o:["die vorherige Erfüllung des vorgegebenen STS-Trainings bei der Behörde oder einer anerkannten Stelle und die Ausstellung eines neuen Nachweises über die Fernpilotenqualifikation.","die Erstellung eines (individuellen) Trainingsprogramms durch den Betreiber im Rahmen seines OM.","kein spezielles Trainingsprogramm, da lediglich die betrieblichen Parameter des STS eingehalten werden müssen und das Betriebsrisiko niedrig ist.","das A2-Fernpilotenzeugnis."],
+ a:[0],
+ why:"Für ein STS braucht der Fernpilot eine spezielle STS-Qualifikation: Theorie plus praktisches Training bei der Behörde oder einer anerkannten Stelle, bestätigt durch einen entsprechenden Nachweis.",
+ no:"Ein selbst erstelltes Trainingsprogramm reicht nicht; „kein Training nötig\" ist falsch; das A2-Zeugnis allein deckt das STS nicht ab.",
+ tip:"STS = eigenes vorgeschriebenes Training + Nachweis, nicht nur A2."},
+{cat:"Standardszenarien",id:"k2-3",n:3,multi:false,q:"Welche Aufgabe hat ein Luftraumbeobachter?",
+ o:["Er erkennt durch visuelles Scannen des Luftraums mögliche Gefahren beim Betrieb des UAS, insbesondere im bemannten Luftverkehr.","Er beobachtet und bewertet mit dem UAS durchgeführte Flugmanöver.","Er ist ausschließlich bei FPV-Flügen vorgesehen und erkennt durch visuelles Scannen des Luftraums mögliche Gefahren, insbesondere im bemannten Luftverkehr.","Ein Luftraumbeobachter ist in der Verordnung (EU) 2019/947 nicht vorgesehen."],
+ a:[0],
+ why:"Der Luftraumbeobachter (Airspace Observer) scannt den Luftraum visuell und meldet Gefahren – vor allem annähernden bemannten Verkehr – an den Fernpiloten.",
+ no:"Er bewertet keine Flugmanöver, ist nicht nur auf FPV beschränkt und ist sehr wohl in der Verordnung vorgesehen.",
+ tip:"Luftraumbeobachter = Augen am Himmel für bemannten Verkehr."},
+{cat:"Standardszenarien",id:"k2-4",n:4,multi:true,q:"Welche Verantwortung obliegt dem Luftraumbeobachter?",
+ o:["Die Position des UAS durch Sichtkontakt oder Unterstützung durch elektronische Mittel zu kennen.","Den Luftraum um das UAS ununterbrochen zu beobachten, um ein Kollisionsrisiko mit einem bemannten Luftfahrzeug zu erkennen.","Den Fernpiloten zu alarmieren, sobald eine Gefahr erkannt wird, und ihn beim Ausweichmanöver oder sonstigen Minderungsmaßnahmen zu unterstützen.","Den bemannten Luftverkehr zu alarmieren, sobald eine Gefahr erkannt wird, und ihn beim Ausweichmanöver zu unterstützen.","Den Luftraum ununterbrochen zu beobachten, um ein Kollisionsrisiko mit Vögeln zu erkennen."],
+ a:[0,1,2],
+ why:"Der Luftraumbeobachter kennt die Position des UAS, beobachtet den Luftraum lückenlos auf bemannten Verkehr und alarmiert/unterstützt den Fernpiloten beim Ausweichen.",
+ no:"Er alarmiert nicht den bemannten Verkehr (das ist nicht seine Aufgabe), und die Vogelbeobachtung ist nicht sein definierter Zweck.",
+ tip:"Beobachter kümmert sich um: UAS-Position kennen, Luftraum scannen, Fernpilot warnen."},
+{cat:"Standardszenarien",id:"k2-5",n:5,multi:false,q:"Was ist entscheidend beim Einsatz eines Luftraumbeobachters?",
+ o:["Eine korrekte Platzierung sowie die Anzahl der benötigten Luftraumbeobachter sowie die sichergestellte und definierte Kommunikation zwischen Fernpilot und jedem Luftraumbeobachter.","Der Luftraumbeobachter erhält den gesetzlichen Mindestlohn.","Die Luftraumbeobachter sind vertraglich abgesichert und erhalten den gesetzlichen Mindestlohn.","In der Nacht können Luftraumbeobachter nur bei Vollmond eingesetzt werden."],
+ a:[0],
+ why:"Wirksam ist der Einsatz nur, wenn Platzierung und Anzahl der Beobachter stimmen und die Kommunikation mit dem Fernpiloten klar definiert und gesichert ist.",
+ no:"Lohn- und Vertragsfragen sind keine luftrechtlichen Einsatzkriterien; „nur bei Vollmond\" ist unsinnig.",
+ tip:"Entscheidend: richtige Position, genug Beobachter, klare Kommunikation."},
+{cat:"Standardszenarien",id:"k2-6",n:6,multi:false,q:"Wofür steht die Abkürzung DAA?",
+ o:["Detect and Avoid","Derogate and Avoidance","Drones and Aviation","Duplicate and Accept"],
+ a:[0],
+ why:"DAA = Detect and Avoid: Systeme/Verfahren zum Erkennen und Ausweichen von Konflikten, v.a. mit anderem Luftverkehr.",
+ no:"Die übrigen Auflösungen sind erfundene Begriffe.",
+ tip:"DAA = Detect and Avoid (erkennen und ausweichen)."},
+{cat:"Standardszenarien",id:"k2-7",n:7,multi:true,q:"Welche Funktionen können DAA-Systeme umfassen?",
+ o:["nicht kollaborative Konfliktvermeidung","Hindernisvermeidung","Vermeidung ungünstiger Wetterbedingungen","Konfliktvermeidung mit anderem Luftverkehr","Vermeidung der Nichteinhaltung von gesetzlichen Vorgaben","Vermeidung der Überschreitung von Betriebsgrenzen des UAS","Vermeidung von geografischen UAS-Gebieten"],
+ a:[0,1,2,3],
+ why:"DAA-Systeme können nicht-kollaborative Konfliktvermeidung, Hindernisvermeidung, Vermeidung schlechter Wetterbedingungen und Konfliktvermeidung mit anderem Luftverkehr leisten.",
+ no:"Einhaltung von Gesetzen, Betriebsgrenzen oder Geozonen sind organisatorische/Geo-Funktionen, nicht klassische DAA-Funktionen.",
+ tip:"DAA vermeidet: Konflikte (Luftverkehr), Hindernisse, schlechtes Wetter."},
+{cat:"Standardszenarien",id:"k2-8",n:8,multi:false,q:"Welches UAS kann im Rahmen des STS-01 eingesetzt werden?",
+ o:["ein UAS mit der Klassenkennzeichnung C5.","ein beliebiges UAS.","ein UAS mit Klassenkennzeichnung C3.","ein UAS mit der Klassenkennzeichnung C6."],
+ a:[0],
+ why:"STS-01 verlangt ein UAS der Klasse C5. (STS-02 entspricht C6.)",
+ no:"Ein beliebiges UAS, C3 oder C6 erfüllen die STS-01-Anforderung nicht.",
+ tip:"STS-01 → C5. STS-02 → C6. (1 vor 2, 5 vor 6.)"},
+{cat:"Standardszenarien",id:"k2-9",n:9,multi:false,q:"Fernpilot wohnhaft in Mitgliedstaat A, Auftrag in B – wo muss der Kompetenznachweis erworben werden?",
+ o:["Die verschiedenen Kompetenznachweise können in beliebigen Mitgliedstaaten erworben werden.","Die Kompetenznachweise müssen in Mitgliedstaat A erworben werden.","Die Kompetenznachweise müssen in Mitgliedstaat B erworben werden.","Die Kompetenznachweise können in irgendeinem Mitgliedstaat erworben werden, es muss jedoch immer derselbe sein."],
+ a:[0],
+ why:"Fernpiloten-Kompetenznachweise sind EU-weit gültig und können in beliebigen Mitgliedstaaten erworben werden – auch in unterschiedlichen.",
+ no:"Eine Bindung an Staat A, Staat B oder an immer denselben Staat existiert nicht.",
+ tip:"Pilotenkompetenz = EU-weit gültig, frei wählbarer Mitgliedstaat. (Registrierung ≠ Kompetenz!)"},
+{cat:"Standardszenarien",id:"k2-10",n:10,multi:false,q:"Nach 5 Jahren muss der Fernpilot seine Kompetenznachweise …",
+ o:["nur theoretisch verlängern bzw. erneuern. Die Praxisnachweise haben kein Ablaufdatum.","sowohl theoretisch als auch praktisch verlängern bzw. erneuern.","nur praktisch verlängern bzw. erneuern. Die Theorienachweise haben kein Ablaufdatum.","nicht verlängern bzw. erneuern. Sie sind ein Leben lang gültig."],
+ a:[0],
+ why:"Die Theorie-Kompetenz ist 5 Jahre gültig und muss erneuert werden; die praktische Ausbildung/Erfahrung läuft nicht in diesem Sinne ab.",
+ no:"„Beides\", „nur praktisch\" oder „nie\" trifft nicht zu – nur die Theorie ist erneuerungspflichtig.",
+ tip:"Nach 5 Jahren: Theorie auffrischen. Praxis bleibt."},
+{cat:"Standardszenarien",id:"k2-11",n:11,multi:false,q:"Wie groß muss der Bodenrisikopuffer bei ungefesselten UAS in STS-01 mindestens sein?",
+ o:["10 m","12 m","20 m","5 m"],
+ a:[0],
+ why:"Bei ungefesseltem Betrieb im STS-01 beträgt der Bodenrisikopuffer mindestens 10 m.",
+ no:"12 m, 20 m oder 5 m entsprechen nicht der Vorgabe.",
+ tip:"STS-01 ungefesselt → 10 m Bodenrisikopuffer."},
+{cat:"Standardszenarien",id:"k2-12",n:12,multi:false,q:"Wie groß muss der Bodenrisikopuffer bei gefesselten UAS in STS-01 mindestens sein?",
+ o:["Die Länge der Leine plus 5 m.","Die Länge der Leine plus 10 m.","Die Länge der Leine plus 8 m.","Die Länge der Leine plus 2 m."],
+ a:[0],
+ why:"Beim gefesselten (tethered) Betrieb ergibt sich der Puffer aus der Leinenlänge plus 5 m – das UAS kann maximal so weit ausschwenken.",
+ no:"+10 m, +8 m oder +2 m entsprechen nicht der Vorgabe.",
+ tip:"Gefesselt = Leinenlänge + 5 m."},
+{cat:"Standardszenarien",id:"k2-13",n:13,multi:false,q:"In welcher Verordnung können die Betriebsbedingungen für STS nachgelesen werden?",
+ o:["Durchführungsverordnung (EU) 2019/947","Delegierte Verordnung (EU) 2019/945","Durchführungsverordnung (EU) 923/2012","Verordnung (EU) 2018/1139"],
+ a:[0],
+ why:"Die Betriebsbedingungen der Standardszenarien stehen in der Durchführungsverordnung (EU) 2019/947 (Betrieb). Die 2019/945 regelt dagegen die technischen Produktanforderungen.",
+ no:"2019/945 = Produkte/Technik; 923/2012 = SERA (bemannter Luftverkehr); 2018/1139 = EASA-Grundverordnung.",
+ tip:"Betrieb/STS → 2019/947. Technik → 2019/945."},
+{cat:"Standardszenarien",id:"k2-14",n:14,multi:false,q:"Der Bodenrisikopuffer beim Betrieb eines UAS in STS-02 muss mindestens folgende Größe haben:",
+ o:["gemäß der Herstelleranweisung zur Angabe der Distanz, die das UAS nach Aktivierung des Flugterminierungssystems (FTS) zurücklegen wird.","gemäß eigenen Berechnungen des Betreibers zur Distanz, die das UAS nach Aktivierung des FTS zurücklegen wird.","100 m","50 m"],
+ a:[0],
+ why:"In STS-02 richtet sich der Bodenrisikopuffer nach der Herstellerangabe zur Strecke, die das UAS nach FTS-Auslösung noch zurücklegt.",
+ no:"Eigene Berechnungen oder feste Werte wie 100 m / 50 m sind nicht maßgeblich – es zählt die Herstellerangabe.",
+ tip:"STS-02 Puffer = Herstellerangabe zur FTS-Strecke."},
+{cat:"Standardszenarien",id:"k2-15",n:15,multi:false,q:"Start und Landung des UAS müssen in STS-02 wie folgt durchgeführt werden:",
+ o:["in VLOS des Fernpiloten","in BVLOS des Fernpiloten, sofern ein Luftraumbeobachter in VLOS ist","in VLOS als auch BVLOS des Fernpiloten","in BVLOS des Fernpiloten als auch des Luftraumbeobachters"],
+ a:[0],
+ why:"Auch wenn STS-02 BVLOS-Flüge erlaubt, müssen Start und Landung in direkter Sicht (VLOS) des Fernpiloten erfolgen – die kritischen Phasen bleiben unter Sichtkontrolle.",
+ no:"BVLOS für Start/Landung ist nicht zulässig, auch nicht mit Beobachter.",
+ tip:"STS-02: Reiseflug darf BVLOS sein, aber Start/Landung immer VLOS."},
+{cat:"Standardszenarien",id:"k2-16",n:16,multi:true,q:"Für den Betrieb im Standardszenario STS-02 benötigt der Fernpilot welche Kompetenz(en)?",
+ o:["Theorieprüfung STS","Onlinelehrgang A1/A3","Praktische Prüfung für STS-02","Fernpilotenzeugnis A2","Praktische Prüfung für STS-01"],
+ a:[0,1,2],
+ why:"Für STS-02 braucht der Fernpilot: den Onlinelehrgang A1/A3 (Grundlage), die STS-Theorieprüfung und die praktische Prüfung speziell für STS-02.",
+ no:"Das A2-Zeugnis und die praktische STS-01-Prüfung sind dafür nicht erforderlich.",
+ tip:"STS-02: A1/A3-Online + STS-Theorie + STS-02-Praxis."},
+{cat:"Standardszenarien",id:"k2-17",n:17,multi:false,q:"Im Standardszenario STS-01 darf ein ungefesseltes UAS mit welcher Bodengeschwindigkeit betrieben werden?",
+ o:["unter 5 m/s","unter 10 m/s","unter 3 m/s","unter 6 m/s"],
+ a:[0],
+ why:"Im STS-01 ist die Bodengeschwindigkeit eines ungefesselten UAS auf unter 5 m/s begrenzt.",
+ no:"10, 3 oder 6 m/s entsprechen nicht der Vorgabe.",
+ tip:"STS-01 ungefesselt → unter 5 m/s."},
+{cat:"Standardszenarien",id:"k2-18",n:18,multi:false,q:"Für UAS der Klasse C5 oder C6 im Rahmen von Standardszenarien gelten welche Beschränkungen?",
+ o:["MTOM von weniger als 25 kg und maximale charakteristische Abmessung von weniger als 3 m","MTOM von weniger als 4 kg und maximale charakteristische Abmessung von weniger als 1 m","MTOM von weniger als 25 kg und maximale charakteristische Abmessung von weniger als 1 m","MTOM von weniger als 50 kg und maximale charakteristische Abmessung von weniger als 3 m"],
+ a:[0],
+ why:"Für C5/C6 gilt: unter 25 kg MTOM und charakteristische Abmessung unter 3 m.",
+ no:"Die Werte 4 kg/1 m, 25 kg/1 m oder 50 kg/3 m treffen nicht zu.",
+ tip:"C5/C6 STS: < 25 kg und < 3 m."},
+{cat:"Standardszenarien",id:"k2-19",n:19,multi:false,q:"C5-UAS in STS-01, Inspektion an einem Objekt von 130 m Höhe – wie hoch dürfen Sie maximal fliegen?",
+ o:["In einem horizontalen Abstand von 50 m zum Objekt darf ich mit Zustimmung der zuständigen Stelle bis auf 145 m Höhe über Grund fliegen.","Ich darf maximal bis auf 120 m Höhe über Grund fliegen.","In einem horizontalen Abstand von 75 m zum Objekt darf ich mit Zustimmung bis auf 145 m Höhe über Grund fliegen.","In einem horizontalen Abstand von 50 m zum Objekt darf ich mit Zustimmung bis auf 150 m Höhe über Grund fliegen."],
+ a:[0],
+ why:"In der Nähe hoher Hindernisse darf bis 15 m über das Hindernis (130 m + 15 m = 145 m) gestiegen werden, innerhalb 50 m horizontalem Abstand und mit Zustimmung der zuständigen Stelle.",
+ no:"120 m wäre die normale Grenze ohne Hindernis; 75 m Abstand oder 150 m Höhe entsprechen nicht der Regel.",
+ tip:"Nahe Hindernis: bis 15 m drüber, innerhalb 50 m → 130+15 = 145 m."},
+{cat:"Standardszenarien",id:"k2-20",n:20,multi:true,q:"Was gehört in den Verantwortungsbereich des Fernpiloten im Rahmen des STS-02?",
+ o:["Das UAS nicht von einem sich bewegenden Fahrzeug aus zu betreiben.","Das programmierbare Flugvolumen (Geocaging) des UAS einstellen, damit es innerhalb der Fluggeografie verbleibt.","Überprüfen, ob FTS und programmierbare Betriebsraumfunktion funktionsfähig sind und ob die direkte Fernidentifizierung eingeschaltet und aktuell ist.","Den betrieblichen Luftraum und Bodensicherheitsbereich für den geplanten Betrieb festlegen, einschließlich des kontrollierten Bereichs am Boden.","Dafür sorgen, dass die Luftraumbeobachter entlang des Flugwegs in ausreichender Zahl und korrekt platziert sind.","Aktuelle Information für die Geo-Sensibilisierungsfunktion hochladen, sofern vorhanden und erforderlich.","Dafür sorgen, dass vor Aufnahme des Betriebs alle im kontrollierten Bereich befindlichen Personen über das Betriebsrisiko informiert wurden."],
+ a:[0,1,2],
+ why:"Der Fernpilot betreibt das UAS nicht von einem fahrenden Fahrzeug, stellt das Geocaging ein und prüft FTS, Betriebsraumfunktion sowie die Remote-ID vor dem Flug.",
+ no:"Das Festlegen von Luftraum/Bodensicherheitsbereich, die Beobachter-Planung, das Hochladen der Geo-Awareness-Daten und die Personeninformation fallen in den Verantwortungsbereich des Betreibers.",
+ tip:"Fernpilot = direkt am Gerät: kein fahrendes Fahrzeug, Geocaging einstellen, FTS/Remote-ID prüfen."},
+{cat:"Standardszenarien",id:"k2-21",n:21,multi:false,q:"Welche Betriebsbedingungen gelten im Rahmen des Standardszenarios STS-02?",
+ o:["Die maximale Entfernung des UAS zum Fernpiloten beträgt 2 km mit Luftraumbeobachter und 1 km ohne Luftraumbeobachter. Der Betrieb kann BVLOS und in einer maximalen Höhe von 120 m erfolgen.","Die maximale Entfernung beträgt beim Einsatz von Luftraumbeobachtern 1 km zum nächsten Beobachter, ansonsten 1 km zum Fernpiloten. Betrieb BVLOS, max. 120 m.","Die maximale Entfernung beträgt 2 km mit Beobachter und 1 km ohne. Betrieb VLOS, max. 150 m.","Die maximale Entfernung beträgt 2 km mit oder ohne Beobachter. Betrieb BVLOS, max. 120 m."],
+ a:[0],
+ why:"STS-02: max. 2 km Entfernung mit Luftraumbeobachter, 1 km ohne, BVLOS erlaubt, maximale Höhe 120 m.",
+ no:"Die anderen Optionen verändern Distanz, Höhe (150 m) oder die Beobachter-Bedingung falsch.",
+ tip:"STS-02: 2 km mit Beobachter / 1 km ohne, BVLOS, 120 m."},
+{cat:"Standardszenarien",id:"k2-22",n:22,multi:false,q:"UAS der Klasse C6 müssen eine Funktion haben, die verhindert, dass das UAS das Betriebsvolumen verlässt. Diese Funktion ist auch bekannt als …",
+ o:["Geocaging","Geolimitation","Geoawareness","Geofencing"],
+ a:[0],
+ why:"Die Funktion, die das UAS innerhalb des programmierten Betriebsvolumens hält, heißt Geocaging (programmierbares Flugvolumen).",
+ no:"Geoawareness warnt nur vor Geozonen; Geolimitation/Geofencing sind hier nicht der vorgegebene Begriff für die C6-Betriebsraumfunktion.",
+ tip:"C6 hält sich im Volumen per Geocaging (Käfig = cage)."},
+{cat:"Standardszenarien",id:"k2-23",n:23,multi:false,q:"Welche Unabhängigkeiten müssen bei einem UAS der Klasse C6 bestehen?",
+ o:["Unabhängigkeit vom FTS zur Flugsteuerung und Geocaging-Funktion","Unabhängigkeit von Flugsteuerung und Geolimitation-Funktion","Unabhängigkeit von Flugsteuerung und Geocaging-Funktion","Unabhängigkeit von FTS und ausschließlich der Flugsteuerung"],
+ a:[0],
+ why:"Beim C6 muss das FTS (Flugterminierungssystem) sowohl von der Flugsteuerung als auch von der Geocaging-Funktion unabhängig sein, damit es im Notfall sicher unabhängig auslösen kann.",
+ no:"Die anderen Optionen lassen entweder das FTS weg oder benennen nur eine der beiden nötigen Unabhängigkeiten.",
+ tip:"C6: FTS unabhängig von Flugsteuerung UND Geocaging."},
+{cat:"Standardszenarien",id:"k2-24",n:24,multi:false,q:"Welches ist ein technisches Mittel für das DAA?",
+ o:["ADS-B Empfänger","ADS-A Empfänger","NOTAM","Fernidentifikationsempfänger"],
+ a:[0],
+ why:"Ein ADS-B-Empfänger erkennt kooperierenden bemannten Verkehr und unterstützt so „Detect and Avoid\".",
+ no:"„ADS-A\" gibt es nicht; ein NOTAM ist eine Mitteilung, kein Detektionsmittel; Remote-ID dient der Identifikation am Boden, nicht der Luftverkehrsdetektion.",
+ tip:"DAA-Technik = ADS-B-Empfänger (sieht bemannten Verkehr)."},
+{cat:"Standardszenarien",id:"k2-25",n:25,multi:false,q:"Welcher Bodenrisikopuffer muss beim STS-02 eingeplant werden?",
+ o:["Der Bodenrisikopuffer hängt von der Herstellerangabe zum FTS ab. Er entspricht der Strecke, die das UAS nach Auslösung des FTS höchstwahrscheinlich bis zur Beendigung des Fluges zurücklegt.","Der Bodenrisikopuffer wird mit der 1:1-Regel bestimmt.","Der Bodenrisikopuffer entspricht dem Doppelten der geplanten Flughöhe.","Der Bodenrisikopuffer entspricht der Strecke, die das UAS bei maximaler Geschwindigkeit in 3 Minuten zurücklegen kann."],
+ a:[0],
+ why:"In STS-02 bemisst sich der Puffer nach der Herstellerangabe zum FTS: die Strecke, die das UAS nach FTS-Auslösung bis zum Flugende zurücklegt.",
+ no:"1:1-Regel, doppelte Flughöhe oder „3-Minuten-Strecke\" sind hier nicht die Vorgabe.",
+ tip:"STS-02 Puffer = FTS-Strecke laut Hersteller (vgl. Frage 14)."},
+{cat:"Standardszenarien",id:"k2-26",n:26,multi:false,q:"Was für eine Anforderung stellt das FTS in STS-01 dar?",
+ o:["eine technische Anforderung","eine betriebliche Anforderung","eine strategische Anforderung","eine optionale Anforderung"],
+ a:[0],
+ why:"Das Flugterminierungssystem (FTS) ist eine technische Anforderung an das UAS – es muss als Hardware/Funktion vorhanden und funktionsfähig sein.",
+ no:"Es ist nicht bloß betrieblich, strategisch oder optional, sondern eine zwingende technische Eigenschaft.",
+ tip:"FTS = technische Anforderung ans Gerät."},
+{cat:"Standardszenarien",id:"k2-27",n:27,multi:false,q:"Wozu dient der kontrollierte Bodenbereich in STS-01?",
+ o:["Verringerung des inhärenten Bodenrisikos.","Verringerung des inhärenten Luftrisikos.","Verringerung des Risikos für Lärm.","Verringerung des Risikos für angrenzende Gebiete."],
+ a:[0],
+ why:"Im kontrollierten Bodenbereich dürfen sich nur Beteiligte aufhalten – das senkt das Bodenrisiko (Gefahr für Personen am Boden).",
+ no:"Er adressiert nicht das Luftrisiko, nicht Lärm und nicht primär angrenzende Gebiete.",
+ tip:"Kontrollierter Boden = weniger Bodenrisiko (keine Unbeteiligten)."},
+{cat:"Standardszenarien",id:"k2-28",n:28,multi:false,q:"Wie groß darf der Abstand zwischen Fernpilot und Luftraumbeobachter in STS-02 maximal sein?",
+ o:["1 km","100 m","5 km","2 km"],
+ a:[0],
+ why:"In STS-02 darf der Abstand zwischen Fernpilot und Luftraumbeobachter maximal 1 km betragen, damit die Kommunikation zuverlässig bleibt.",
+ no:"100 m wäre zu eng, 5 km oder 2 km zu weit.",
+ tip:"Fernpilot ↔ Beobachter in STS-02: max. 1 km."},
+{cat:"Standardszenarien",id:"k2-29",n:29,multi:false,q:"Welche Funktion muss ein UAS der Klasse C6 in Bezug auf die C2-Verbindung vorhalten?",
+ o:["Eine Warnung, sobald sich die C2-Verbindung verschlechtert und wenn sie verloren geht.","Eine Funktion hierzu ist nicht erforderlich.","Eine Warnung nur bei Verlust der C2-Verbindung.","Eine Warnung nur bei Verschlechterung der C2-Verbindung."],
+ a:[0],
+ why:"Ein C6 muss den Fernpiloten sowohl bei Verschlechterung als auch bei Verlust der Steuerverbindung (C2-Link) warnen.",
+ no:"„Keine Funktion\", „nur Verlust\" oder „nur Verschlechterung\" greifen jeweils zu kurz – es müssen beide Fälle gewarnt werden.",
+ tip:"C6 warnt bei C2: schlechter werden UND Verlust."},
+{cat:"Standardszenarien",id:"k2-30",n:30,multi:false,q:"Betriebserklärung in Mitgliedstaat A, Betrieb teilweise/ganz im Luftraum von Mitgliedstaat B – was tun?",
+ o:["Er muss der zuständigen Behörde des Mitgliedstaats B eine Kopie der beim Registrierungsstaat eingereichten Erklärung sowie eine Kopie der Empfangsbestätigung und der Bestätigung der Vollständigkeit vorlegen.","Er muss nichts weiter unternehmen, sofern eine Betriebserklärung beim Registrierungsstaat vorliegt und dort eine Empfangsbestätigung ausgestellt wurde.","Er muss bei der zuständigen Behörde des Mitgliedstaats B eine Betriebsgenehmigung beantragen.","Er muss bei der zuständigen Behörde des Mitgliedstaats B eine Betriebserklärung abgeben und auf die Bestätigung der Vollständigkeit warten."],
+ a:[0],
+ why:"Für STS grenzüberschreitend legt der Betreiber dem Zielland B Kopien seiner im Heimatstaat eingereichten Erklärung samt Empfangs- und Vollständigkeitsbestätigung vor.",
+ no:"„Nichts tun\" reicht nicht; eine neue Genehmigung oder eine erneute Erklärung in B ist nicht der vorgesehene Weg.",
+ tip:"STS im Ausland: Kopien der Heimat-Erklärung + Bestätigungen bei Land B vorlegen."},
+{cat:"Standardszenarien",id:"k2-31",n:31,multi:false,q:"Worauf sind STS-01 und STS-02 gegenüber bestehenden PDRAs beschränkt? 1) UAS mit Klassenkennzeichnung, 2) Flüge unter 120 m, 3) VLOS/begrenzte BVLOS/mit Luftraumbeobachter, 4) Flüge über kontrolliertem Bodenbereich.",
+ o:["1, 2, 3, 4","1","1, 2, 4","1, 2"],
+ a:[0],
+ why:"Alle vier Beschränkungen treffen zu: Klassenkennzeichnung, unter 120 m, VLOS/begrenzte BVLOS bzw. mit Beobachter, und Betrieb über kontrolliertem Bodenbereich.",
+ no:"Jede Teilauswahl lässt mindestens eine der vier zutreffenden Beschränkungen weg.",
+ tip:"STS-Beschränkungen: alle vier (1-2-3-4)."},
+{cat:"Standardszenarien",id:"k2-32",n:32,multi:false,q:"Wie groß muss die Mindestsichtweite in STS-02 sein?",
+ o:["5 km","10 km","1 km","2 km"],
+ a:[0],
+ why:"In STS-02 muss die meteorologische Sichtweite mindestens 5 km betragen.",
+ no:"10 km, 1 km oder 2 km entsprechen nicht der Vorgabe.",
+ tip:"STS-02 Mindestsicht: 5 km."},
+{cat:"Standardszenarien",id:"k2-33",n:33,multi:false,q:"Wo muss der kontrollierte Bodenbereich in STS-02 liegen?",
+ o:["vollständig in einer dünn besiedelten Umgebung","vollständig in einer dicht besiedelten Umgebung","vollständig über Wasser","zumindest teilweise in einer dünn besiedelten Umgebung"],
+ a:[0],
+ why:"In STS-02 muss der kontrollierte Bodenbereich vollständig in dünn besiedelter Umgebung liegen.",
+ no:"Dicht besiedelt ist ausgeschlossen; „über Wasser\" oder „teilweise\" sind nicht die Vorgabe.",
+ tip:"STS-02 Boden: komplett dünn besiedelt. (STS-01 darf dicht.)"},
+{cat:"Standardszenarien",id:"k2-34",n:34,multi:false,q:"Welche Nachricht muss ein Fernpilot dem Luftraumbeobachter in STS-02 unverzüglich übermitteln?",
+ o:["Abweichungen des UAS von der vorgesehenen Flugbahn und dem damit verbundenen Zeitplan","dass ein Schwarmflug mit UAS ansteht","dass er das Kommando an eine andere Steuerungseinheit überträgt","dass die eigene Position auf ein fahrendes Fahrzeug verlagert wird"],
+ a:[0],
+ why:"Der Fernpilot muss den Beobachter sofort über Abweichungen von Flugbahn und Zeitplan informieren, damit dieser den Luftraum gezielt überwachen kann.",
+ no:"Schwarmflug, Kommandoübergabe oder Positionsverlagerung sind in diesem Kontext nicht die geforderte Meldung.",
+ tip:"Fernpilot meldet Beobachter: Abweichungen von Flugbahn/Zeitplan."},
+{cat:"Standardszenarien",id:"k2-35",n:35,multi:false,q:"Welche Voraussetzung muss für eine C5-Klassenkennzeichnung eines Starrflüglers bestehen?",
+ o:["Es muss gefesselt sein.","Es muss einen Langsamflugmodus haben.","Es muss ungefesselt sein.","Eine C5-Klassifizierung ist nicht möglich."],
+ a:[0],
+ why:"Ein Starrflügler (Fixed-Wing) kann nicht schweben; für eine C5-Einstufung muss er daher gefesselt (tethered) betrieben werden.",
+ no:"Ein Langsamflugmodus genügt nicht; ungefesselt ist gerade nicht zulässig; eine C5-Einstufung ist sehr wohl möglich – eben gefesselt.",
+ tip:"Starrflügler als C5 → nur gefesselt."},
+{cat:"Standardszenarien",id:"k2-36",n:36,multi:false,q:"Bei einem C5-UAS muss das Flugabbruchsystem (FTS) wovon unabhängig sein?",
+ o:["von der Flugsteuerung","vom Fernpiloten","von der Geocaging-Funktion","vom Mobiltelefon"],
+ a:[0],
+ why:"Das FTS eines C5 muss von der Flugsteuerung unabhängig sein, damit es auch bei einem Fehler der Steuerung zuverlässig auslösen kann.",
+ no:"Unabhängigkeit „vom Fernpiloten\" oder „vom Mobiltelefon\" ist nicht der Punkt; bei C5 ist die Geocaging-Unabhängigkeit nicht das geforderte Kriterium (anders als beim C6).",
+ tip:"C5-FTS: unabhängig von der Flugsteuerung."},
+{cat:"Standardszenarien",id:"k2-37",n:37,multi:true,q:"Welche Informationen muss ein C6-klassifiziertes UAS an den Fernpiloten übermitteln?",
+ o:["die geografische Position","die Flughöhe","die Geschwindigkeit","die Kameraausrichtung"],
+ a:[0,1,2],
+ why:"Ein C6 muss dem Fernpiloten Position, Höhe und Geschwindigkeit übermitteln – die für eine sichere Steuerung nötigen Flugdaten.",
+ no:"Die Kameraausrichtung ist keine sicherheitsrelevante Pflichtinformation des C6.",
+ tip:"C6 meldet: Position, Höhe, Geschwindigkeit (nicht die Kamera)."},
+{cat:"Standardszenarien",id:"k2-38",n:38,multi:false,q:"Ein Fallschirmsystem dient wozu?",
+ o:["dazu, die Aufpralldynamik des UAS zu reduzieren","dazu, das UAS vor Beschädigungen zu schützen","dazu, die Unfähigkeit des Fernpiloten auszugleichen","dazu, den Flug nach Aufbrauchen der Batteriekapazität fortzuführen"],
+ a:[0],
+ why:"Ein Fallschirm verlangsamt den Fall und reduziert die Aufprallenergie – das senkt das Verletzungsrisiko am Boden (Bodenrisikominderung).",
+ no:"Geräteschutz ist allenfalls ein Nebeneffekt; Pilotenfehler ausgleichen oder den Flug verlängern kann ein Fallschirm nicht.",
+ tip:"Fallschirm = weniger Aufprallenergie = weniger Bodenrisiko."},
+{cat:"Standardszenarien",id:"k2-39",n:39,multi:false,q:"Wie weit über den fluggeografischen Bereich hinaus muss das Kontingenzgebiet (Contingency Area) bei STS-02 geplant werden?",
+ o:["mindestens 10 m über die Grenze des fluggeografischen Bereichs hinaus","mindestens 20 m über die Grenze des fluggeografischen Bereichs hinaus","mindestens 100 m über die Grenze des fluggeografischen Bereichs hinaus","mindestens 50 m über die Grenze des fluggeografischen Bereichs hinaus"],
+ a:[0],
+ why:"In STS-02 muss das Kontingenzgebiet mindestens 10 m über die Grenze der Fluggeografie hinausreichen.",
+ no:"20 m, 100 m oder 50 m entsprechen nicht der Vorgabe.",
+ tip:"STS-02 Contingency: mind. 10 m über die Fluggeografie."},
+{cat:"Standardszenarien",id:"k2-40",n:40,multi:true,q:"Was benötigen Sie, um mit dem Betrieb in einem Standardszenario loszulegen, wenn Sie als Betreiber in Deutschland registriert sind?",
+ o:["die Eingangsbestätigung des LBA","die Kopie der abgegebenen Erklärung","die Bestätigung der Vollständigkeit der abgegebenen Erklärung durch das LBA","ein LUC","eine Betriebsgenehmigung"],
+ a:[0,1,2],
+ why:"Für den STS-Start brauchst du die abgegebene Betriebserklärung (Kopie), die Eingangsbestätigung des LBA und dessen Bestätigung der Vollständigkeit.",
+ no:"Ein LUC oder eine Betriebsgenehmigung sind im STS gerade nicht erforderlich – das ist ja der Vorteil des Standardszenarios.",
+ tip:"STS-Start: Erklärung + Eingangsbestätigung + Vollständigkeitsbestätigung. Kein LUC/keine Genehmigung."},
+
+/* ===================== MODUL 3: BETRIEBSVERFAHREN ===================== */
+{cat:"Betriebsverfahren",id:"k3-1",n:1,multi:false,q:"Das Akronym ERP steht wofür?",
+ o:["Emergency Response Plan","Emergency Response Phase","Emergency Rapid Procedure","Extended Response Plan"],
+ a:[0],
+ why:"ERP = Emergency Response Plan (Notfallplan): die festgelegte Prozesskette für den Notfall.",
+ no:"Die übrigen Auflösungen sind erfundene Begriffe.",
+ tip:"ERP = Emergency Response Plan = Notfallplan."},
+{cat:"Betriebsverfahren",id:"k3-2",n:2,multi:false,q:"In welcher Reihenfolge werden die Verfahren angewendet: 1. Fluggeografischer Bereich, 2. Contingency-Bereich, 3. Bodenrisikobereich?",
+ o:["Normalverfahren – Sicherheitsverfahren (Kontingenzverfahren) – Notfallverfahren","Notfallverfahren – Sicherheitsverfahren (Kontingenzverfahren) – Normalverfahren","Sicherheitsverfahren (Kontingenzverfahren) – Normalverfahren – Notfallverfahren","Notfallverfahren – Normalverfahren – Sicherheitsverfahren (Kontingenzverfahren)"],
+ a:[0],
+ why:"Von innen nach außen: in der Fluggeografie gelten Normalverfahren, im Contingency-Bereich die Sicherheits-/Kontingenzverfahren, im Bodenrisikobereich die Notfallverfahren.",
+ no:"Die anderen Reihenfolgen verdrehen die Zuordnung von Bereich und Verfahren.",
+ tip:"Innen→außen: Normal → Contingency → Notfall."},
+{cat:"Betriebsverfahren",id:"k3-3",n:3,multi:false,q:"Der Notfallplan …",
+ o:["greift im Falle eines Kontrollverlustes des UAS und somit beim Eintritt eines unvermeidlichen Schadensereignisses.","beschreibt den Bodenrisikopuffer, insbesondere seine Ausdehnung und Funktion.","enthält Notverfahren zur Vermeidung eines Schadensereignisses.","enthält Sicherheitsverfahren zur Vermeidung eines Ausfliegens des UAS aus dem Betriebsbereich."],
+ a:[0],
+ why:"Der Notfallplan (ERP) greift, wenn die Kontrolle verloren ist und ein Schaden unvermeidlich wird – er soll die Folgen minimieren, nicht den Schaden verhindern.",
+ no:"Den Bodenrisikopuffer beschreibt er nicht; das Vermeiden eines Schadens/Ausfliegens leisten Not- bzw. Contingency-Verfahren, nicht der ERP selbst.",
+ tip:"ERP = wenn's schon zu spät ist: Schaden begrenzen, nicht verhindern."},
+{cat:"Betriebsverfahren",id:"k3-4",n:4,multi:false,q:"Wozu dient der Notfallplan (ERP) bei einem BVLOS-Flug?",
+ o:["Die im ERP festgelegte Prozesskette hilft im Notfall, mögliche Schäden auf ein absolutes Minimum zu reduzieren.","Er hilft bei der notwendigen Programmierung der Flugstrecke.","Ein Notfallplan ist für die Ausstellung des Fernpilotenzeugnisses A2 notwendig.","Ein Notfallplan ist für einen BVLOS-Flug nicht notwendig."],
+ a:[0],
+ why:"Der ERP legt eine Prozesskette fest, mit der im Notfall der Schaden auf ein Minimum reduziert wird.",
+ no:"Mit Flugstreckenprogrammierung oder dem A2-Zeugnis hat er nichts zu tun, und gerade bei BVLOS ist er besonders wichtig.",
+ tip:"ERP = Schaden im Notfall minimieren."},
+{cat:"Betriebsverfahren",id:"k3-5",n:5,multi:false,q:"Was sollte beim Erstellen eines Notfallplans (ERP) sichergestellt sein?",
+ o:["dass die Größe, Art und Komplexität der Tätigkeiten und die Struktur des Betreibers berücksichtigt wird","eine größtmögliche Schadensausmaßreduzierung beim UAS im Falle eines Absturzes","Sicherstellung der aufgezeichneten Daten beim UAS-Betrieb im Falle eines Unfalls","Sicherstellung der Liquidität des Betreibers"],
+ a:[0],
+ why:"Ein guter ERP ist auf Größe, Art und Komplexität des Betriebs sowie die Betreiberstruktur zugeschnitten – er muss zum konkreten Betrieb passen.",
+ no:"Der Schutz des Geräts oder die Datensicherung sind nicht das Ziel des ERP; Liquidität ist keine luftrechtliche Anforderung.",
+ tip:"ERP passt sich an Größe, Art, Komplexität und Betreiberstruktur an."},
+{cat:"Betriebsverfahren",id:"k3-6",n:6,multi:false,q:"Wie ist zu verfahren, wenn unbeteiligte Personen den kontrollierten Bodenbereich betreten?",
+ o:["Das UAS wird unverzüglich gelandet, ein Überflug der unbeteiligten Personen ist zu vermeiden.","Das Hilfspersonal soll sich um die Eindringlinge kümmern, der Flugbetrieb wird unverändert fortgeführt.","Das UAS sollte in einen Betriebszustand des Hoverns oder Loiterns gebracht werden.","Das UAS sollte unverzüglich aus dem kontrollierten Bodenbereich geflogen werden."],
+ a:[0],
+ why:"Betreten Unbeteiligte den Bereich, wird das UAS unverzüglich (sicher) gelandet und ein Überflug der Personen vermieden – Personenschutz hat Vorrang.",
+ no:"Flugbetrieb unverändert fortführen oder die Personen überfliegen wäre gefährlich; bloßes Hovern oder Wegfliegen löst die Gefährdung nicht sicher auf.",
+ tip:"Unbeteiligte im Bereich → sofort landen, nicht überfliegen."},
+{cat:"Betriebsverfahren",id:"k3-7",n:7,multi:false,q:"Welche Aspekte sind beim Vorflug-Check nach dem MEUH-Konzept zu berücksichtigen?",
+ o:["Meteorology (Meteorologie), Environment (Umwelt), UAS, Human Limitations (menschliche Einschränkungen)","Meteorology, Emergency Procedures, Uninvolved Persons, Human Limitations","Meteorology, Exhausts (Abgase), UAS, Height (Höhe)","Magnetism, Engine, USSP (U-Space-Service-Provider), Human Limitations"],
+ a:[0],
+ why:"MEUH steht für Meteorology, Environment, UAS und Human Limitations – die vier Vorflug-Prüfbereiche.",
+ no:"Die anderen Varianten passen die Buchstaben falsch auf (Emergency/Uninvolved, Exhausts/Height, Magnetism/Engine).",
+ tip:"MEUH = Meteorology, Environment, UAS, Human Limitations."},
+{cat:"Betriebsverfahren",id:"k3-8",n:8,multi:false,q:"Inwieweit darf der Betrieb eines UAS die Betriebsgrenzen gemäß Herstellervorgaben überschreiten?",
+ o:["Die Betriebsgrenzen dürfen nicht überschritten werden.","Die Betriebsgrenzen gelten lediglich als Anhalt und dürfen auch kurzzeitig überschritten werden.","Die Betriebsgrenzen dürfen um 5 % überschritten werden.","Die Betriebsgrenzen dürfen um 10 % überschritten werden."],
+ a:[0],
+ why:"Die vom Hersteller festgelegten Betriebsgrenzen sind verbindlich und dürfen nicht überschritten werden.",
+ no:"Weder als „Anhalt\" noch um 5 % oder 10 % ist ein Überschreiten zulässig.",
+ tip:"Betriebsgrenzen = harte Grenze, kein Spielraum."},
+{cat:"Betriebsverfahren",id:"k3-9",n:9,multi:false,q:"In welchem Rahmen kann der Betreiber seine Sicherheits- und Notverfahren vor STS-Flugbetrieb auf Eignung testen?",
+ o:["Im Rahmen der offenen Kategorie A3, sofern alle damit verbundenen Bedingungen erfüllt werden.","Gar nicht. Erst im Rahmen des Betriebs nach STS-01 oder STS-02.","Im Rahmen der offenen Kategorie A3, nach den Bedingungen des STS-02.","Im Rahmen der offenen Kategorie A3, nach den Bedingungen des STS-01."],
+ a:[0],
+ why:"Verfahren lassen sich vorab in der offenen Kategorie A3 erproben, solange alle Bedingungen der A3 eingehalten werden.",
+ no:"„Gar nicht\" ist falsch; das Testen erfolgt unter A3-Bedingungen, nicht bereits nach STS-01/STS-02-Bedingungen.",
+ tip:"STS-Verfahren vorab testen → in A3 (unter A3-Bedingungen)."},
+{cat:"Betriebsverfahren",id:"k3-10",n:10,multi:true,q:"Was gehört zu den Vorflugkontrollpunkten eines Fernpiloten?",
+ o:["Überprüfen der AIP und von NOTAM auf mögliche Beschränkungen","Überprüfen der Einhaltung der Betriebsgrenzen des UAS und dessen Lufttüchtigkeit","Überprüfen der meteorologischen Bedingungen vor Ort (Wind, Temperatur, Sicht, Niederschlag)","Erkennen möglicher elektromagnetischer Störungen/Interferenzen (EMI), die zu einer Signalstörung beim C2-Link führen können"],
+ a:[0,1,2,3],
+ why:"Alle vier gehören dazu: AIP/NOTAM prüfen, Betriebsgrenzen und Lufttüchtigkeit, Wetter vor Ort und mögliche EMI-Störungen des C2-Links.",
+ no:"Hier ist keine Option falsch – ein vollständiger Vorflug-Check deckt alle vier Bereiche ab.",
+ tip:"Vorflug: NOTAM/AIP, Technik/Grenzen, Wetter, EMI → alles prüfen."},
+{cat:"Betriebsverfahren",id:"k3-11",n:11,multi:true,q:"Welche Aspekte sind für eine gute Vorflug-Checkliste zu berücksichtigen?",
+ o:["Klarheit","ergonomischer, logischer und durchdachter Ablauf der Prüfpunkte","wenige, wesentliche Informationen/Prüfpunkte","einfache Lesbarkeit und Nutzbarkeit","enthält Ausführungen und Erklärungen zu den Prüfpunkten","möglichst viele Informationen","möglichst kleine Schriftgröße"],
+ a:[0,1,2,3],
+ why:"Eine gute Checkliste ist klar, logisch/ergonomisch aufgebaut, auf wenige wesentliche Punkte beschränkt und einfach lesbar/nutzbar.",
+ no:"Lange Erklärungen, möglichst viele Informationen oder kleine Schrift machen eine Checkliste unübersichtlich und unbrauchbar.",
+ tip:"Gute Checkliste: klar, logisch, knapp, gut lesbar."},
+{cat:"Betriebsverfahren",id:"k3-12",n:12,multi:false,q:"Wie prüft der Fernpilot vor dem Flug die Lufttüchtigkeit des UAS?",
+ o:["mittels einer Checkliste","auf Basis auswendig gelernter Prüfpunkte","auf Basis seiner gemachten, individuellen Erfahrungen","Dies ist nicht erforderlich."],
+ a:[0],
+ why:"Die Lufttüchtigkeit wird systematisch anhand einer Checkliste geprüft – das stellt Vollständigkeit und Wiederholbarkeit sicher.",
+ no:"Auswendiges Wissen oder reine Erfahrung sind fehleranfällig; „nicht erforderlich\" ist falsch.",
+ tip:"Lufttüchtigkeit → immer per Checkliste."},
+{cat:"Betriebsverfahren",id:"k3-13",n:13,multi:false,q:"Die Prüfpunkte einer Checkliste zur Überprüfung des UAS basieren auf welchen Quellen?",
+ o:["den Herstellervorgaben","eigenen Erfahrungen","Foreneinträgen","aus einem Brainstorming der Fernpiloten und dem Betreiber"],
+ a:[0],
+ why:"Die Prüfpunkte stützen sich auf die Herstellervorgaben – nur der Hersteller kennt die maßgeblichen technischen Kontrollpunkte.",
+ no:"Eigene Erfahrung, Forenwissen oder Brainstorming sind keine verlässliche Grundlage für die Prüfpunkte.",
+ tip:"Checklisten-Prüfpunkte = Herstellervorgaben."},
+{cat:"Betriebsverfahren",id:"k3-14",n:14,multi:false,q:"Vor dem Flug im Rahmen des STS-02 muss der Fernpilot was einstellen?",
+ o:["Das programmierbare Flugvolumen (Geocaging-Funktion), damit das UAS innerhalb der Fluggeografie bleibt.","Die Lärmwerte, damit abhängig von der Umwelt die vorgegebenen Lärmwerte eingehalten werden.","Die Geschwindigkeit im Langsamflugmodus.","Die Helligkeit des grünen Blinklichts bei Nachtflugbetrieb für eine bessere Sichtbarkeit."],
+ a:[0],
+ why:"Vor dem STS-02-Flug stellt der Fernpilot das Geocaging (programmierbares Flugvolumen) ein, damit das UAS die Fluggeografie nicht verlässt.",
+ no:"Lärmwerte, Langsamflug-Geschwindigkeit oder Lichthelligkeit sind hier nicht die geforderte Einstellung.",
+ tip:"STS-02 vor dem Flug: Geocaging einstellen."},
+{cat:"Betriebsverfahren",id:"k3-15",n:15,multi:false,q:"Der Fernpilot bemerkt eine erhebliche Anzahl an Vögeln im Betriebsbereich. Wie sollte er sich verhalten?",
+ o:["Er landet das UAS unverzüglich oder startet gar nicht erst. Die Mission kann erst fortgesetzt werden, wenn die Vögel den Betriebsbereich verlassen haben, da sie eine Gefahr darstellen.","Das UAS wird in den Hover- oder Loitering-Modus versetzt, bis die Vögel weitergezogen sind.","Der Flugbetrieb kann fortgesetzt werden, da Vögel im Allgemeinen einem UAS ausweichen.","Der Flugbetrieb wird nach einer ausgiebigen Vergrämungsaktion, auch mittels Hilfsmittel, fortgesetzt.","Es muss gefesselt sein."],
+ a:[0],
+ why:"Viele Vögel sind ein Kollisionsrisiko – der Fernpilot landet sofort bzw. startet nicht und wartet, bis die Vögel weg sind.",
+ no:"Auf das Ausweichen der Vögel zu vertrauen, nur zu hovern oder zu vergrämen löst die Gefahr nicht zuverlässig auf.",
+ tip:"Viele Vögel = Gefahr → landen/nicht starten, abwarten."},
+{cat:"Betriebsverfahren",id:"k3-16",n:16,multi:true,q:"Was muss der Fernpilot vor dem Betrieb in STS-01 am UAS prüfen oder aktivieren?",
+ o:["Fernidentifizierungssystem (Remote-ID)","Funktionsfähigkeit des FTS (Flugabbruchsystem)","die Kopplung mehrerer Steuereinheiten","nichts, da moderne UAS alle Aufgaben automatisch erledigen"],
+ a:[0,1],
+ why:"Vor dem STS-01-Betrieb prüft/aktiviert der Fernpilot die Remote-ID und die Funktionsfähigkeit des FTS.",
+ no:"Eine Kopplung mehrerer Steuereinheiten ist nicht vorgesehen; „nichts nötig\" ist falsch – die Vorflugprüfung bleibt Pflicht.",
+ tip:"STS-01 vor dem Flug: Remote-ID + FTS prüfen."},
+/* ===================== MODUL 4: KENNTNISSE ÜBER UAS UND FLUGLEISTUNG ===================== */
+{cat:"UAS & Flugleistung",id:"k4-1",n:1,multi:false,q:"Die höchstzulässige Startmasse (MTOM) …",
+ o:["darf auf keinen Fall überschritten werden, da sonst eine sichere Flugdurchführung gefährdet ist.","darf um 5 % überschritten werden, ohne dass dadurch die Sicherheit gefährdet wird.","darf um bis zu 10 % überschritten werden, ohne dass dadurch die Sicherheit gefährdet wird.","ist lediglich eine theoretische Berechnungsgröße, die für die Flugdurchführung ohne Bedeutung ist."],
+ a:[0],
+ why:"Die MTOM ist eine harte Grenze: Wird sie überschritten, sind Flugleistung und Sicherheit nicht mehr gewährleistet.",
+ no:"Weder 5 % noch 10 % Überschreitung sind zulässig; die MTOM ist auch keine bloß theoretische Größe.",
+ tip:"MTOM = harte Obergrenze, kein Spielraum."},
+{cat:"UAS & Flugleistung",id:"k4-2",n:2,multi:false,q:"Aussagen zum Betriebsbereich der Kategorien Hubschrauber, VTOL, Multikopter und Starrflügler – welche trifft zu?",
+ o:["Der Betriebsbereich ist bei allen Luftfahrzeugkategorien von UAS unterschiedlich. Jede Kategorie hat Stärken und Schwächen. Diese gilt es zu kennen und auszunutzen.","Die Unterscheidung von Betriebsbereichen erfolgt nur in der bemannten Luftfahrt, da dort die Ausmaße größer sind.","Der Betriebsbereich ist bei allen UAS-Kategorien ähnlich, sodass keine Eingewöhnung oder weiteren Kenntnisse nötig sind.","Der Betriebsbereich ist bei allen UAS-Kategorien unterschiedlich. Dies spielt jedoch in der Nutzung keine Rolle."],
+ a:[0],
+ why:"Jede Bauform hat eigene Stärken und Schwächen (z. B. Effizienz, Manövrierbarkeit). Der Fernpilot sollte diese kennen und gezielt nutzen.",
+ no:"Die Unterschiede gelten auch bei UAS (nicht nur bemannt), sind nicht „ähnlich/egal\" und spielen sehr wohl eine Rolle.",
+ tip:"Jede Bauform: eigene Stärken/Schwächen – kennen und nutzen."},
+{cat:"UAS & Flugleistung",id:"k4-3",n:3,multi:false,q:"Welches ist der typische Betriebsbereich eines Starrflüglers?",
+ o:["Starrflügler sind ideal für Langstreckenflüge. Ihre aerodynamische Bauweise sorgt für eine effiziente Akkunutzung. Die Schwachstelle ist der Langsamflug. Daher sind Flüge bei beengten Raumverhältnissen zu vermeiden.","Starrflügler sind ideal für Lang- und Kurzstreckenflüge. Sie spielen ihre Stärke im Langsamflug und bei beengten Raumverhältnissen aus.","Starrflügler sind die Allrounder; neben Lang- und Kurzstrecke beherrschen sie auch Langsamflüge und enge Manöver.","Starrflügler sind ideal für Kurzstreckenflüge, da sie schnell Strecken überwinden; bei der Akkunutzung eher mäßig effizient."],
+ a:[0],
+ why:"Starrflügler fliegen dank Auftrieb durch die Tragflächen sehr effizient über lange Strecken, können aber nicht langsam fliegen/schweben – daher ungeeignet für enge Räume.",
+ no:"Sie sind gerade nicht für Langsamflug/enge Manöver oder Kurzstrecke geeignet und keine Allrounder.",
+ tip:"Starrflügler = Langstrecke & effizient, aber kein Langsamflug."},
+{cat:"UAS & Flugleistung",id:"k4-4",n:4,multi:false,q:"Wie wird der Punkt, der die Schwerpunktlage angibt, häufig auch bezeichnet?",
+ o:["Center of Gravity (CG)","Middle of Gravity (MG)","Center of Weight (CW)","Medium Mass (MM)"],
+ a:[0],
+ why:"Der Schwerpunkt heißt im Englischen Center of Gravity (CG).",
+ no:"MG, CW und MM sind erfundene bzw. falsche Begriffe.",
+ tip:"Schwerpunkt = Center of Gravity (CG)."},
+{cat:"UAS & Flugleistung",id:"k4-5",n:5,multi:false,q:"Wie ist die Reichweite eines UAS bei einem Flug mit Nutzlast verglichen mit einem Flug ohne Nutzlast?",
+ o:["Die Reichweite ist immer geringer.","Die Reichweite ist immer größer.","Die Reichweite ist unverändert.","Nutzlast ist bei einem UAS niemals erlaubt."],
+ a:[0],
+ why:"Zusätzliche Nutzlast erhöht das Gewicht und den Energiebedarf – die Reichweite sinkt.",
+ no:"Größer oder unverändert ist falsch; Nutzlast ist grundsätzlich erlaubt.",
+ tip:"Mehr Last = mehr Verbrauch = weniger Reichweite."},
+{cat:"UAS & Flugleistung",id:"k4-6",n:6,multi:false,q:"Welche UAS-Kategorie ist in Bezug auf die Flugstabilität am anfälligsten, wenn sich der Schwerpunkt verlagert?",
+ o:["Flugzeug","Multikopter","Hubschrauber","Luftschiff"],
+ a:[0],
+ why:"Starrflügler/Flugzeuge reagieren besonders empfindlich auf Schwerpunktverlagerungen, weil sich dadurch Anstellwinkel und Längsstabilität verändern.",
+ no:"Multikopter und Hubschrauber gleichen über die Steuerung mehr aus; das Luftschiff ist hier nicht das anfälligste.",
+ tip:"Schwerpunkt-Verlagerung trifft vor allem das Flugzeug (Starrflügler)."},
+{cat:"UAS & Flugleistung",id:"k4-7",n:7,multi:false,q:"Welcher ist der typische Betriebsbereich eines Multikopters?",
+ o:["Multikopter werden eher für Kurzstreckenflüge eingesetzt. Durch die aerodynamischen Nachteile sind sie wenig effizient bei der Akkunutzung. Sie sind ausgelegt für Langsamflüge sowie beengte Raumverhältnisse und können sehr gut Windeinflüsse ausgleichen.","Multikopter werden eher für Höhenflüge eingesetzt und sind sehr effizient beim Ausgleichen von Luftdichteunterschieden.","Multikopter sind ideal für Langstreckenflüge und sehr effizient bei der Akkunutzung; nicht für Langsamflüge geeignet.","Multikopter sind Allrounder und allen anderen Luftfahrzeugen in Reichweite, Effizienz, Geschwindigkeit und Manövrierbarkeit überlegen."],
+ a:[0],
+ why:"Multikopter erzeugen Auftrieb rein über die Rotoren – das ist energieintensiv (kurze Reichweite), erlaubt aber Schweben, Langsamflug und Einsatz auf engem Raum.",
+ no:"Sie sind nicht effizient/langstreckentauglich und auch keine überlegenen Allrounder.",
+ tip:"Multikopter = Kurzstrecke, ineffizient, aber wendig & schwebefähig."},
+{cat:"UAS & Flugleistung",id:"k4-8",n:8,multi:false,q:"Wie wird die höchstzulässige Startmasse (MTOM) eines UAS durch den Fernpiloten ermittelt?",
+ o:["Einzig die Herstellerangabe im Handbuch ist relevant.","Durch Wiegen des UAS.","Durch Schätzen und Testen.","Das MTOM ist irrelevant."],
+ a:[0],
+ why:"Die MTOM ist ein vom Hersteller festgelegter Grenzwert – maßgeblich ist die Angabe im Handbuch (nicht das aktuelle Gewicht).",
+ no:"Wiegen liefert nur die momentane Masse, nicht die zulässige Höchstmasse; Schätzen/Testen ist unzuverlässig; irrelevant ist sie nicht.",
+ tip:"MTOM = Herstellerangabe im Handbuch (nicht selbst wiegen)."},
+{cat:"UAS & Flugleistung",id:"k4-9",n:9,multi:false,q:"Wie wird die zulässige Zuladung eines UAS berechnet?",
+ o:["höchstzulässige Startmasse (MTOM) abzüglich der Leermasse des UAS","höchstzulässige Startmasse (MTOM) multipliziert mit der Leermasse des UAS","höchstzulässige Startmasse (MTOM) dividiert durch die Leermasse des UAS","höchstzulässige Startmasse (MTOM) addiert mit der Leermasse des UAS"],
+ a:[0],
+ why:"Zuladung = MTOM − Leermasse. Was über das Eigengewicht hinaus bis zur MTOM frei ist, darf zugeladen werden.",
+ no:"Multiplizieren, dividieren oder addieren ergibt physikalisch keinen Sinn.",
+ tip:"Zuladung = MTOM minus Leermasse."},
+{cat:"UAS & Flugleistung",id:"k4-11",n:10,multi:false,q:"Welchen Einfluss hat eine außen angebrachte Nutzlast mit großen Abmessungen auf die Flugstabilität eines UAS?",
+ o:["Eine außen angebrachte Nutzlast mit großen Abmessungen erhöht den Widerstand. Dadurch benötigt das UAS mehr Leistung.","Eine außen angebrachte Nutzlast mit großen Abmessungen verringert den Widerstand. Dadurch kommt das UAS mit weniger Leistung aus.","Eine außen angebrachte Nutzlast mit großen Abmessungen hat keinen Einfluss auf den Widerstand und die Leistung des UAS.","Eine außen angebrachte Nutzlast mit großen Abmessungen erhöht den Widerstand. Dadurch kommt das UAS mit weniger Leistung aus."],
+ a:[0],
+ why:"Große außen angebrachte Lasten vergrößern die Angriffsfläche → mehr Luftwiderstand → höherer Leistungsbedarf.",
+ no:"Den Widerstand verringern oder „kein Einfluss\" ist falsch; mehr Widerstand bei gleichzeitig weniger Leistung ist widersprüchlich.",
+ tip:"Großer Anbau außen = mehr Widerstand = mehr Leistung nötig."},
+{cat:"UAS & Flugleistung",id:"k4-12",n:11,multi:false,q:"Welche Aussage ist korrekt, wenn der Schwerpunkt bei Starrflüglern nach hinten (schwanzlastig) verlagert wird?",
+ o:["Der Anstellwinkel vergrößert sich und muss durch mehr Leistung ausgeglichen werden.","Der Anstellwinkel verringert sich und dementsprechend muss die Leistung reduziert werden.","Der Anstellwinkel verringert sich und muss durch mehr Leistung ausgeglichen werden.","Der Anstellwinkel vergrößert sich und muss durch weniger Leistung ausgeglichen werden."],
+ a:[0],
+ why:"Schwanzlastigkeit hebt die Nase an → größerer Anstellwinkel → mehr Widerstand → mehr Leistung nötig, um stabil zu bleiben.",
+ no:"Ein „verringerter\" Anstellwinkel oder „weniger Leistung\" widersprechen der Schwanzlastigkeit.",
+ tip:"Hecklastig → Nase hoch → größerer Anstellwinkel → mehr Leistung."},
+{cat:"UAS & Flugleistung",id:"k4-13",n:12,multi:false,q:"Welche ist die beste Methode (Best Practice) beim Anbringen einer Nutzlast?",
+ o:["Es wird eine Checkliste gemäß Herstellervorgaben verwendet. Die Aufnahmevorrichtung wird auf Schäden geprüft. Indikatoren zeigen die korrekte Position bzw. das Einrasten. Sofern möglich wird die Nutzlast redundant gesichert. Unmittelbar vor dem Start erfolgt eine letzte Kontrolle, nach der Landung eine Nachflugkontrolle.","Das Vorgehen entspricht den Herstellervorgaben, die der Fernpilot auswendig lernen muss; Indikatoren zeigen das Einrasten; vor dem Start eine letzte Kontrolle, nach der Landung eine kurze Sichtkontrolle.","Fernpiloten mit wenig Erfahrung nutzen eine Checkliste; mit zunehmender Erfahrung kann die Kontrolle kürzer ausfallen, Standardhandgriffe auswendig.","Es wird eine eigene Checkliste verwendet, die auch von Herstellerangaben abweichen kann; nach der Landung nur bei Störungen eine Sichtkontrolle."],
+ a:[0],
+ why:"Best Practice ist die checklistenbasierte Montage nach Herstellervorgabe, mit Schadensprüfung, Einrast-Indikatoren, redundanter Sicherung sowie Kontrolle vor dem Start und Nachflugkontrolle.",
+ no:"Auswendiges Vorgehen, „mit Erfahrung kürzer\" oder eigenmächtiges Abweichen von Herstellervorgaben sind nicht Best Practice.",
+ tip:"Nutzlast: Checkliste + Schadensprüfung + Einrasten + redundant sichern + Vor/Nachflugkontrolle."},
+{cat:"UAS & Flugleistung",id:"k4-14",n:13,multi:false,q:"Was ist bei der Lagerung von Lithium-Polymer-Akkus zu beachten? 1) 40-50 % Ladung, 2) im Kühlschrank, 3) feuerfest, 4) Tiefentladung ohne Folgen, 5) 65-75 % Ladung, 6) 90-100 % Ladung.",
+ o:["3, 5","2, 3, 5","1, 3, 5","1, 2"],
+ a:[0],
+ why:"Laut Vorgabe: feuerfeste Lagerung (3) und eine Lagerladung im Bereich 65-75 % (5).",
+ no:"Kühlschrank (2) ist nicht vorgesehen, Tiefentladung (4) ist schädlich, 90-100 % (6) ist ungünstig; auch 1 ist hier nicht Teil der markierten Lösung.",
+ tip:"LiPo lagern: feuerfest + ~65-75 % Ladung (Lösung 3, 5)."},
+{cat:"UAS & Flugleistung",id:"k4-15",n:14,multi:false,q:"Welche Aussage zur Kapazität einer Batterie ist korrekt?",
+ o:["Die Kapazität gibt die Maximaldauer an, über die eine definierte Stromstärke geliefert werden kann.","Die Kapazität gibt die Maximaldauer an, über die eine variable Stromstärke geliefert werden kann.","Die Kapazität gibt die Mindestdauer an, über die eine variable Stromstärke geliefert werden kann.","Die Kapazität gibt die Mindestdauer an, über die eine definierte Stromstärke geliefert werden kann."],
+ a:[0],
+ why:"Kapazität (z. B. in mAh/Ah) beschreibt, wie lange eine definierte (konstante) Stromstärke maximal geliefert werden kann.",
+ no:"„Variabel\" oder „Mindestdauer\" trifft die Definition nicht.",
+ tip:"Kapazität = Maximaldauer bei definiertem Strom."},
+{cat:"UAS & Flugleistung",id:"k4-16",n:15,multi:false,q:"Durch welche Faktoren wird die Lebensdauer von Akkus beeinflusst? 1) Extreme Kälte, 2) große Hitze, 3) Nutzungshäufigkeit, 4) Überladung, 5) Lagerungsfehler, 6) Tiefentladung, 7) Kurzschluss",
+ o:["1, 2, 3, 4, 5, 6, 7","1, 2, 4","1, 2, 3, 5, 7","1, 2, 4, 5, 6"],
+ a:[0],
+ why:"Alle sieben Faktoren beeinflussen die Lebensdauer: Kälte, Hitze, Nutzungshäufigkeit, Überladung, Lagerungsfehler, Tiefentladung und Kurzschluss.",
+ no:"Jede Teilauswahl lässt mindestens einen relevanten Faktor weg.",
+ tip:"Akku-Lebensdauer: alle sieben Faktoren (1-7)."},
+{cat:"UAS & Flugleistung",id:"k4-17",n:16,multi:false,q:"Was gibt die C-Rate in Bezug auf Akkus an?",
+ o:["Die C-Rate ist der maximale Faktor für den Lade- bzw. Entladestrom, bezogen auf die Kapazität.","Die C-Rate ist der minimale Faktor für den Lade- bzw. Entladestrom, bezogen auf die Kapazität.","Die C-Rate ist der maximale Faktor für die Leistungsdauer bei definiertem Entladestrom.","Die C-Rate ist der minimale Faktor für den Lade- bzw. Entladestrom, bezogen auf die Nennspannung."],
+ a:[0],
+ why:"Die C-Rate gibt an, mit welchem maximalen Strom (als Vielfaches der Kapazität) ge- bzw. entladen werden darf.",
+ no:"„Minimal\", „Leistungsdauer\" oder Bezug auf die Nennspannung sind falsch.",
+ tip:"C-Rate = max. Lade-/Entladestrom relativ zur Kapazität."},
+{cat:"UAS & Flugleistung",id:"k4-18",n:17,multi:false,q:"Wie kann festgestellt werden, dass ein Akku in Reihe geschaltet ist?",
+ o:["Der Akku hat eine Kennzeichnung mit dem Buchstaben S.","Das kann nicht festgestellt werden und ist auch irrelevant.","Der Akku hat eine Kennzeichnung mit dem Buchstaben R.","Der Akku hat eine Kennzeichnung mit dem Buchstaben P."],
+ a:[0],
+ why:"In Reihe (seriell) geschaltete Zellen werden mit „S\" gekennzeichnet (z. B. 3S = drei Zellen in Reihe → höhere Spannung).",
+ no:"„R\" gibt es nicht in diesem Sinne; „P\" steht für parallel; irrelevant ist die Schaltung nicht.",
+ tip:"S = seriell (Reihe), P = parallel."},
+{cat:"UAS & Flugleistung",id:"k4-19",n:18,multi:false,q:"Wofür steht die Kennzeichnung „P\" auf einem Akku?",
+ o:["Es handelt sich um einen Akku, bei dem die Zellen parallel geschaltet sind.","Es handelt sich um einen Akku, der mehr Leistung (Power) hat und für den Sportmodus geeignet ist.","Es handelt sich um einen Akku, der dauerhaft (permanent) am Ladestrom angeschlossen sein muss, wenn er nicht benutzt wird.","Es handelt sich um einen Akku mit erhöhtem Eigenschutz (Preventive) und somit intelligent."],
+ a:[0],
+ why:"„P\" steht für parallel geschaltete Zellen (z. B. 2P → höhere Kapazität/Strombelastbarkeit bei gleicher Spannung).",
+ no:"Power, Permanent oder Preventive sind erfundene Deutungen.",
+ tip:"P = parallel (mehr Kapazität/Strom), S = seriell (mehr Spannung)."},
+{cat:"UAS & Flugleistung",id:"k4-20",n:19,multi:false,q:"Welche Auswirkungen hat das Überschreiten der C-Rate bei einer Batterie?",
+ o:["Die Lebensdauer der Batterie verkürzt sich, da die C-Rate Maximalwerte darstellt.","Die Lebensdauer verkürzt sich bei Unterschreitung und verlängert sich bei Überschreitung der C-Rate.","Die Lebensdauer verlängert sich, da die C-Rate Mindestwerte darstellt.","Die Überschreitung der C-Rate hat keinen Einfluss auf die Lebensdauer."],
+ a:[0],
+ why:"Die C-Rate ist ein Maximalwert. Wird sie überschritten, wird die Batterie überlastet – das verkürzt ihre Lebensdauer (und kann gefährlich sein).",
+ no:"Die übrigen Aussagen verdrehen Ursache und Wirkung oder behaupten fälschlich „kein Einfluss\".",
+ tip:"C-Rate überschreiten = Überlast = kürzere Lebensdauer."},
+{cat:"UAS & Flugleistung",id:"k4-21",n:20,multi:false,q:"Was ist beim Aufladen von Akkus generell zu beachten?",
+ o:["Ein Akku sollte generell auf einer feuerfesten Unterlage oder einem Behältnis sowie unter Aufsicht geladen werden.","Die heutigen Akkus sind intelligent und haben eine integrierte Löschvorrichtung. Eine Aufsicht ist nicht erforderlich.","Von modernen Akkus geht keine Brandgefahr aus. Der Ladeprozess sollte aber beaufsichtigt werden, damit er nicht überladen wird.","Die heutigen Akkus steuern den Aufladeprozess eigenständig. Eine Aufsicht oder Absicherung ist nicht erforderlich."],
+ a:[0],
+ why:"Wegen der Brandgefahr von LiPo-Akkus immer feuerfest (Unterlage/Behältnis) und unter Aufsicht laden.",
+ no:"Eine „integrierte Löschvorrichtung\" oder „keine Brandgefahr\" ist falsch; Aufsicht ist immer nötig.",
+ tip:"Laden: feuerfest + unter Aufsicht. Immer."},
+{cat:"UAS & Flugleistung",id:"k4-22",n:21,multi:false,q:"Ein Akku hat eine Kapazität von 5.000 mAh und liefert einen Strom von 5 A. Wie lange hält er?",
+ o:["1 Stunde","50 Minuten","5 Stunden","10 Minuten"],
+ a:[0],
+ why:"5.000 mAh = 5 Ah. Bei 5 A: 5 Ah ÷ 5 A = 1 Stunde.",
+ no:"50 Minuten, 5 Stunden oder 10 Minuten ergeben sich rechnerisch nicht.",
+ tip:"Ah ÷ A = Stunden → 5 ÷ 5 = 1 h."},
+{cat:"UAS & Flugleistung",id:"k4-23",n:22,multi:false,q:"Wie viele Ladezyklen beträgt die Lebensdauer (Erreichen von 80 % Kapazität) eines Lithium-Polymer-Akkus in der Regel?",
+ o:["300 bis 500","1.000 bis 1.500","500 bis 800","100 bis 300"],
+ a:[0],
+ why:"LiPo-Akkus erreichen in der Regel nach etwa 300 bis 500 Ladezyklen die 80-%-Schwelle.",
+ no:"1.000-1.500, 500-800 oder 100-300 entsprechen nicht dem typischen Richtwert.",
+ tip:"LiPo: ca. 300-500 Ladezyklen."},
+{cat:"UAS & Flugleistung",id:"k4-24",n:23,multi:false,q:"In welchem Temperaturbereich liegt im Allgemeinen der ideale Betriebsbereich von Lithium-Polymer-Akkus?",
+ o:["10 °C bis 40 °C","0 °C bis 30 °C","20 °C bis 50 °C","−5 °C bis 40 °C"],
+ a:[0],
+ why:"LiPo-Akkus arbeiten am besten im Bereich von etwa 10 °C bis 40 °C.",
+ no:"Die anderen Bereiche reichen zu weit ins Kalte oder Heiße.",
+ tip:"LiPo ideal: ca. 10-40 °C."},
+{cat:"UAS & Flugleistung",id:"k4-25",n:24,multi:false,q:"Die elektrische Leistung P in der Einheit Watt (W) wird wie berechnet?",
+ o:["Die Spannung multipliziert mit der Stromstärke. Sie wird dabei in Volt (V) angegeben, die Stromstärke in Ampere (A).","Die Spannung dividiert mit der Stromstärke. Spannung in Volt (V), Stromstärke in Ampere (A).","Die Spannung multipliziert mit dem Widerstand. Spannung in Volt (V), Widerstand in Ohm.","Die Stromstärke multipliziert mit dem Widerstand. Stromstärke in Ampere (A), Widerstand in Ohm."],
+ a:[0],
+ why:"P = U × I (Leistung = Spannung × Stromstärke), in Watt; U in Volt, I in Ampere.",
+ no:"Dividieren oder die Kombination mit dem Widerstand ergibt nicht direkt die Leistung in dieser Form.",
+ tip:"P = U × I (Watt = Volt × Ampere)."},
+{cat:"UAS & Flugleistung",id:"k4-26",n:25,multi:false,q:"Zwei parallel geschaltete 6-V-Batterien mit je 5 Ah liefern welche elektrische Ladung?",
+ o:["10 Ah","2,5 Ah","12 Ah","5 Ah"],
+ a:[0],
+ why:"Parallelschaltung addiert die Kapazitäten (Ladung): 5 Ah + 5 Ah = 10 Ah; die Spannung bleibt bei 6 V.",
+ no:"Bei Parallelschaltung bleibt die Spannung gleich; 12 V/12 Ah gehört zur Reihenschaltung-Logik, 2,5/5 Ah sind falsch.",
+ tip:"Parallel: Kapazität addiert (Spannung gleich) → 10 Ah."},
+{cat:"UAS & Flugleistung",id:"k4-27",n:26,multi:false,q:"Zwei in Reihe geschaltete 6-V-Batterien mit je 5 Ah liefern welche Spannung?",
+ o:["12 V","5 V","6 V","10 V"],
+ a:[0],
+ why:"Reihenschaltung addiert die Spannungen: 6 V + 6 V = 12 V; die Kapazität bleibt bei 5 Ah.",
+ no:"5 V, 6 V oder 10 V ergeben sich nicht; die Spannung verdoppelt sich.",
+ tip:"Reihe: Spannung addiert (Kapazität gleich) → 12 V."},
+{cat:"UAS & Flugleistung",id:"k4-28",n:27,multi:false,q:"Sie unternehmen einen Flug im Winter bei 0 °C. Was gilt es zu beachten?",
+ o:["Die Batterien sollten vorgewärmt werden, bspw. durch Körperwärme.","Die Batterien sind mit einem Gaskocher zu erwärmen.","Es ist nichts weiter zu beachten.","Die Batterien sollten gekühlt werden."],
+ a:[0],
+ why:"Kälte reduziert die Akkuleistung deutlich. Vorwärmen (z. B. am Körper) hält die Leistung und schützt den Akku.",
+ no:"Gaskocher (Gefahr!), „nichts beachten\" oder zusätzliches Kühlen sind falsch.",
+ tip:"Kälte → Akku vorwärmen (schonend, z. B. Körperwärme)."},
+{cat:"UAS & Flugleistung",id:"k4-29",n:28,multi:false,q:"Welche Eigenschaft weisen Lithium-Polymer-Batterien (Li-Pos) auf?",
+ o:["Es sind Batterien mit hohen Energiedichten, die sich gut für schwere und/oder UAS mit hohem Leistungsbedarf eignen, aber wenige Ladezyklen durchlaufen können.","Batterien mit geringen Energiedichten, gut für schwere UAS mit hohem Leistungsbedarf, aber wenige Ladezyklen.","Batterien mit geringen Energiedichten, gut für leichte UAS mit geringem Leistungsbedarf, aber viele Ladezyklen.","Batterien mit hohen Energiedichten, gut für schwere UAS mit hohem Leistungsbedarf und viele Ladezyklen."],
+ a:[0],
+ why:"LiPos haben eine hohe Energiedichte (viel Leistung bei wenig Gewicht), vertragen aber nur relativ wenige Ladezyklen.",
+ no:"„Geringe Energiedichte\" ist falsch; „viele Ladezyklen\" trifft bei LiPo nicht zu.",
+ tip:"LiPo: hohe Energiedichte, aber wenige Ladezyklen."},
+{cat:"UAS & Flugleistung",id:"k4-30",n:29,multi:false,q:"Was ist der sogenannte Memory-Effekt?",
+ o:["Der Memory-Effekt ist ein Kapazitätsverlust, der bei häufiger Teilentladung auftritt.","Ein Kapazitätsverlust, der auftritt, wenn der Akku ständig auf 100 % aufgeladen wird.","Die Künstliche Intelligenz zur Akkusteuerung wird als Memory-Effekt bezeichnet.","Ein Kapazitätsverlust, der auftritt, wenn der Akku ständig auf 0 bis 5 % entladen wird."],
+ a:[0],
+ why:"Der Memory-Effekt ist ein Kapazitätsverlust durch wiederholte Teilentladung – der Akku „merkt\" sich die geringere Entladetiefe.",
+ no:"Das ständige Vollladen oder Tiefentladen beschreibt andere Alterungseffekte; mit KI hat der Begriff nichts zu tun.",
+ tip:"Memory-Effekt = Kapazitätsverlust durch ständige Teilentladung."},
+{cat:"UAS & Flugleistung",id:"k4-31",n:30,multi:false,q:"Welche Effekte können durch elektrischen Strom verursacht werden? 1) Erwärmungseffekt, 2) magnetischer Effekt, 3) chemischer Effekt, 4) Kühlungseffekt, 5) aerodynamischer Effekt, 6) Aufladeffekt",
+ o:["1, 2, 3","1, 2, 4, 5","1, 2","1, 2, 3, 6"],
+ a:[0],
+ why:"Elektrischer Strom erzeugt Wärme (1), ein Magnetfeld (2) und kann chemische Wirkungen (3) hervorrufen.",
+ no:"Kühlung (4), aerodynamischer Effekt (5) und „Aufladeffekt\" (6) sind keine direkten Stromwirkungen.",
+ tip:"Strom wirkt: Wärme, Magnetismus, Chemie (1-2-3)."},
+
+/* ===================== MODUL 5: LUFTRAUM UND AERONAUTISCHE INFORMATIONEN ===================== */
+{cat:"Luftraum & Information",id:"k5-1",n:1,multi:false,q:"Wie sind permanente Flugbeschränkungsgebiete auf der Luftfahrtkarte ICAO 1:500.000 gekennzeichnet?",
+ o:["Mit Ländercode und einem „R\", gefolgt von einer Ordnungsnummer, z. B. ED-R 112A.","Flugbeschränkungsgebiete sind nicht besonders gekennzeichnet.","Mit Ländercode und einem „D\", gefolgt von einer Ordnungsnummer, z. B. ED-D 112A.","Mit Ländercode und einem „P\", gefolgt von einer Ordnungsnummer, z. B. ED-P 112A."],
+ a:[0],
+ why:"Flugbeschränkungsgebiete (Restricted) tragen ein „R\" – in Deutschland z. B. ED-R 112A.",
+ no:"„D\" steht für Gefahrengebiet (Danger), „P\" für Luftsperrgebiet (Prohibited); „nicht gekennzeichnet\" ist falsch.",
+ tip:"R = Restricted (Beschränkung), D = Danger, P = Prohibited."},
+{cat:"Luftraum & Information",id:"k5-2",n:2,multi:false,q:"Wer ist der Herausgeber des Luftfahrthandbuchs (AIP) in Deutschland?",
+ o:["Deutsche Flugsicherung GmbH (DFS)","Bundesaufsichtsamt für Flugsicherung (BAF)","Luftfahrt-Bundesamt (LBA)","Bundesministerium für Verkehr"],
+ a:[0],
+ why:"Die AIP für Deutschland wird von der Deutschen Flugsicherung (DFS) herausgegeben.",
+ no:"BAF, LBA und Verkehrsministerium haben andere Aufgaben und geben die AIP nicht heraus.",
+ tip:"AIP Deutschland → DFS."},
+{cat:"Luftraum & Information",id:"k5-3",n:3,multi:false,q:"Was besagt das Prinzip der staatlichen Souveränität?",
+ o:["Es ist ein internationaler Grundsatz, der besagt, dass Staaten über den Luftraum über ihrem Hoheitsgebiet entscheiden dürfen.","Ein europäischer Grundsatz, wonach nicht die Staaten, sondern die Europäische Kommission über den Luftraum entscheidet.","Ein europäischer Grundsatz, wonach Staaten über den Luftraum über ihrem Hoheitsgebiet entscheiden dürfen.","Ein internationaler Grundsatz, wonach nicht die Staaten, sondern die Vereinten Nationen über den Luftraum entscheiden."],
+ a:[0],
+ why:"Nach dem (international anerkannten) Souveränitätsprinzip hat jeder Staat die uneingeschränkte Lufthoheit über seinem Hoheitsgebiet.",
+ no:"Es ist nicht europäisch beschränkt, und weder die EU-Kommission noch die UN entscheiden über den nationalen Luftraum.",
+ tip:"Souveränität = jeder Staat bestimmt über seinen eigenen Luftraum (international)."},
+{cat:"Luftraum & Information",id:"k5-4",n:4,multi:true,q:"Mit welchen Buchstaben wird international der kontrollierte Luftraum klassifiziert?",
+ o:["A (Alpha)","C (Charlie)","B (Bravo)","E (Echo)","D (Delta)","G (Golf)","F (Foxtrott)"],
+ a:[0,1,2,3,4],
+ why:"Kontrollierter Luftraum umfasst die Klassen A, B, C, D und E. (F und G sind unkontrolliert.)",
+ no:"G (Golf) ist unkontrolliert; Klasse F ist in Deutschland nicht in Gebrauch und zählt nicht zum kontrollierten Luftraum.",
+ tip:"Kontrolliert = A bis E. Unkontrolliert = F/G."},
+{cat:"Luftraum & Information",id:"k5-5",n:5,multi:false,q:"In welchem Luftraum ist das Fliegen nach Sichtflugregeln (VFR) für die bemannte Luftfahrt NICHT erlaubt?",
+ o:["A (Alpha)","C (Charlie)","B (Bravo)","G (Golf)"],
+ a:[0],
+ why:"In Luftraum A ist ausschließlich IFR erlaubt – VFR ist dort verboten.",
+ no:"In B, C und G ist VFR (unter Bedingungen) zulässig.",
+ tip:"Luftraum A = nur IFR, kein VFR."},
+{cat:"Luftraum & Information",id:"k5-6",n:6,multi:false,q:"Das Fliegen nach Instrumentenflugregeln (IFR) ist in welchen Lufträumen erlaubt?",
+ o:["A, B, C, D, E, G","A, B, C, D","A, B, C","A, B, C, D, E"],
+ a:[0],
+ why:"IFR ist grundsätzlich in allen Luftraumklassen A bis G möglich (in G mit Einschränkungen).",
+ no:"Die anderen Auswahlen lassen mindestens eine Klasse (insbesondere G) weg.",
+ tip:"IFR: in allen Klassen A-G möglich."},
+{cat:"Luftraum & Information",id:"k5-7",n:7,multi:false,q:"Ein Luftraum mit bestimmten Abmessungen, der zur ausschließlichen Nutzung für einen bestimmten Nutzer zeitweise reserviert wird und in den andere Luftverkehrsteilnehmer nicht einfliegen dürfen, heißt …",
+ o:["TSA","Flugbeschränkungsgebiet (R)","TRA","Luftsperrgebiet (P)"],
+ a:[0],
+ why:"Eine TSA (Temporary Segregated Area) ist exklusiv für einen Nutzer reserviert – andere dürfen nicht einfliegen.",
+ no:"Eine TRA erlaubt unter Bedingungen Durchflug; R und P sind dauerhafte Beschränkungs-/Sperrgebiete, nicht die exklusive zeitweise Reservierung.",
+ tip:"TSA = exklusiv reserviert, kein Einflug für andere."},
+{cat:"Luftraum & Information",id:"k5-8",n:8,multi:false,q:"Aus wie vielen Teilen besteht das Luftfahrthandbuch AIP?",
+ o:["3","2","5","4"],
+ a:[0],
+ why:"Die AIP gliedert sich in drei Teile: GEN (General), ENR (En-Route) und AD (Aerodromes).",
+ no:"2, 4 oder 5 Teile entsprechen nicht der Gliederung.",
+ tip:"AIP = 3 Teile: GEN, ENR, AD."},
+{cat:"Luftraum & Information",id:"k5-9",n:9,multi:false,q:"Wofür steht das Akronym AIP?",
+ o:["Aeronautical Information Publication","Aviation Information Publication","Aeronautical Informations and Prohibitions","Alternative Information Publication"],
+ a:[0],
+ why:"AIP = Aeronautical Information Publication (Luftfahrthandbuch).",
+ no:"Die übrigen Auflösungen sind erfundene Begriffe.",
+ tip:"AIP = Aeronautical Information Publication."},
+{cat:"Luftraum & Information",id:"k5-10",n:10,multi:false,q:"In welchem Teil finden sich Informationen zu Flugbeschränkungs-, Gefahren- und Luftsperrgebieten?",
+ o:["im En-Route-Teil (ENR)","im Teil General (GEN)","im Teil Drohnen (UAS)","im Teil Flugplätze (AD)"],
+ a:[0],
+ why:"Beschränkungs-, Gefahren- und Sperrgebiete betreffen die Strecke und stehen im En-Route-Teil (ENR).",
+ no:"GEN enthält Allgemeines, AD die Flugplätze; einen „Teil Drohnen\" gibt es in der AIP-Grundgliederung nicht.",
+ tip:"Sperr-/Gefahren-/Beschränkungsgebiete → ENR (En-Route)."},
+{cat:"Luftraum & Information",id:"k5-11",n:11,multi:true,q:"Informationen, die nur von kurzer Dauer sind, werden wo veröffentlicht?",
+ o:["NOTAM","Supplement (SUP)","Luftfahrthandbuch (AIP)","Gesetzblatt"],
+ a:[0,1],
+ why:"Kurzfristige bzw. zeitlich begrenzte Informationen werden per NOTAM und per AIP-Supplement (SUP) veröffentlicht.",
+ no:"Die AIP selbst enthält dauerhafte Informationen; das Gesetzblatt ist kein luftfahrtspezifisches Mitteilungsmedium.",
+ tip:"Kurzfristig → NOTAM + Supplement (SUP)."},
+{cat:"Luftraum & Information",id:"k5-12",n:12,multi:false,q:"Wofür steht das Akronym AIC?",
+ o:["Aeronautical Information Circular","Aviation Information Circular","Aerodrome Information Circular","Alternative Information Circular"],
+ a:[0],
+ why:"AIC = Aeronautical Information Circular (Luftfahrt-Informationsrundschreiben).",
+ no:"Die übrigen Auflösungen sind erfundene Begriffe.",
+ tip:"AIC = Aeronautical Information Circular."},
+{cat:"Luftraum & Information",id:"k5-13",n:13,multi:false,q:"Wofür steht das Akronym NOTAM?",
+ o:["Notice to Airmen","Notice to Aircraft and Military","Notice of Temporary Amendments","Notice to Aviation"],
+ a:[0],
+ why:"NOTAM = Notice to Airmen: eine kurzfristige Mitteilung an Luftfahrer.",
+ no:"Die übrigen Auflösungen sind erfundene Begriffe.",
+ tip:"NOTAM = Notice to Airmen."},
+{cat:"Luftraum & Information",id:"k5-14",n:14,multi:false,q:"Eine Karte zeigt eine Entfernung von 3 cm für real 30 km. Welchen Maßstab hat die Karte?",
+ o:["1:1.000.000","1:500.000","1:10.000","1:100.000"],
+ a:[0],
+ why:"3 cm entsprechen 30 km = 3.000.000 cm. 3.000.000 ÷ 3 = 1.000.000, also Maßstab 1:1.000.000.",
+ no:"1:500.000, 1:10.000 oder 1:100.000 ergeben sich aus der Rechnung nicht.",
+ tip:"30 km / 3 cm → 1 cm = 10 km → 1:1.000.000."},
+{cat:"Luftraum & Information",id:"k5-15",n:15,multi:false,q:"Ein Aeronautical Information Circular (AIC) dient wozu?",
+ o:["Enthält Informationen, die weder der eigentlichen AIP noch einem NOTAM zugeordnet werden können, aber mit Bezug zur Flugsicherheit, Navigation, Technik oder zu administrativen/gesetzgebenden Maßnahmen relevant sind.","Enthält ausschließlich luftfahrttechnische Bekanntmachungen, die die Flugsicherheit beeinträchtigen.","Enthält Informationen zur Luftraumstruktur eines Staates.","Enthält kodifizierte Informationen zur kurzfristigen Änderung der AIP mit Verfahren zur sicheren Durchführung des Luftverkehrs."],
+ a:[0],
+ why:"Ein AIC transportiert ergänzende, erläuternde oder administrative Informationen, die nicht in AIP oder NOTAM passen, aber für die Luftfahrt relevant sind.",
+ no:"Kurzfristige kodifizierte Änderungen sind NOTAM-Inhalte; die anderen Beschreibungen sind zu eng bzw. falsch.",
+ tip:"AIC = Ergänzendes/Administratives, das nicht in AIP oder NOTAM passt."},
+{cat:"Luftraum & Information",id:"k5-16",n:16,multi:false,q:"1 cm in der Luftfahrtkarte ICAO Maßstab 1:500.000 entspricht welcher Entfernung in der Realität?",
+ o:["5 km","500 m","50 km","5.000 cm"],
+ a:[0],
+ why:"1:500.000 bedeutet 1 cm = 500.000 cm = 5.000 m = 5 km.",
+ no:"500 m, 50 km oder 5.000 cm sind das Ergebnis einer falschen Umrechnung.",
+ tip:"1:500.000 → 1 cm = 5 km."},
+{cat:"Luftraum & Information",id:"k5-17",n:17,multi:false,q:"Was ist ein NOTAM?",
+ o:["Eine temporäre, kurzfristige und kodifizierte Änderungsmitteilung zur AIP mit Verfahren, Informationen oder Anordnungen zur sicheren Flugdurchführung.","Eine temporäre, kurzfristige und kodifizierte Änderungsmitteilung zu Gesetzen und Verordnungen.","Eine dauerhafte kodifizierte Änderungsmitteilung zur AIP mit Verfahren, Informationen oder Anordnungen.","Eine temporäre kurzfristige Änderungsmitteilung zur AIP im Klartext mit Verfahren, Informationen oder Anordnungen."],
+ a:[0],
+ why:"Ein NOTAM ist eine temporäre, kurzfristige und kodierte Mitteilung, die die AIP für die sichere Flugdurchführung ergänzt/ändert.",
+ no:"Es betrifft nicht Gesetze allgemein, ist nicht dauerhaft und nicht im Klartext, sondern kodifiziert.",
+ tip:"NOTAM = temporär + kurzfristig + kodifiziert, zur AIP."},
+{cat:"Luftraum & Information",id:"k5-18",n:18,multi:false,q:"In einem Flugbeschränkungsgebiet (R) gilt Folgendes:",
+ o:["UAS dürfen unter bestimmten Bedingungen betrieben werden (bspw. mit einer Genehmigung).","UAS dürfen nie in solchen Gebieten betrieben werden.","UAS dürfen an Wochenenden in diesen Gebieten betrieben werden.","UAS dürfen immer einfliegen, da nur die bemannte Luftfahrt betroffen ist."],
+ a:[0],
+ why:"In einem Beschränkungsgebiet (R) ist der Betrieb nicht generell verboten, sondern unter bestimmten Bedingungen – etwa mit Genehmigung – möglich.",
+ no:"„Nie\", „nur am Wochenende\" oder „immer\" trifft nicht zu; R bedeutet beschränkt, nicht gesperrt.",
+ tip:"R = beschränkt: Betrieb möglich unter Bedingungen/Genehmigung."},
+{cat:"Luftraum & Information",id:"k5-19",n:19,multi:false,q:"Luftfahrtinformationen, insbesondere zu Luftsperr-, Gefahren- und Flugbeschränkungsgebieten, können wo eingeholt werden?",
+ o:["In der AIP des Staates, in dem der Flugbetrieb stattfindet.","In der AIP des Staates, in dem der Fernpilot seine Kompetenznachweise erworben hat.","In irgendeiner AIP eines Staates.","In der AIP des Staates, in dem der Betreiber registriert ist."],
+ a:[0],
+ why:"Maßgeblich ist die AIP des Staates, in dem tatsächlich geflogen wird – dort stehen die örtlich gültigen Gebiete.",
+ no:"Kompetenz- oder Registrierungsstaat sind irrelevant; „irgendeine AIP\" hilft nicht.",
+ tip:"Infos aus der AIP des Landes, in dem du fliegst."},
+{cat:"Luftraum & Information",id:"k5-20",n:20,multi:false,q:"NOTAM-Zeile B) bedeutet (z. B. „B) 2411141000\")?",
+ o:["Ab welchem Datum und zu welcher Zeit das NOTAM wirksam wird.","Ab welchem Datum und zu welcher Zeit das NOTAM endet.","Die geografischen Koordinaten des Geltungsortes.","Die Referenznummer des NOTAMS."],
+ a:[0],
+ why:"Die Zeile B) gibt den Beginn der Gültigkeit an (Datum/Uhrzeit, wann das NOTAM wirksam wird). C) gibt das Ende an.",
+ no:"Das Ende steht in C), Koordinaten in Q)/Feld A, die Referenz ist die NOTAM-Nummer – nicht Zeile B).",
+ tip:"B) = Beginn (wirksam ab), C) = Ende."},
+/* ===================== MODUL 6: METEOROLOGIE ===================== */
+{cat:"Meteorologie",id:"k6-1",n:1,multi:false,q:"Bauteile eines UAS (z. B. Tragflächen, Rotorblätter) können vereisen. In welchem Temperaturbereich ist die Vereisungsgefahr am größten?",
+ o:["0 °C bis −15 °C","5 °C bis −5 °C","0 °C bis 5 °C","0 °C bis −3 °C"],
+ a:[0],
+ why:"Die größte Vereisungsgefahr besteht im Bereich von etwa 0 °C bis −15 °C – hier kann unterkühltes Wasser besonders gut an Bauteilen anfrieren.",
+ no:"Engere Bereiche wie 0 bis −3 °C oder 0 bis 5 °C decken die kritische Spanne nicht ab; 5 bis −5 °C ist zu eng.",
+ tip:"Vereisung am stärksten: 0 °C bis −15 °C."},
+{cat:"Meteorologie",id:"k6-2",n:2,multi:false,q:"Was muss beim Einsatz/Flug eines UAS bei Wind beachtet werden?",
+ o:["Für eine ordnungsgemäße Flugplanung müssen die Gegen- und Rückenwindkomponente und eine ausreichende Akkureserve für den Rückflug berücksichtigt werden.","Der Wind muss nicht berücksichtigt werden, die moderne Steuer- und Regelungstechnik regelt das automatisch.","Der aktuell vorherrschende Wind wirkt sich immer positiv auf Flugleistung und Flugdurchführung aus.","Für eine ordnungsgemäße Flugplanung muss die Rückenwindkomponente berücksichtigt werden."],
+ a:[0],
+ why:"Gegenwind kostet Energie, Rückenwind hilft – beides muss eingeplant werden, inklusive Akkureserve für den (oft gegenwindigen) Rückflug.",
+ no:"„Nicht berücksichtigen\" oder „immer positiv\" ist falsch; nur die Rückenwindkomponente zu betrachten ist unvollständig.",
+ tip:"Wind planen: Gegen- UND Rückenwind + Akkureserve für den Rückflug."},
+{cat:"Meteorologie",id:"k6-3",n:3,multi:false,q:"Was kann eine Flugwetterberatung für den UAS-Betrieb sinnvoll ergänzen?",
+ o:["Wetterradarbilder mit Anzeige von Niederschlag oder Wettersatellitenbilder können die Flugwetterberatung sinnvoll und aktuell ergänzen.","Die Flugwetterberatung darf nur durch vom DWD zertifizierte Lösungen ergänzt werden.","Das Analysieren älterer Telemetrie-Aufzeichnungen vom Aufstiegsort kann eine Flugwetterberatung ersetzen.","Der Pollenflug-Gefahrenindex des DWD kann eine Flugwetterberatung ergänzen."],
+ a:[0],
+ why:"Aktuelle Radar- und Satellitenbilder zeigen Niederschlag und Bewölkung in Echtzeit und ergänzen die Beratung gut.",
+ no:"„Nur zertifizierte Lösungen\" ist zu eng, alte Telemetrie ersetzt keine Beratung, der Pollenindex ist für die Flugsicherheit irrelevant.",
+ tip:"Radar-/Satellitenbilder ergänzen die Flugwetterberatung."},
+{cat:"Meteorologie",id:"k6-4",n:4,multi:false,q:"Was ist ein METAR?",
+ o:["Eine standardisierte Meldung in Kurzform, die die Wetterbeobachtung eines einzelnen Flugplatzes wiedergibt.","Ein Begriff aus der Flugnavigation.","Eine App für Wettermeldungen für Steuerer unbemannter Fluggeräte, herausgegeben vom DWD.","Ein Wetterbeobachtungssatellit des DWD."],
+ a:[0],
+ why:"Ein METAR ist eine standardisierte, codierte Wetter-Beobachtungsmeldung (Ist-Zustand) für einen bestimmten Flugplatz.",
+ no:"Es ist kein Navigationsbegriff, keine App und kein Satellit.",
+ tip:"METAR = beobachtetes Ist-Wetter eines Flugplatzes (Kurzform)."},
+{cat:"Meteorologie",id:"k6-5",n:5,multi:false,q:"Womit muss der Fernpilot in den Abendstunden rechnen, wenn sich die Lufttemperatur dem Taupunkt nähert?",
+ o:["dichter Bodennebel","keinerlei Wetteränderung","nur mit Nebel in der Nähe der Küste","starke Gewitter"],
+ a:[0],
+ why:"Nähert sich die Temperatur dem Taupunkt, kondensiert die Luftfeuchte – es bildet sich (Boden-)Nebel.",
+ no:"„Keine Änderung\" ist falsch; Nebel ist nicht auf die Küste beschränkt; Gewitter entstehen anders.",
+ tip:"Temperatur ≈ Taupunkt → Nebel."},
+{cat:"Meteorologie",id:"k6-6",n:6,multi:false,q:"Wie ändert sich im Allgemeinen die Windgeschwindigkeit in 100 m Höhe über Grund in offenem Gelände?",
+ o:["Sie ist um 50 % größer als am Boden.","Sie ist um 100 % größer als am Boden.","Sie ist um 75 % größer als am Boden.","Sie ist um 25 % größer als am Boden."],
+ a:[0],
+ why:"Mit der Höhe nimmt die Bodenreibung ab; in 100 m ist der Wind in offenem Gelände grob etwa 50 % stärker als am Boden.",
+ no:"100 %, 75 % oder 25 % entsprechen nicht dem Richtwert.",
+ tip:"In 100 m: Wind ca. +50 % gegenüber Boden."},
+{cat:"Meteorologie",id:"k6-7",n:7,multi:false,q:"Wie müssen die Wettervorhersagen eingeholt werden?",
+ o:["Von allen Anbietern, wenn verifiziert werden kann, dass diese Daten des staatlichen Wetterdienstes nutzen.","Von Hobbymeteorologen aus dem Internet.","Von der Kurzanzeige meines Handy-Widgets.","Ausschließlich von einer staatlichen Flugwetterberatung."],
+ a:[0],
+ why:"Zulässig sind beliebige Anbieter, sofern nachweislich Daten des staatlichen Wetterdienstes zugrunde liegen – so ist die Qualität gesichert.",
+ no:"Hobby-Quellen oder Handy-Widgets sind unzuverlässig; „ausschließlich staatlich\" ist zu eng.",
+ tip:"Quelle egal – aber Daten müssen vom staatlichen Wetterdienst stammen."},
+{cat:"Meteorologie",id:"k6-8",n:8,multi:false,q:"Womit hat man bei Föhn-Wetterlagen im Gebirge auf der Lee-Seite zu rechnen?",
+ o:["Turbulenzen durch Rotoren","Windstille","Windzunahme","Thermik"],
+ a:[0],
+ why:"Auf der windabgewandten (Lee-)Seite entstehen bei Föhn Leewellen und darunter Rotoren – starke, gefährliche Turbulenzen.",
+ no:"Windstille, bloße Windzunahme oder Thermik beschreiben die Rotor-Turbulenzen nicht.",
+ tip:"Lee bei Föhn = Rotoren = Turbulenz."},
+{cat:"Meteorologie",id:"k6-9",n:9,multi:false,q:"Wie bezeichnet man bei Föhn-Wetterlagen in Gebirgen die windabgewandte Seite?",
+ o:["Lee","Luv","Schatten","Windstill"],
+ a:[0],
+ why:"Die windabgewandte Seite heißt Lee, die windzugewandte Luv.",
+ no:"„Schatten\" und „Windstill\" sind keine meteorologischen Bezeichnungen dafür; Luv ist die Gegenseite.",
+ tip:"Lee = windabgewandt, Luv = windzugewandt."},
+{cat:"Meteorologie",id:"k6-10",n:10,multi:false,q:"Ist eine Flugwetterberatung für die Flugvorbereitung eines UAS-Aufstiegs notwendig?",
+ o:["Eine Flugwetterberatung ist immer Bestandteil einer Flugvorbereitung.","Eine Flugwetterberatung ist nur bei grenzwertigem Wetter notwendig.","Eine Flugwetterberatung ist für Fernpiloten von UAS nicht geeignet.","Eine Flugwetterberatung ist nur für Piloten bemannter Luftfahrzeuge notwendig."],
+ a:[0],
+ why:"Die Beurteilung des Wetters gehört immer zur Flugvorbereitung – unabhängig von der erwarteten Wetterlage.",
+ no:"„Nur bei grenzwertigem Wetter\", „nicht geeignet\" oder „nur bemannt\" ist falsch.",
+ tip:"Wetter checken: immer Teil der Flugvorbereitung."},
+{cat:"Meteorologie",id:"k6-11",n:11,multi:false,q:"Das Akronym METAR steht wofür?",
+ o:["Meteorological Aerodrome Report","Terminal Aerodrome Forecast","Meteorological Automatic Report","Meteorological Aviation Report"],
+ a:[0],
+ why:"METAR = Meteorological Aerodrome Report (beobachtetes Flugplatzwetter).",
+ no:"Terminal Aerodrome Forecast ist das TAF; die anderen sind erfundene Begriffe.",
+ tip:"METAR = Meteorological Aerodrome Report."},
+{cat:"Meteorologie",id:"k6-12",n:12,multi:false,q:"Über was geben Isobaren auf Oberflächen-Wetterkarten (Surface Weather Charts) Aufschluss?",
+ o:["über Windrichtung und Geschwindigkeit","über Niederschlagsgebiete","über die Temperatur und den Taupunkt","über den Grad der Wolkenbedeckung"],
+ a:[0],
+ why:"Isobaren verbinden Punkte gleichen Luftdrucks. Aus ihrer Lage und Dichte lassen sich Windrichtung und -geschwindigkeit ableiten (enge Isobaren = starker Wind).",
+ no:"Niederschlag, Temperatur/Taupunkt oder Bewölkung werden nicht durch Isobaren dargestellt.",
+ tip:"Isobaren = Druck → Wind (eng = stark)."},
+{cat:"Meteorologie",id:"k6-13",n:13,multi:false,q:"Wofür steht das Akronym TAF?",
+ o:["Terminal Aerodrome Forecast","Terminal Aviation Forecast","Transcoded Aerodrome Forecast","Terminal Automatic Forecast"],
+ a:[0],
+ why:"TAF = Terminal Aerodrome Forecast: die Wettervorhersage für einen Flugplatz.",
+ no:"Die übrigen Auflösungen sind erfundene Begriffe.",
+ tip:"TAF = Terminal Aerodrome Forecast (Vorhersage). METAR = Beobachtung."},
+{cat:"Meteorologie",id:"k6-14",n:14,multi:false,q:"Wozu dient ein SPECI-Bericht?",
+ o:["Ein SPECI-Bericht ist eine Sonderwettermeldung, wenn definierte Schwellenwerte einzelner Wetterelemente seit der letzten Meldung erreicht oder durchschritten werden.","Ein SPECI-Bericht ist eine Sonderwettermeldung, der nur bei Wetterverschlechterungen ausgegeben wird.","Ein SPECI-Bericht ist eine Sonderwettermeldung durch Fernpiloten in einem MET-Forum.","Ein SPECI-Bericht ist eine Sonderwettermeldung zu Gefahrenlagen wie starken Gewittern."],
+ a:[0],
+ why:"Ein SPECI ist eine außerplanmäßige Sondermeldung, die ausgelöst wird, sobald Wetterelemente bestimmte Schwellenwerte über- oder unterschreiten – in beide Richtungen.",
+ no:"Es ist nicht nur auf Verschlechterungen oder nur auf Gewitter beschränkt und kommt nicht aus einem Forum.",
+ tip:"SPECI = Sondermeldung bei Schwellenwert-Über-/Unterschreitung."},
+{cat:"Meteorologie",id:"k6-15",n:15,multi:false,q:"TAF EDDW 051100Z 0512/0612 14008KT 9999 OVC004 […] – was bedeutet 0512/0612?",
+ o:["Gültigkeit des TAF vom 05., 12:00 Uhr UTC bis zum 06., 12:00 Uhr UTC.","Referenznummer des TAF.","Taupunkt 5 °C und Temperatur 12 °C, variiert bis Taupunkt 6 °C und Temperatur 12 °C.","Wind um 5-6 Knoten aus 120°."],
+ a:[0],
+ why:"„0512/0612\" gibt den Gültigkeitszeitraum an: vom 5. Tag 12:00 UTC bis zum 6. Tag 12:00 UTC.",
+ no:"Es ist keine Referenznummer, kein Temperatur-/Taupunktwert und keine Windangabe.",
+ tip:"TAF: TTHH/TTHH = Gültigkeit von … bis (Tag/Stunde UTC)."},
+{cat:"Meteorologie",id:"k6-16",n:16,multi:false,q:"Welche Zeitzone wird für Zeitangaben in der Luftfahrt genutzt?",
+ o:["UTC (Koordinierte Weltzeit)","MESZ (Mitteleuropäische Sommerzeit)","CET (Mitteleuropäische Zeit)","MEZ (Mitteleuropäische Zeit)"],
+ a:[0],
+ why:"In der Luftfahrt wird weltweit einheitlich UTC verwendet (in Meldungen mit „Z\" gekennzeichnet), um Zeitzonenfehler zu vermeiden.",
+ no:"MESZ, CET und MEZ sind lokale Zeitzonen und werden nicht für luftfahrtweite Angaben genutzt.",
+ tip:"Luftfahrt = UTC (Zulu/„Z\")."},
+{cat:"Meteorologie",id:"k6-17",n:17,multi:false,q:"Wie verhält sich die Luftdichte mit der Höhe und welche Folge hat dies für das UAS?",
+ o:["Die Dichte sinkt und die Propeller müssen sich schneller drehen, um die erforderliche Leistung zu erbringen.","Die Dichte sinkt und die Propeller müssen sich langsamer drehen, um die erforderliche Leistung zu erbringen.","Die Dichte steigt und die Propeller müssen sich langsamer drehen.","Die Dichte steigt und die Propeller müssen sich schneller drehen."],
+ a:[0],
+ why:"Mit der Höhe sinkt die Luftdichte. Weniger Luftmasse pro Umdrehung bedeutet: die Propeller müssen schneller drehen, um denselben Auftrieb/Schub zu erzeugen.",
+ no:"Die Dichte steigt nicht mit der Höhe; „langsamer drehen\" widerspricht der geringeren Dichte.",
+ tip:"Höher → dünnere Luft → Propeller müssen schneller drehen."},
+{cat:"Meteorologie",id:"k6-18",n:18,multi:false,q:"In welchem Verhältnis steht die Dichte zur Temperatur und zum Druck?",
+ o:["Die Dichte steigt, wenn der Druck steigt, und die Dichte sinkt, wenn die Temperatur steigt.","Die Dichte steigt, wenn der Druck sinkt, und die Dichte sinkt, wenn die Temperatur steigt.","Die Dichte sinkt, wenn der Druck steigt, und die Dichte steigt, wenn die Temperatur steigt.","Die Dichte steigt, wenn der Druck steigt, und die Dichte steigt, wenn die Temperatur steigt."],
+ a:[0],
+ why:"Höherer Druck presst die Luft zusammen (Dichte steigt); höhere Temperatur dehnt sie aus (Dichte sinkt).",
+ no:"Die anderen Kombinationen kehren mindestens eine dieser beiden Abhängigkeiten falsch um.",
+ tip:"Dichte: ↑ mit Druck, ↓ mit Temperatur."},
+{cat:"Meteorologie",id:"k6-19",n:19,multi:false,q:"Wann wird im Gegensatz zu Dunst von Nebel gesprochen?",
+ o:["wenn die Sichtweite unter 1 km liegt","wenn die Sichtweite unter 500 m liegt","wenn die Sichtweite unter 100 m liegt","wenn die Sichtweite unter 5 km liegt"],
+ a:[0],
+ why:"Von Nebel spricht man definitionsgemäß bei einer horizontalen Sichtweite unter 1 km; darüber (bis ~8 km) ist es Dunst.",
+ no:"500 m oder 100 m sind nur Sonderfälle starken Nebels; 5 km wäre noch Dunst.",
+ tip:"Nebel = Sicht unter 1 km."},
+{cat:"Meteorologie",id:"k6-20",n:20,multi:false,q:"Wann ist die Wahrscheinlichkeit von Nebel am größten?",
+ o:["Kurz nach Sonnenaufgang, da die Temperatur noch einmal abfällt und den Taupunkt erreichen kann.","Kurz nach Sonnenuntergang, da die Temperatur noch einmal abfällt und den Taupunkt erreichen kann.","Um Mitternacht, da die Temperatur noch einmal abfällt und den Taupunkt erreichen kann.","Kurz vor Sonnenaufgang, da die Temperatur noch einmal abfällt und den Taupunkt erreichen kann."],
+ a:[0],
+ why:"Das Temperaturminimum liegt typischerweise um/kurz nach Sonnenaufgang – dann ist die Wahrscheinlichkeit, den Taupunkt zu erreichen und Nebel zu bilden, am größten.",
+ no:"Nach Sonnenuntergang oder Mitternacht ist es noch nicht am kältesten; „kurz vor Sonnenaufgang\" ist hier nicht die markierte Lösung.",
+ tip:"Nebel am ehesten: kurz nach Sonnenaufgang (kältester Moment)."},
+{cat:"Meteorologie",id:"k6-21",n:21,multi:false,q:"Wie verhält sich die Temperatur mit zunehmender Höhe idealerweise bis zur Tropopause (11 km)?",
+ o:["Die Temperatur nimmt linear mit der Höhe ab. Die Temperaturabnahme beträgt 0,65 K je 100 m Höhenzunahme.","Die Temperatur nimmt linear mit der Höhe zu. Die Zunahme beträgt 0,65 K je 100 m.","Die Temperatur nimmt exponentiell mit der Höhe ab. Die Abnahme beträgt 2 K je 100 m.","Die Temperatur nimmt exponentiell mit der Höhe zu. Die Zunahme beträgt 2 K je 100 m."],
+ a:[0],
+ why:"In der Standardatmosphäre nimmt die Temperatur bis zur Tropopause linear um 0,65 K pro 100 m ab.",
+ no:"„Zunahme\" oder „exponentiell mit 2 K\" widerspricht der ISA.",
+ tip:"ISA: −0,65 K pro 100 m (linear, bis 11 km)."},
+{cat:"Meteorologie",id:"k6-22",n:22,multi:false,q:"Welche Kennzeichnung gilt auf Wetterkarten für Druckgebiete und welche Eigenschaft haben diese?",
+ o:["Hochdruckgebiete (Antizyklone) werden mit H gekennzeichnet und drehen auf der Nordhalbkugel im Uhrzeigersinn. Tiefdruckgebiete (Zyklone) werden mit L gekennzeichnet und drehen auf der Nordhalbkugel gegen den Uhrzeigersinn.","Hochdruckgebiete werden mit L gekennzeichnet und drehen im Uhrzeigersinn; Tiefdruckgebiete mit H und drehen gegen den Uhrzeigersinn.","Hochdruckgebiete werden mit H gekennzeichnet und drehen im Uhrzeigersinn; Tiefdruckgebiete mit L und drehen ebenfalls im Uhrzeigersinn.","Hochdruckgebiete werden mit H gekennzeichnet und drehen gegen den Uhrzeigersinn; Tiefdruckgebiete mit L und drehen im Uhrzeigersinn."],
+ a:[0],
+ why:"Hoch = H, dreht auf der Nordhalbkugel im Uhrzeigersinn; Tief = L (Low), dreht gegen den Uhrzeigersinn.",
+ no:"Die anderen Optionen vertauschen Buchstaben oder Drehrichtungen.",
+ tip:"Nordhalbkugel: Hoch (H) = mit Uhr, Tief (L) = gegen Uhr."},
+{cat:"Meteorologie",id:"k6-23",n:23,multi:false,q:"10 °C entsprechen wie viel °F?",
+ o:["50 °F","32 °F","5 °F","0,5 °F"],
+ a:[0],
+ why:"Umrechnung: °F = °C × 9/5 + 32 = 10 × 1,8 + 32 = 50 °F.",
+ no:"32 °F sind 0 °C; 5 °F und 0,5 °F ergeben sich aus falscher Umrechnung.",
+ tip:"°F = °C × 1,8 + 32 → 10 °C = 50 °F."},
+{cat:"Meteorologie",id:"k6-24",n:24,multi:false,q:"Wann erwarten wir im Tagesverlauf die höchsten Temperaturen?",
+ o:["am späten Nachmittag","mittags","am frühen Nachmittag","abends"],
+ a:[0],
+ why:"Wegen der zeitverzögerten Erwärmung des Bodens liegt das Tagesmaximum der Temperatur meist am späten Nachmittag, nicht mittags.",
+ no:"Mittags steht die Sonne am höchsten, das Temperaturmaximum kommt aber später; früher Nachmittag/Abend trifft es nicht.",
+ tip:"Wärmster Moment: später Nachmittag (verzögert)."},
+{cat:"Meteorologie",id:"k6-25",n:25,multi:false,q:"Nahe der Erdoberfläche gilt welche Regel für den Wind?",
+ o:["Die Oberflächenreibung reduziert die Windgeschwindigkeit.","Die Oberflächenreibung hat keinen Einfluss auf die Windgeschwindigkeit.","Die Oberflächenreibung erhöht oder verlangsamt die Windgeschwindigkeit.","Die Oberflächenreibung erhöht die Windgeschwindigkeit."],
+ a:[0],
+ why:"Reibung am Boden bremst den Wind – nahe der Oberfläche ist er daher langsamer als in der Höhe.",
+ no:"„Kein Einfluss\", „erhöht\" oder „erhöht/verlangsamt\" trifft nicht zu.",
+ tip:"Bodenreibung bremst den Wind (langsamer unten)."},
+{cat:"Meteorologie",id:"k6-26",n:26,multi:false,q:"Schwacher Wind aus nordöstlicher Richtung – wie in einem METAR/TAF dargestellt?",
+ o:["045/05KT","045/25KT","090/20KT","315/05KT"],
+ a:[0],
+ why:"Nordost = 045°, schwacher Wind = 05 Knoten → 045/05KT.",
+ no:"25KT wäre nicht „schwach\"; 090° ist Ost; 315° ist Nordwest.",
+ tip:"NO = 045°, schwach ≈ 05 KT → 045/05KT."},
+{cat:"Meteorologie",id:"k6-27",n:27,multi:false,q:"Welcher Faktor eignet sich zur Umrechnung von kt in m/s?",
+ o:["Der Faktor 0,5, d. h. 30 kt entsprechen ungefähr 15 m/s.","Der Faktor 3, d. h. 30 kt entsprechen ungefähr 10 m/s.","Der Faktor 2, d. h. 30 kt entsprechen ungefähr 60 m/s.","Der Faktor 0,65, d. h. 30 kt entsprechen 19,5 m/s."],
+ a:[0],
+ why:"1 kt ≈ 0,514 m/s, als Faustformel rund 0,5. 30 kt × 0,5 = 15 m/s.",
+ no:"Faktor 3, 2 oder 0,65 ergeben unrealistische Werte.",
+ tip:"kt → m/s: ×0,5 (30 kt ≈ 15 m/s)."},
+{cat:"Meteorologie",id:"k6-28",n:28,multi:false,q:"10 kt entsprechen wie viel km/h?",
+ o:["18,5 km/h","15,8 km/h","1,85 km/h","1,58 km/h"],
+ a:[0],
+ why:"1 kt = 1,852 km/h. 10 kt = 18,52 km/h ≈ 18,5 km/h.",
+ no:"15,8; 1,85 oder 1,58 km/h ergeben sich aus falscher Umrechnung.",
+ tip:"kt → km/h: ×1,852 (10 kt ≈ 18,5 km/h)."},
+{cat:"Meteorologie",id:"k6-29",n:29,multi:false,q:"Wie lautet der Temperaturgradient pro 100 m gemäß der internationalen Standardatmosphäre (ISA)?",
+ o:["0,65 K","1,98 K","1,85 K","6,5 K"],
+ a:[0],
+ why:"Der ISA-Temperaturgradient beträgt 0,65 K pro 100 m (= 6,5 K pro 1.000 m).",
+ no:"6,5 K gilt pro 1.000 m (nicht pro 100 m); 1,98 K und 1,85 K sind falsch.",
+ tip:"ISA: 0,65 K pro 100 m."},
+{cat:"Meteorologie",id:"k6-30",n:30,multi:false,q:"Welche der folgenden Aussagen ist korrekt?",
+ o:["Im Allgemeinen nehmen die Dichte, die Temperatur und der Druck mit der Höhe ab.","Im Allgemeinen nehmen Dichte, Temperatur und Druck mit der Höhe zu.","Im Allgemeinen nehmen Dichte und Temperatur mit der Höhe ab, der Druck jedoch zu.","Im Allgemeinen nimmt die Dichte mit der Höhe zu, Druck und Temperatur jedoch ab."],
+ a:[0],
+ why:"Mit zunehmender Höhe nehmen (bis zur Tropopause) Dichte, Temperatur und Druck alle ab.",
+ no:"Eine Zunahme von Druck/Temperatur/Dichte mit der Höhe widerspricht der Atmosphäre.",
+ tip:"Höher hinauf → Dichte, Temperatur und Druck nehmen ab."},
+{cat:"Meteorologie",id:"k6-31",n:31,multi:false,q:"Was geschieht mit dem Wind in der Höhe?",
+ o:["Der Wind nimmt in der Höhe an Stärke zu und dreht um ca. 30° nach rechts, da die Reibung sich vermindert und die Corioliskraft einen größeren Einfluss hat.","Der Wind nimmt an Stärke ab und dreht um ca. 30° nach rechts, da die Reibung sich vermindert und die Corioliskraft kleineren Einfluss hat.","Der Wind nimmt an Stärke ab und dreht um ca. 30° nach links, da die Reibung sich vermindert und die Corioliskraft größeren Einfluss hat.","Der Wind nimmt an Stärke zu und dreht um ca. 30° nach rechts, da die Reibung sich verstärkt und die Corioliskraft kleineren Einfluss hat."],
+ a:[0],
+ why:"Mit der Höhe sinkt die Bodenreibung, die Corioliskraft wirkt stärker: Der Wind wird schneller und dreht (Nordhalbkugel) um ~30° nach rechts.",
+ no:"Die anderen Optionen drehen Stärke, Richtung oder Reibungs-/Corioliswirkung falsch.",
+ tip:"Höher: Wind stärker + ~30° nach rechts (weniger Reibung, mehr Coriolis)."},
+{cat:"Meteorologie",id:"k6-32",n:32,multi:false,q:"Wann weht der Landwind und warum?",
+ o:["Nachts weht der Landwind, da sich das Land stärker abkühlt als die See und sich somit über Land ein Hochdrucksystem bildet. Die warme See erwärmt die darüberliegende Luft und es bildet sich ein Tiefdrucksystem. Der Wind weht vom Land auf die See.","Tagsüber weht der Landwind, da sich das Land stärker erwärmt als die See; über Land bildet sich ein Tief, über See ein Hoch. Der Wind weht von der See auf das Land.","Tagsüber weht der Landwind, da sich das Land stärker abkühlt als die See; über Land ein Hoch, über See ein Tief. Wind vom Land auf die See.","Nachts weht der Landwind, da sich das Land stärker erwärmt als die See; über Land ein Tief, über See ein Hoch. Wind von der See auf das Land."],
+ a:[0],
+ why:"Nachts kühlt das Land schneller ab → Hoch über Land, Tief über der wärmeren See → der Wind weht vom Land zur See (Landwind).",
+ no:"Die anderen Varianten vertauschen Tag/Nacht, Hoch/Tief oder die Windrichtung.",
+ tip:"Nachts: Land kalt → Landwind weht Land → See."},
+{cat:"Meteorologie",id:"k6-33",n:33,multi:false,q:"Welche Bedingungen begünstigen die Vereisung?",
+ o:["niedrige Temperaturen und eine hohe Luftfeuchte","hohe Windgeschwindigkeiten und eine niedrige Temperatur","hohe Windgeschwindigkeiten und eine hohe Luftfeuchte","niedrige Temperaturen und eine geringe Luftfeuchte"],
+ a:[0],
+ why:"Vereisung braucht Feuchtigkeit (Wasser zum Anfrieren) und Temperaturen um/unter dem Gefrierpunkt – also niedrige Temperatur + hohe Luftfeuchte.",
+ no:"Windgeschwindigkeit ist nicht der entscheidende Faktor; geringe Feuchte liefert kein Anfriermaterial.",
+ tip:"Vereisung = kalt + feucht."},
+{cat:"Meteorologie",id:"k6-34",n:34,multi:false,q:"Was gilt in Hinblick auf Gewitter?",
+ o:["Bei Gewittern bestehen Cumulonimbuswolken (Cb) mit Böenwalzen, starken Auf- und Abwinden sowie Starkregen und Blitzen. Der UAS-Betrieb ist gefährdet und sollte unverzüglich beendet werden.","Bei Gewittern bestehen Cumuluswolken (Cu) mit mäßigen Winden und leichtem Regen, selten Blitze. Der UAS-Betrieb ist ungefährdet und kann fortgeführt werden.","Bei Gewittern bestehen Stratuswolken (St), Starkregen und Blitze. Der UAS-Betrieb ist teilweise gefährdet und sollte in 5 Minuten beendet werden.","Bei Gewittern bestehen Cumulonimbuswolken (Cb) mit Böenwalzen, Starkregen und Blitzen. Der UAS-Betrieb ist nicht gefährdet, da die Geräte gute Technik haben und IP-zertifiziert sind."],
+ a:[0],
+ why:"Gewitter sind an Cumulonimbus (Cb) gebunden – mit Böen, extremen Auf-/Abwinden, Starkregen und Blitzen. Der Betrieb ist hochgefährlich und sofort zu beenden.",
+ no:"Cu/St beschreiben kein Gewitter; „nicht gefährdet wegen IP-Zertifizierung\" ist gefährlich falsch.",
+ tip:"Gewitter = Cb → sofort beenden."},
+{cat:"Meteorologie",id:"k6-35",n:35,multi:false,q:"An einem heißen Sommertag mit Sonneneinstrahlung erwarten Sie welches Ereignis?",
+ o:["Thermik und damit einhergehende Turbulenzen über Sand-, Fels- und Betonflächen sowie umgepflügten Äckern","Thermik und Turbulenzen über Wasser- und Waldflächen sowie stark bewachsenen Feldern","Nebelbildung in den Abendstunden","Nebelbildung in den Morgenstunden"],
+ a:[0],
+ why:"Sich stark aufheizende Flächen (Sand, Fels, Beton, dunkle Äcker) erzeugen aufsteigende Warmluft (Thermik) und damit Turbulenzen.",
+ no:"Wasser und Wald heizen sich kaum auf (kaum Thermik); Nebel entsteht bei Abkühlung, nicht bei Hitze/Sonne.",
+ tip:"Heiß + trockene/dunkle Flächen → Thermik & Turbulenz."},
+{cat:"Meteorologie",id:"k6-36",n:36,multi:false,q:"Unter welchen Bedingungen bildet sich Strahlungsnebel?",
+ o:["Die durch die Sonne eingebrachte Energie kann (nachts) wieder möglichst ungehindert abstrahlen und die Temperatur an der Oberfläche erreicht den Taupunkt.","Warme und feuchte Luft kühlt über einer kalten Oberfläche auf die Taupunkttemperatur ab.","Die durch die Sonne eingebrachte Energie kann möglichst nicht abstrahlen und die Temperatur erreicht den Taupunkt.","Kalte und trockene Luft erwärmt sich über einer warmen Oberfläche auf die Taupunkttemperatur."],
+ a:[0],
+ why:"Strahlungsnebel entsteht in klaren, windstillen Nächten: Der Boden strahlt Wärme ab, kühlt aus, die bodennahe Luft erreicht den Taupunkt – Nebel bildet sich.",
+ no:"Das Heranführen warmer feuchter Luft beschreibt Advektionsnebel; „nicht abstrahlen\" verhindert gerade die Auskühlung.",
+ tip:"Strahlungsnebel = klare Nacht, Boden strahlt ab, kühlt aus."},
+{cat:"Meteorologie",id:"k6-37",n:37,multi:false,q:"Für die Bildung von Lee-Wellen über einem Bergkamm müssen welche Eigenschaften vorliegen?",
+ o:["Der Wind muss über dem Kamm an Geschwindigkeit zunehmen und darf sich in der Richtung nur leicht ändern.","Der Wind muss über dem Kamm an Geschwindigkeit abnehmen und darf sich in der Richtung nur leicht ändern.","Der Wind muss an Geschwindigkeit abnehmen und sich in der Richtung stark ändern.","Der Wind muss an Geschwindigkeit zunehmen und sich in der Richtung stark ändern."],
+ a:[0],
+ why:"Leewellen entstehen bei mit der Höhe zunehmender Windgeschwindigkeit und nahezu konstanter Windrichtung (nur leichte Richtungsänderung).",
+ no:"Abnehmende Geschwindigkeit oder stark drehender Wind verhindern stehende Wellen.",
+ tip:"Leewellen: Wind nimmt zu, Richtung bleibt nahezu gleich."},
+{cat:"Meteorologie",id:"k6-38",n:38,multi:false,q:"Wann ist am ehesten mit Vereisung zu rechnen?",
+ o:["bei feuchter Luft mit Temperaturen nahe dem Taupunkt und um oder unter dem Gefrierpunkt","bei trockener Luft mit Temperaturen nahe dem Taupunkt und um oder unter dem Gefrierpunkt","bei trockener Luft mit Temperaturen unter −5 °C","bei feuchter Luft mit Temperaturen nahe dem Taupunkt und zwischen 10 °C und 20 °C"],
+ a:[0],
+ why:"Vereisung braucht hohe Feuchte (Luft nahe Sättigung/Taupunkt) und Temperaturen um oder unter dem Gefrierpunkt.",
+ no:"Trockene Luft liefert kein Wasser; 10-20 °C ist viel zu warm zum Anfrieren.",
+ tip:"Vereisung: feucht + nahe Taupunkt + um/unter 0 °C."},
+{cat:"Meteorologie",id:"k6-39",n:39,multi:true,q:"In welchen Einheiten wird der Wind in der Regel angegeben?",
+ o:["Knoten (kt)","Meter pro Sekunde (m/s)","Kilometer pro Stunde (km/h)","Meilen pro Stunde (mph)"],
+ a:[0,1,2],
+ why:"Wind wird üblicherweise in Knoten (Luftfahrt), Meter pro Sekunde und Kilometer pro Stunde angegeben.",
+ no:"Meilen pro Stunde (mph) ist in der hiesigen Luftfahrt nicht gebräuchlich.",
+ tip:"Wind: kt, m/s, km/h (nicht mph)."},
+{cat:"Meteorologie",id:"k6-40",n:40,multi:false,q:"Wozu dient die rot-weiße Farbmarkierung an Windsäcken?",
+ o:["Sie dient der Schätzung der aktuellen Windgeschwindigkeit.","Sie dient der Vogelvergrämung.","Sie dient der besseren Sichtbarkeit des Windsacks.","Sie dient der Hinderniskennzeichnung."],
+ a:[0],
+ why:"Die farbigen Segmente erlauben es, anhand des Anstellwinkels und der angeströmten Segmente die Windstärke grob abzuschätzen.",
+ no:"Vogelvergrämung, reine Sichtbarkeit oder Hinderniskennzeichnung sind nicht der eigentliche Zweck der Streifen.",
+ tip:"Windsack-Streifen = Windstärke abschätzen."},
+
+/* ===================== MODUL 7: MENSCHLICHES LEISTUNGSVERMÖGEN ===================== */
+{cat:"Menschliches Leistungsvermögen",id:"k7-1",n:1,multi:false,q:"Wie wird Stressbewältigung definiert?",
+ o:["Als Prozess, durch den sich eine Person Systeme aneignet, die ihr helfen, den Stress zu bewältigen.","Als Prozess, durch den regelmäßige Entspannungsurlaube möglich werden.","Als Maßnahme gegen Stress, bei der die zu erledigenden Dinge einfach liegen gelassen werden.","Als Maßnahme gegen den kommerziellen Druck in der UAS-Branche."],
+ a:[0],
+ why:"Stressbewältigung (Coping) ist der Prozess, sich Strategien/Systeme anzueignen, um mit Stress umzugehen.",
+ no:"Urlaub, Aufgaben liegen lassen oder Branchendruck sind keine Definition der Stressbewältigung.",
+ tip:"Stressbewältigung = sich Bewältigungs-Strategien aneignen."},
+{cat:"Menschliches Leistungsvermögen",id:"k7-2",n:2,multi:true,q:"Welche Auslöser führen laut ICAO zu Müdigkeit, die zu verminderter Leistungsfähigkeit führt?",
+ o:["Schlafverlust","längeres Wachsein","Arbeitsbelastung","zirkadiane Phase","ausgiebiger Sport","Kaffeekonsum","zu langer Schlaf"],
+ a:[0,1,2,3],
+ why:"Laut ICAO sind Schlafverlust, längeres Wachsein, Arbeitsbelastung und die zirkadiane Phase (innere Uhr) Auslöser von Müdigkeit.",
+ no:"Sport, Kaffeekonsum oder „zu langer Schlaf\" zählen nicht zu diesen ICAO-Müdigkeitsauslösern.",
+ tip:"Müdigkeit (ICAO): Schlafverlust, langes Wachsein, Arbeitslast, zirkadiane Phase."},
+{cat:"Menschliches Leistungsvermögen",id:"k7-3",n:3,multi:true,q:"Welches sind Stressoren des kommerziellen oder betrieblichen Drucks?",
+ o:["lange Arbeitszeiten","hohe Arbeitsbelastung","hohe Anforderungen seitens der Vorgesetzten","Reparaturarbeiten am Haus","Haushalt","Kindererziehung"],
+ a:[0,1,2],
+ why:"Kommerzieller/betrieblicher Druck entsteht durch lange Arbeitszeiten, hohe Arbeitsbelastung und hohe Anforderungen der Vorgesetzten.",
+ no:"Hausreparaturen, Haushalt und Kindererziehung sind private (nicht betriebliche) Stressoren.",
+ tip:"Betrieblicher Druck = Arbeitszeit, Arbeitslast, Vorgesetzten-Anforderungen."},
+{cat:"Menschliches Leistungsvermögen",id:"k7-4",n:4,multi:false,q:"Wie verläuft der Abbau von Alkohol im Körper?",
+ o:["Der Abbau verläuft linear und benötigt einige Zeit.","Der Abbau ist zu Beginn schnell und verlangsamt sich dann.","Der Abbau erfolgt schneller durch Ausschwitzen.","Der Abbau verläuft exponentiell und somit ziemlich rasch."],
+ a:[0],
+ why:"Alkohol wird mit weitgehend konstanter Rate (linear) abgebaut – das braucht Zeit und lässt sich nicht beschleunigen.",
+ no:"Der Abbau ist nicht exponentiell, nicht anfangs schneller, und Ausschwitzen beschleunigt ihn nicht.",
+ tip:"Alkoholabbau = linear, dauert – nicht beschleunigbar."},
+{cat:"Menschliches Leistungsvermögen",id:"k7-5",n:5,multi:false,q:"Wofür stehen die Buchstaben in der I'M-SAFE-Checkliste?",
+ o:["Krankheit, Medikamente, Stress, Alkohol, Müdigkeit, Emotionen","Irritation, Medikamente, Sucht, Adrenalin, Fehler, Erholung","Krankheit, Meditation, Sucht, Angst, Müdigkeit, Emotionen","Indikation, Medikation, Stress, Arbeitsbelastung, Fehleranalyse, Erholung"],
+ a:[0],
+ why:"I'M SAFE = Illness (Krankheit), Medication (Medikamente), Stress, Alcohol (Alkohol), Fatigue (Müdigkeit), Emotion – eine Selbstcheck-Liste vor dem Flug.",
+ no:"Die anderen Auflösungen passen nicht zu den Buchstaben I-M-S-A-F-E.",
+ tip:"I'M SAFE: Illness, Medication, Stress, Alcohol, Fatigue, Emotion."},
+{cat:"Menschliches Leistungsvermögen",id:"k7-6",n:6,multi:false,q:"Wovon ist das Ausmaß an Stress bei einer Person abhängig, wenn eine Aufgabe wahrgenommen wird?",
+ o:["subjektive Einschätzung der eigenen Fähigkeiten und subjektive Wahrnehmung der Anforderungen der Aufgabe","subjektive Einschätzung der eigenen Fähigkeiten und tatsächliche Anforderungen der Aufgabe","tatsächliche eigene Fähigkeiten und subjektive Wahrnehmung der Anforderungen","tatsächliche eigene Fähigkeiten und tatsächliche Anforderung der Aufgabe"],
+ a:[0],
+ why:"Stress entsteht aus dem subjektiv empfundenen Verhältnis: wie schätze ich meine Fähigkeiten ein und wie anspruchsvoll nehme ich die Aufgabe wahr – beides subjektiv.",
+ no:"Sobald „tatsächliche\" Werte einfließen, ist es nicht mehr die subjektive Wahrnehmung, die den empfundenen Stress bestimmt.",
+ tip:"Stress = subjektive Fähigkeiten vs. subjektive Anforderung."},
+{cat:"Menschliches Leistungsvermögen",id:"k7-7",n:7,multi:true,q:"Welche Eigenschaften haben Fachsprachen?",
+ o:["geringes Risiko von Mehrdeutigkeit","begrenzter Wortschatz","umfangreicher Wortschatz","starke Syntax"],
+ a:[0,1],
+ why:"Fachsprachen sind auf Eindeutigkeit ausgelegt: begrenzter, klar definierter Wortschatz und damit geringes Risiko von Missverständnissen.",
+ no:"Ein umfangreicher Wortschatz oder eine besonders „starke\" Syntax sind keine Merkmale – sie würden Mehrdeutigkeit eher erhöhen.",
+ tip:"Fachsprache: knapper Wortschatz, eindeutig."},
+{cat:"Menschliches Leistungsvermögen",id:"k7-8",n:8,multi:false,q:"Welcher Sinn ist der bedeutendste für die Orientierung?",
+ o:["Sehen","Hören","Riechen","Fühlen"],
+ a:[0],
+ why:"Der Mensch orientiert sich überwiegend visuell – das Sehen liefert den größten Teil der für die Orientierung nötigen Informationen.",
+ no:"Hören, Riechen und Fühlen tragen bei, sind aber für die räumliche Orientierung deutlich nachrangig.",
+ tip:"Orientierung = vor allem Sehen."},
+{cat:"Menschliches Leistungsvermögen",id:"k7-9",n:9,multi:false,q:"Wie wird fachsprachlich die Bestätigung des Empfängers über den Erhalt einer Nachricht an den Sender bezeichnet?",
+ o:["Feedback","Reverse","Acknowledgement","Answer"],
+ a:[0],
+ why:"Die Rückmeldung des Empfängers, dass eine Nachricht angekommen/verstanden ist, wird als Feedback bezeichnet (geschlossener Kommunikationskreis).",
+ no:"Reverse und Answer sind hier nicht der Fachbegriff; „Acknowledgement\" war im Original als falsch markiert.",
+ tip:"Empfangsbestätigung = Feedback (Kommunikationsschleife schließen)."},
+{cat:"Menschliches Leistungsvermögen",id:"k7-10",n:10,multi:false,q:"Wie lange dauert die Anpassung des Auges an eine dunkle Umgebung?",
+ o:["30 Minuten","10 Minuten","20 Minuten","45 Minuten"],
+ a:[0],
+ why:"Die vollständige Dunkeladaption des Auges dauert etwa 30 Minuten.",
+ no:"10 oder 20 Minuten sind zu kurz, 45 Minuten überschätzt die Dauer.",
+ tip:"Dunkeladaption: ca. 30 Minuten."},
+{cat:"Menschliches Leistungsvermögen",id:"k7-11",n:11,multi:false,q:"Welche Lichtfarbe wird bei Nacht durch das menschliche Auge am besten wahrgenommen?",
+ o:["grün","blau","gelb","rot"],
+ a:[0],
+ why:"Bei Dunkelheit ist das Auge (Stäbchensehen) am empfindlichsten im grünen Bereich des Spektrums.",
+ no:"Blau, Gelb und Rot werden bei Nacht schlechter wahrgenommen.",
+ tip:"Nachtsehen: grün am besten sichtbar."},
+{cat:"Menschliches Leistungsvermögen",id:"k7-12",n:12,multi:false,q:"Bis zu welcher Distanz können wir Entfernungen und Geschwindigkeiten verlässlich abschätzen?",
+ o:["ca. 1 m","ca. 100 m","ca. 50 m","ca. 10 m"],
+ a:[0],
+ why:"Wirklich verlässlich (mit beidäugigem Tiefensehen) schätzen wir nur auf sehr kurze Distanz – etwa bis ca. 1 m; darüber wird es zunehmend ungenau.",
+ no:"100 m, 50 m oder 10 m überschätzen die zuverlässige Schätzdistanz deutlich.",
+ tip:"Verlässliches Schätzen nur bis ca. 1 m."},
+{cat:"Menschliches Leistungsvermögen",id:"k7-13",n:13,multi:false,q:"Sie fliegen mit einem UAS. Plötzlich erfahren Sie eine Störung, z. B. durch das Ansprechen einer Person. In welcher Reihenfolge reagieren Sie?",
+ o:["fliegen - navigieren - kommunizieren","navigieren - fliegen - kommunizieren","fliegen - kommunizieren - navigieren","kommunizieren - fliegen - navigieren"],
+ a:[0],
+ why:"Es gilt die Luftfahrt-Priorität „Aviate – Navigate – Communicate\": zuerst das Fluggerät sicher steuern (fliegen), dann navigieren, dann kommunizieren.",
+ no:"Jede Reihenfolge, die das sichere Fliegen nicht an erste Stelle setzt, ist falsch.",
+ tip:"Aviate – Navigate – Communicate: erst fliegen, dann reden."},
+{cat:"Menschliches Leistungsvermögen",id:"k7-14",n:14,multi:false,q:"Welche Aussage trifft in Bezug auf die Schätzung von Geschwindigkeiten zu?",
+ o:["Geschwindigkeiten sind im Allgemeinen schwer zu schätzen. Gute Schätzungen basieren vor allem auf Erfahrung.","Geschwindigkeiten sind im Allgemeinen gut zu schätzen. Gute Schätzungen basieren vor allem auf Erfahrung.","Geschwindigkeiten sind im Allgemeinen gut zu schätzen. Gute Schätzungen basieren vor allem auf Können.","Geschwindigkeiten sind generell exakt messbar ohne Hilfsmittel."],
+ a:[0],
+ why:"Geschwindigkeiten lassen sich nur schwer zuverlässig schätzen; was hilft, ist vor allem Erfahrung.",
+ no:"„Gut zu schätzen\" unterschätzt die Schwierigkeit; reines „Können\" ohne Erfahrung trifft es nicht.",
+ tip:"Geschwindigkeit schätzen = schwierig, Erfahrung hilft."},
+{cat:"Menschliches Leistungsvermögen",id:"k7-15",n:15,multi:false,q:"Welche Schätzmethode zur Entfernungsschätzung ist am ungenauesten?",
+ o:["Faustformel","Schätzen auf Basis einer Referenz","Daumensprung","Förster-Dreieck"],
+ a:[0],
+ why:"Die Faustformel ist die gröbste Methode und damit am ungenauesten; Referenzobjekte, Daumensprung und Förster-Dreieck liefern genauere Ergebnisse.",
+ no:"Referenz, Daumensprung und Förster-Dreieck sind systematischer und genauer als die grobe Faustformel.",
+ tip:"Ungenaueste Entfernungsschätzung: Faustformel."},
+{cat:"Menschliches Leistungsvermögen",id:"k7-16",n:16,multi:false,q:"Wie groß sollte der Bereich über und unterhalb der Flugbahn des UAS sein, der beim visuellen Scan des Luftraums berücksichtigt wird?",
+ o:["10°","3°","15°","5°"],
+ a:[0],
+ why:"Beim Luftraum-Scan sollte ein Bereich von etwa 10° ober- und unterhalb der Flugbahn beobachtet werden, um annähernden Verkehr zu erkennen.",
+ no:"3° und 5° sind zu eng; 15° war im Original als falsch markiert.",
+ tip:"Luftraum-Scan: ±10° um die Flugbahn."},
+{cat:"Menschliches Leistungsvermögen",id:"k7-17",n:17,multi:false,q:"Welche Scantechnik sollten Sie bei der Luftraumbeobachtung anwenden?",
+ o:["Ich teile mir den Luftraum in Segmente ein und fokussiere das jeweilige Segment für eine kurze Zeit.","Ich teile mir den Luftraum in Segmente ein und fokussiere das jeweilige Segment für lange Zeit.","Ich fokussiere mich immer wieder auf den Luftraum hinter mir.","Ich blicke wahllos im Luftraum herum."],
+ a:[0],
+ why:"Effektiv ist das segmentweise Absuchen: den Himmel in Abschnitte teilen und jeden kurz fixieren – so erkennt das Auge Bewegungen zuverlässig.",
+ no:"Zu langes Fixieren, der Fokus nach hinten oder wahlloses Umherblicken übersehen Verkehr.",
+ tip:"Scan: in Segmente teilen, jedes kurz fixieren."},
+{cat:"Menschliches Leistungsvermögen",id:"k7-18",n:18,multi:true,q:"Welche Faktoren beeinflussen die Abschätzung der Höhe?",
+ o:["Sonnenstand","Luftfeuchtigkeit","Taupunkt","Temperatur"],
+ a:[0,1],
+ why:"Sicht- und Lichtverhältnisse beeinflussen die Höhenschätzung: Sonnenstand (Licht/Schatten/Blendung) und Luftfeuchtigkeit (Dunst/Sichttrübung).",
+ no:"Taupunkt und Temperatur als Zahlenwerte wirken sich nicht direkt auf die visuelle Höhenschätzung aus.",
+ tip:"Höhenschätzung beeinflusst von: Sonnenstand & Luftfeuchtigkeit."},
+{cat:"Menschliches Leistungsvermögen",id:"k7-19",n:19,multi:true,q:"Was wirkt sich negativ auf das Situationsbewusstsein aus?",
+ o:["Stress","hohe Arbeitsbelastung","Krankheit","Ablenkung"],
+ a:[0,1,2,3],
+ why:"Alle vier mindern das Situationsbewusstsein: Stress, hohe Arbeitsbelastung, Krankheit und Ablenkung verengen Aufmerksamkeit und Wahrnehmung.",
+ no:"Hier gibt es keine falsche Option – alle genannten Faktoren wirken negativ.",
+ tip:"Situationsbewusstsein leidet unter: Stress, Arbeitslast, Krankheit, Ablenkung (alle)."},
+{cat:"Menschliches Leistungsvermögen",id:"k7-20",n:20,multi:false,q:"Wie kann man im Vorfeld sicherstellen, dass in kritischen Situationen ein geringes Stresslevel aufkommt und die Situation sicher gemeistert wird?",
+ o:["flugbetriebliches Training mit ausreichend vielen Wiederholungen","Fitnesstraining des Fernpiloten","Vorhandensein aller aktuellen technischen Features beim UAS","Vorhandensein eines Fallschirmsystems am UAS"],
+ a:[0],
+ why:"Eingeübte, oft wiederholte Abläufe (Training) führen dazu, dass kritische Situationen routiniert und mit weniger Stress bewältigt werden.",
+ no:"Fitness und Technik/Fallschirm helfen am Rand, ersetzen aber nicht das eingeübte Verhalten im Ernstfall.",
+ tip:"Weniger Stress im Ernstfall = vorher oft trainieren."}
+
+
+
+];
+
+/* ============ PERSISTENZ ============ */
+const STORE_KEY="sts_trainer_v1";
+let memStore=null;
+function hasLS(){try{const k="__t";localStorage.setItem(k,"1");localStorage.removeItem(k);return true;}catch(e){return false;}}
+const LS=hasLS();
+function loadState(){let raw=null;if(LS){try{raw=localStorage.getItem(STORE_KEY);}catch(e){}}else raw=memStore;if(raw){try{return JSON.parse(raw);}catch(e){}}return null;}
+function saveState(){const raw=JSON.stringify(state);if(LS){try{localStorage.setItem(STORE_KEY,raw);}catch(e){}}else memStore=raw;}
+function freshState(){const cards={};QUESTIONS.forEach(q=>{cards[q.id]={ef:2.5,interval:0,due:0,seen:0,correct:0,streak:0,wrong:0};});return {cards,theme:"dark",globalSeen:0,globalCorrect:0,clock:0};}
+let state=loadState()||freshState();
+if(!state.activeModule)state.activeModule="ALLE";
+const MODULES=["Spezielle Kategorie","Standardszenarien","Betriebsverfahren","UAS & Flugleistung","Luftraum & Information","Meteorologie","Menschliches Leistungsvermögen"];
+function POOL(){return state.activeModule==="ALLE"?QUESTIONS:QUESTIONS.filter(q=>q.cat===state.activeModule);}
+QUESTIONS.forEach(q=>{if(!state.cards[q.id])state.cards[q.id]={ef:2.5,interval:0,due:0,seen:0,correct:0,streak:0,wrong:0};});
+
+/* ============ DOM-Helfer ============ */
+const $=s=>document.querySelector(s);
+const views=["home","quiz","flash","results","diff"];
+function show(v){
+  views.forEach(x=>$("#view-"+x).classList.toggle("hidden",x!==v));
+  // Untere Navigationsleiste nur im Quiz zeigen
+  document.body.classList.toggle("has-nav", v==="quiz");
+  window.scrollTo(0,0);
+}
+function toast(msg){const t=$("#toast");t.textContent=msg;t.classList.add("show");clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove("show"),2300);}
+
+/* ============ THEME ============ */
+function applyTheme(){
+  document.body.dataset.theme=state.theme;
+  $("#themeBtn").textContent=state.theme==="dark"?"☀️":"🌙";
+  const tc=document.querySelector('meta[name="theme-color"]');
+  if(tc)tc.setAttribute("content",state.theme==="dark"?"#0e1726":"#eef1f6");
+}
+$("#themeBtn").onclick=()=>{state.theme=state.theme==="dark"?"light":"dark";applyTheme();saveState();};
+applyTheme();
+
+/* ============ DASHBOARD ============ */
+function updateDash(){
+  $("#s-answered").textContent=state.globalSeen;
+  $("#s-acc").textContent=state.globalSeen?Math.round(state.globalCorrect/state.globalSeen*100)+"%":"–";
+  $("#s-mastered").textContent=POOL().filter(q=>state.cards[q.id].streak>=2).length;
+}
+function renderModules(){
+  const row=document.querySelector("#modRow");
+  const opts=[["ALLE","Alle"]].concat(MODULES.map(m=>[m,m]));
+  row.innerHTML="";
+  opts.forEach(([val,label])=>{
+    const n=val==="ALLE"?QUESTIONS.length:QUESTIONS.filter(q=>q.cat===val).length;
+    const b=document.createElement("button");
+    b.className="mod-btn"+(state.activeModule===val?" active":"");
+    b.innerHTML=label+`<span class="cnt">${n}</span>`;
+    b.onclick=()=>{state.activeModule=val;saveState();renderModules();updateDash();};
+    row.appendChild(b);
+  });
+}
+renderModules();
+updateDash();
+
+/* ============ SRS ============ */
+function gradeCard(n,good){
+  const c=state.cards[n];c.seen++;state.globalSeen++;
+  if(good){c.correct++;state.globalCorrect++;c.streak++;c.interval=c.interval===0?1:(c.interval===1?3:Math.round(c.interval*c.ef));c.ef=Math.min(3.0,c.ef+0.1);}
+  else{c.wrong++;c.streak=0;c.interval=0;c.ef=Math.max(1.3,c.ef-0.25);}
+  c.due=state.clock+c.interval+1;saveState();updateDash();
+}
+function pickSRS(excludeN){
+  state.clock++;
+  let pool=POOL().filter(q=>q.id!==excludeN);
+  pool.sort((a,b)=>{const ca=state.cards[a.id],cb=state.cards[b.id];const da=ca.due<=state.clock?0:1,db=cb.due<=state.clock?0:1;if(da!==db)return da-db;if(ca.ef!==cb.ef)return ca.ef-cb.ef;return ca.seen-cb.seen;});
+  const top=pool.slice(0,Math.min(4,pool.length));
+  return top[Math.floor(Math.random()*top.length)];
+}
+
+/* ============ QUIZ-ENGINE ============ */
+let session=null;
+function startMode(mode){
+  let list,timed=false,limit=0;
+  if(mode==="sequential")list=POOL().slice();
+  else if(mode==="random")list=shuffle(POOL().slice());
+  else if(mode==="wrong"){list=POOL().filter(q=>state.cards[q.id].wrong>0&&state.cards[q.id].streak===0);if(!list.length){toast("Keine falschen Fragen – stark! 🎉");return;}list=shuffle(list);}
+  else if(mode==="exam"){const p=POOL();const cnt=Math.min(20,p.length);list=shuffle(p.slice()).slice(0,cnt);timed=true;limit=Math.max(5,cnt)*45;}
+  else if(mode==="srs")list=null;
+  else if(mode==="flash"){startFlash();return;}
+  // SRS-Session-Länge: 20, aber nie mehr als der gewählte Pool hergibt (sonst irreführender Zähler)
+  const srsMax=Math.min(20,POOL().length);
+  session={mode,list,idx:0,correct:0,wrong:0,wrongList:[],timed,limit,timeLeft:limit,answered:false,srsCount:0,srsMax,curN:null,picks:[]};
+  show("quiz");
+  $("#q-timer").classList.toggle("hidden",!timed);
+  if(timed)startTimer();
+  renderQuiz();
+}
+function startTimer(){clearInterval(session._timer);updateTimerUI();session._timer=setInterval(()=>{session.timeLeft--;updateTimerUI();if(session.timeLeft<=0){clearInterval(session._timer);finishSession();}},1000);}
+function updateTimerUI(){const m=Math.floor(session.timeLeft/60),s=session.timeLeft%60;const el=$("#q-timer");el.textContent=`${m}:${String(s).padStart(2,"0")}`;el.classList.toggle("danger",session.timeLeft<=60);}
+function currentQuestion(){if(session.mode==="srs"){if(!session.curN)session.curN=pickSRS(null).id;return QUESTIONS.find(q=>q.id===session.curN);}return session.list[session.idx];}
+
+function renderQuiz(){
+  const q=currentQuestion();session.answered=false;session.picks=[];
+  let cur,total;
+  if(session.mode==="srs"){cur=session.srsCount+1;total=session.srsMax;}
+  else{cur=session.idx+1;total=session.list.length;}
+  $("#q-counter").textContent=`${cur} / ${total}`;
+  $("#q-score").textContent=`✓ ${session.correct} · ✗ ${session.wrong}`;
+  $("#q-bar").style.width=Math.round((cur-1)/total*100)+"%";
+
+  // Antwort-Reihenfolge pro Anzeige mischen (verhindert Positions-Auswendiglernen).
+  // session.order[displayPos] = originaler Optionsindex
+  session.order=shuffle(q.o.map((_,i)=>i));
+
+  const slot=$("#quiz-slot");slot.innerHTML="";
+  const card=document.createElement("div");card.className="card";
+  const tag=`<div class="qtag"><span>${q.cat} · Frage ${q.n}</span>${q.multi?'<span class="multi-pill">Mehrere möglich</span>':''}</div>`;
+  let opts="";
+  session.order.forEach((orig,pos)=>{
+    opts+=`<button class="opt" data-i="${orig}"><span class="mark">${pos+1}</span><span>${q.o[orig]}</span></button>`;
+  });
+  card.innerHTML=tag+`<h2 class="qtext">${q.q}</h2><div id="optWrap">${opts}</div><div id="fbSlot"></div>`;
+  slot.appendChild(card);
+
+  card.querySelectorAll(".opt").forEach(btn=>{
+    btn.onclick=()=>{
+      if(session.answered)return;
+      const i=+btn.dataset.i;
+      if(q.multi){
+        btn.classList.toggle("sel");
+        const idx=session.picks.indexOf(i);
+        if(idx>=0)session.picks.splice(idx,1);else session.picks.push(i);
+        updateNav();
+      }else{
+        // Single-Choice: Auswahl markieren, aber NICHT sofort werten – Prüfen per Button
+        card.querySelectorAll(".opt").forEach(b=>b.classList.remove("sel"));
+        btn.classList.add("sel");
+        session.picks=[i];
+        updateNav();
+      }
+    };
+  });
+  updateNav();
+}
+
+/* Untere Navigation steuern */
+function updateNav(){
+  const q=currentQuestion();
+  const prev=$("#navPrev"), main=$("#navMain");
+  // Zurück nur in linearen Modi und nicht bei der ersten Frage
+  const linear=(session.mode!=="srs");
+  prev.style.display=linear?"flex":"none";
+  prev.disabled=!(linear && session.idx>0 && !session.answered);
+  if(session.answered){
+    main.textContent="Weiter →";
+    main.disabled=false;
+    main.dataset.act="next";
+  }else{
+    main.textContent=session.mode==="exam"?"Weiter →":"Antwort prüfen";
+    main.disabled=session.picks.length===0;
+    main.dataset.act="check";
+  }
+}
+$("#navMain").onclick=()=>{
+  const act=$("#navMain").dataset.act;
+  if(act==="check"){const q=currentQuestion();if(session.picks.length)evaluate(q);}
+  else advance();
+};
+$("#navPrev").onclick=()=>{
+  if(session.mode==="srs"||session.idx===0||session.answered)return;
+  session.idx--;renderQuiz();
+};
+
+// Tastatur-Bedienung (nur im Quiz-View aktiv): Ziffern 1-9 = Option an dieser Anzeigeposition, Enter = prüfen/weiter
+document.addEventListener("keydown",(e)=>{
+  if($("#view-quiz").classList.contains("hidden"))return;        // nur im Quiz
+  if(!session||!session.order)return;
+  const tag=(e.target.tagName||"").toLowerCase();
+  if(tag==="input"||tag==="textarea")return;
+  if(e.key>="1"&&e.key<="9"){
+    if(session.answered)return;
+    const pos=parseInt(e.key,10)-1;
+    if(pos>=session.order.length)return;
+    const orig=session.order[pos];
+    const btn=document.querySelector(`.opt[data-i="${orig}"]`);
+    if(btn){btn.click();e.preventDefault();}
+  }else if(e.key==="Enter"){
+    const main=$("#navMain");
+    if(main&&!main.disabled){main.click();e.preventDefault();}
+  }
+});
+
+function arrEq(a,b){return a.length===b.length&&a.slice().sort().every((v,i)=>v===b.slice().sort()[i]);}
+function evaluate(q){
+  session.answered=true;
+  const good=arrEq(session.picks,q.a);
+  if(good)session.correct++;else{session.wrong++;if(!session.wrongList.includes(q.id))session.wrongList.push(q.id);}
+  // In der Prüfungssimulation NICHT den Lern-/SRS-Fortschritt verändern (reiner Test)
+  if(session.mode!=="exam")gradeCard(q.id,good);
+  // Prüfungssimulation: kein sofortiges Feedback (echtes Prüfungsgefühl) – direkt zur nächsten Frage
+  if(session.mode==="exam"){advance();return;}
+  document.querySelectorAll(".opt").forEach(btn=>{
+    const i=+btn.dataset.i;btn.disabled=true;btn.classList.remove("sel");
+    if(q.a.includes(i))btn.classList.add("correct");
+    else if(session.picks.includes(i))btn.classList.add("wrong");
+  });
+  const fb=$("#fbSlot");
+  fb.innerHTML=`
+    <div class="feedback">
+      <div class="fb-head ${good?'ok':'no'}">${good?'✓ Richtig!':'✗ Leider falsch'}</div>
+      <div class="fb-body">
+        <div class="fb-block"><div class="h acc">Warum richtig</div><p>${q.why}</p></div>
+        <div class="fb-block"><div class="h">Warum die anderen weniger passen</div><p>${q.no}</p></div>
+        <div class="fb-block tip"><div class="h">💡 Eselsbrücke</div><p>${q.tip}</p></div>
+      </div>
+    </div>`;
+  updateNav();
+  // sanft zum Feedback scrollen
+  setTimeout(()=>fb.scrollIntoView({behavior:"smooth",block:"nearest"}),60);
+}
+function advance(){
+  if(session.mode==="srs"){
+    session.srsCount++;
+    if(session.srsCount>=session.srsMax){finishSession();return;}
+    session.curN=pickSRS(session.curN).id;renderQuiz();
+  }else{
+    session.idx++;
+    if(session.idx>=session.list.length){finishSession();return;}
+    renderQuiz();
+  }
+}
+function finishSession(){
+  if(session._timer)clearInterval(session._timer);
+  document.body.classList.remove("has-nav");
+  const total=session.correct+session.wrong;
+  const pct=total?Math.round(session.correct/total*100):0;
+  show("results");
+  const off=402-(402*pct/100);
+  const ring=$("#r-ring");
+  ring.style.stroke=pct>=75?"var(--green)":pct>=50?"var(--gold)":"var(--red)";
+  ring.style.strokeDashoffset=402;
+  setTimeout(()=>{ring.style.transition="stroke-dashoffset 1s";ring.style.strokeDashoffset=off;},60);
+  $("#r-pct").textContent=pct+"%";
+  const pass=pct>=75;const v=$("#r-verdict");
+  if(session.mode==="exam"){v.textContent=pass?"Bestanden ✓":"Noch nicht bestanden";v.className="verdict "+(pass?"pass":"fail");$("#r-detail").textContent=`${session.correct} von ${total} richtig · Prüfungssimulation`;}
+  else{v.textContent=pct>=75?"Sehr gut!":pct>=50?"Solide – weiter üben":"Dranbleiben!";v.className="verdict "+(pct>=50?"pass":"fail");$("#r-detail").textContent=`${session.correct} von ${total} richtig beantwortet`;}
+  $("#r-retry").style.display=session.wrongList.length?"":"none";
+}
+$("#r-retry").onclick=()=>{const wl=session.wrongList.slice();session={mode:"wrong",list:shuffle(QUESTIONS.filter(q=>wl.includes(q.id))),idx:0,correct:0,wrong:0,wrongList:[],timed:false,answered:false,picks:[]};show("quiz");$("#q-timer").classList.add("hidden");renderQuiz();};
+$("#r-home").onclick=()=>{show("home");updateDash();};
+$("#quizBack").onclick=()=>{if(session&&session._timer)clearInterval(session._timer);show("home");updateDash();};
+
+/* ============ KARTEIKARTEN ============ */
+let flash=null;
+function startFlash(){flash={list:shuffle(POOL().slice()),idx:0};show("flash");renderFlash();}
+function renderFlash(){
+  const q=flash.list[flash.idx];
+  $("#f-counter").textContent=`${flash.idx+1} / ${flash.list.length}`;
+  $("#f-bar").style.width=Math.round(flash.idx/flash.list.length*100)+"%";
+  const correctTxt=q.a.map(i=>q.o[i]).join(" + ");
+  const slot=$("#flash-slot");
+  slot.innerHTML=`
+    <div class="flip" id="flipCard">
+      <div class="flip-inner">
+        <div class="flip-face"><div class="qtag"><span>${q.cat} · Frage ${q.n}</span></div><h2 class="qtext" style="margin:0;">${q.q}</h2></div>
+        <div class="flip-face flip-back">
+          <div class="fb-block"><div class="h acc">Antwort</div><p style="font-weight:700;">${correctTxt}</p></div>
+          <div class="fb-block"><div class="h">Warum</div><p>${q.why}</p></div>
+          <div class="fb-block tip"><div class="h">💡 Merkhilfe</div><p>${q.tip}</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="flip-hint" id="flipHint">Tippen zum Umdrehen</div>
+    <div class="rate-row hidden" id="rateRow">
+      <button class="rate r1" data-g="0">Nochmal</button>
+      <button class="rate r2" data-g="1">Unsicher</button>
+      <button class="rate r3" data-g="2">Sicher ✓</button>
+    </div>`;
+  const fc=$("#flipCard");
+  fc.onclick=()=>{fc.classList.toggle("flipped");const f=fc.classList.contains("flipped");$("#rateRow").classList.toggle("hidden",!f);$("#flipHint").textContent=f?"Wie gut wusstest du es?":"Tippen zum Umdrehen";};
+  slot.querySelectorAll(".rate").forEach(b=>{b.onclick=(e)=>{e.stopPropagation();gradeCard(q.id,+b.dataset.g>=2);nextFlash();};});
+}
+function nextFlash(){flash.idx++;if(flash.idx>=flash.list.length){toast("Kartenstapel fertig! 🃏");show("home");updateDash();return;}renderFlash();}
+$("#flashBack").onclick=()=>{show("home");updateDash();};
+
+/* ============ SCHWIERIGE FRAGEN ============ */
+function showDifficult(){
+  const diff=POOL().map(q=>({q,c:state.cards[q.id]})).filter(x=>x.c.wrong>0)
+    .sort((a,b)=>{const ra=a.c.seen?a.c.correct/a.c.seen:1,rb=b.c.seen?b.c.correct/b.c.seen:1;if(ra!==rb)return ra-rb;return b.c.wrong-a.c.wrong;});
+  show("diff");
+  $("#diff-count").textContent=diff.length+" Fragen";
+  const slot=$("#diff-slot");
+  if(!diff.length){slot.innerHTML=`<div class="empty">Noch keine schwierigen Fragen erfasst.<br>Beantworte ein paar Fragen, dann erscheinen hier deine Schwachstellen.</div>`;return;}
+  slot.innerHTML="";
+  diff.forEach(x=>{const rate=x.c.seen?Math.round(x.c.correct/x.c.seen*100):0;const el=document.createElement("div");el.className="diff-item";el.innerHTML=`<div class="diff-badge">${x.q.n}</div><div class="diff-q"><span style="opacity:.6;font-size:11px">${x.q.cat}</span><br>${x.q.q}</div><div class="diff-rate">${rate}%<br>${x.c.wrong}× falsch</div>`;slot.appendChild(el);});
+  const train=document.createElement("button");train.className="ghost";train.style.marginTop="10px";train.style.width="100%";train.textContent="🎯 Diese Fragen jetzt trainieren";
+  train.onclick=()=>{session={mode:"wrong",list:shuffle(diff.map(x=>x.q)),idx:0,correct:0,wrong:0,wrongList:[],timed:false,answered:false,picks:[]};show("quiz");$("#q-timer").classList.add("hidden");renderQuiz();};
+  slot.appendChild(train);
+}
+$("#showDiff").onclick=showDifficult;
+$("#diffBack").onclick=()=>{show("home");updateDash();};
+
+/* ============ EXPORT / IMPORT ============ */
+$("#exportBtn").onclick=()=>{const blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download=`sts-fortschritt-${new Date().toISOString().slice(0,10)}.json`;a.click();URL.revokeObjectURL(url);toast("Fortschritt exportiert 💾");};
+$("#importBtn").onclick=()=>$("#fileInput").click();
+$("#fileInput").onchange=(e)=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const data=JSON.parse(r.result);if(!data.cards)throw new Error();state=data;QUESTIONS.forEach(q=>{if(!state.cards[q.id])state.cards[q.id]={ef:2.5,interval:0,due:0,seen:0,correct:0,streak:0,wrong:0};});saveState();applyTheme();updateDash();toast("Fortschritt importiert 📂");}catch(err){toast("Datei konnte nicht gelesen werden");}};r.readAsText(f);e.target.value="";};
+
+/* ============ RESET ============ */
+$("#resetBtn").onclick=()=>{if(confirm("Gesamten Lernfortschritt wirklich zurücksetzen?")){const th=state.theme;const am=state.activeModule;state=freshState();state.theme=th;state.activeModule=am;saveState();renderModules();updateDash();toast("Fortschritt zurückgesetzt ↺");}};
+
+/* ============ MODE-BUTTONS ============ */
+document.querySelectorAll(".mode-card").forEach(b=>b.onclick=()=>startMode(b.dataset.mode));
+
+/* ============ UTIL ============ */
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+if(!LS){setTimeout(()=>toast("Tipp: Datei lokal speichern für dauerhaften Fortschritt"),900);}
+</script>
+</body>
+</html>
