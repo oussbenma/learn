@@ -31,6 +31,10 @@
     --sal:env(safe-area-inset-left,0px);
     --sar:env(safe-area-inset-right,0px);
     --navh:72px; /* Höhe der unteren Navigationsleiste */
+    /* Maximale Inhaltsbreite – wird auf größeren Geräten hochgesetzt */
+    --content-max:780px;
+    /* Horizontaler Innenabstand der App (skaliert je Gerät) */
+    --pad-x:16px;
   }
   [data-theme="light"]{
     --bg:#f1f4fa; --bg2:#e6ebf4; --panel:#ffffff; --panel-soft:#f5f8fd;
@@ -75,13 +79,13 @@
     letter-spacing:.01em;
   }
   .app{
-    max-width:780px; margin:0 auto;
+    max-width:var(--content-max); margin:0 auto;
     /* Safe-Area links/rechts + Platz unten für die Navigationsleiste */
     padding:
       calc(14px + var(--sat))
-      calc(16px + var(--sar))
+      calc(var(--pad-x) + var(--sar))
       calc(28px + var(--sab))
-      calc(16px + var(--sal));
+      calc(var(--pad-x) + var(--sal));
   }
   /* Wenn die untere Nav sichtbar ist, mehr Abstand unten lassen */
   body.has-nav .app{ padding-bottom:calc(var(--navh) + var(--sab) + 24px); }
@@ -190,14 +194,14 @@
   @keyframes slideIn{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:none;}}
   .qtag{font-size:11px;color:var(--accent);font-weight:700;text-transform:uppercase;letter-spacing:.14em;margin-bottom:10px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
   .multi-pill{background:rgba(255,213,107,.16);color:var(--gold);border:1px solid rgba(255,213,107,.4);padding:2px 9px;border-radius:20px;font-size:9.5px;}
-  .qtext{font-size:19px;font-weight:700;line-height:1.4;margin:0 0 22px;letter-spacing:-.2px;}
+  .qtext{font-size:19px;font-weight:700;line-height:1.4;margin:0 0 22px;letter-spacing:-.2px;overflow-wrap:break-word;word-break:break-word;}
 
   .opt{
     display:flex;gap:13px;align-items:flex-start;width:100%;text-align:left;
     background:var(--panel-soft);border:1.5px solid var(--line);border-radius:var(--r-md);
     padding:15px 15px;margin-bottom:11px;cursor:pointer;font-size:16px;color:var(--ink);
     transition:transform .14s,border-color .14s,background .14s;line-height:1.42;font-family:inherit;min-height:54px;
-    -webkit-user-select:none;user-select:none;
+    -webkit-user-select:none;user-select:none;overflow-wrap:break-word;word-break:break-word;
   }
   .opt:hover:not(:disabled){border-color:var(--accent2);background:var(--panel-2);}
   .opt:active:not(:disabled){transform:scale(.985);}
@@ -311,7 +315,7 @@
   .learn-search:focus-within{border-color:var(--accent2);}
   .learn-search .ls-ic{font-size:15px;opacity:.7;}
   .learn-search input{flex:1;background:none;border:none;outline:none;color:var(--ink);font-family:inherit;
-    font-size:15px;padding:12px 0;min-width:0;}
+    font-size:16px;padding:12px 0;min-width:0;}
   .learn-search input::placeholder{color:var(--muted);}
   .learn-search .ls-clear{flex:0 0 auto;background:none;border:none;color:var(--muted);font-size:16px;
     cursor:pointer;padding:6px;line-height:1;font-family:inherit;}
@@ -368,7 +372,8 @@
   .navbar{
     position:fixed;left:0;right:0;bottom:0;z-index:50;
     display:flex;gap:10px;align-items:stretch;
-    padding:10px calc(14px + var(--sar)) calc(10px + var(--sab)) calc(14px + var(--sal));
+    width:100%;max-width:var(--content-max);margin:0 auto;
+    padding:10px calc(var(--pad-x) + var(--sar)) calc(10px + var(--sab)) calc(var(--pad-x) + var(--sal));
     background:linear-gradient(to top,var(--bg) 64%,rgba(11,18,32,0));
     border-top:1px solid transparent;
     transform:translateY(130%);transition:transform .35s cubic-bezier(.2,.8,.2,1);
@@ -404,25 +409,85 @@
   .mod-btn .cnt{opacity:.7;font-weight:700;font-size:11px;margin-left:5px;}
   .hidden{display:none !important;}
 
+  /* ===== Sehr kleine Smartphones (Hochformat) ===== */
+  @media(max-width:380px){
+    :root{ --pad-x:13px; }
+    .mode-grid{grid-template-columns:1fr;}
+    .stat .num{font-size:21px;}
+    .stat .lbl{font-size:9px;}
+    .stat-grid{gap:9px;}
+    .topbar{gap:10px;padding:12px 13px;}
+    .logo{width:42px;height:42px;}
+    .qtext{font-size:17px;}
+    .navbar .nbtn{font-size:14px;}
+  }
+
   /* ===== Kleine Smartphones (Hochformat) ===== */
   @media(max-width:560px){
     .mode-grid{grid-template-columns:1fr 1fr;gap:10px;}
     .qtext{font-size:18px;}
     .opt{font-size:16px;}            /* >=16px verhindert iOS-Auto-Zoom */
     .brand h1{font-size:16px;}
-  }
-  @media(max-width:380px){
-    .mode-grid{grid-template-columns:1fr;}
-    .stat .num{font-size:21px;}
-    .stat .lbl{font-size:9px;}
+    .card{padding:22px 16px;}
+    .result-hero{padding:22px 14px;}
   }
 
-  /* ===== Querformat auf niedrigen Höhen ===== */
+  /* ===== Große Smartphones / iPhone Pro Max (Hochformat) ===== */
+  @media(min-width:431px) and (max-width:767px){
+    :root{ --pad-x:20px; --content-max:560px; }
+    .qtext{font-size:20px;}
+    .opt{padding:16px 16px;min-height:56px;}
+    .card{padding:26px 22px;}
+    .stat .num{font-size:28px;}
+    .brand h1{font-size:18px;}
+  }
+
+  /* ===== Tablets / iPad (Hochformat & klein) ===== */
+  @media(min-width:768px){
+    :root{ --content-max:720px; --pad-x:26px; }
+    .mode-grid{grid-template-columns:repeat(3,1fr);gap:14px;}
+    .stat-grid{gap:14px;}
+    .qtext{font-size:21px;}
+    .opt{font-size:16.5px;padding:17px 18px;}
+    .card{padding:30px 28px;}
+    .mode-card{padding:20px 18px;}
+    .mode-card h3{font-size:16px;}
+    .lesson-p,.lesson-intro{font-size:15.5px;}
+    .ring{width:170px;height:170px;}
+    .ring .pct{font-size:38px;}
+  }
+
+  /* ===== Große Tablets / iPad Querformat ===== */
+  @media(min-width:1024px){
+    :root{ --content-max:860px; --pad-x:32px; }
+    .mode-grid{grid-template-columns:repeat(4,1fr);}
+    .qtext{font-size:22px;}
+    .card{padding:34px 34px;}
+    /* Hover-Effekte nur auf Zeigegeräten – verhindert „kleben“ auf Touch */
+  }
+
+  /* ===== Desktop ===== */
+  @media(min-width:1280px){
+    :root{ --content-max:920px; }
+  }
+
+  /* Hover-Effekte nur dort, wo es einen echten Zeiger gibt (kein Touch-Sticky) */
+  @media(hover:none){
+    .mode-card:hover{transform:none;border-color:var(--line);box-shadow:var(--shadow-sm);}
+    .lesson-card:hover{transform:none;border-color:var(--line);box-shadow:var(--shadow-sm);}
+    .opt:hover:not(:disabled){border-color:var(--line);background:var(--panel-soft);}
+    .mode-card:hover .glow{opacity:.22;transform:none;}
+  }
+
+  /* ===== Querformat auf niedrigen Höhen (Smartphone liegend) ===== */
   @media(max-height:520px) and (orientation:landscape){
     .app{padding-top:calc(8px + var(--sat));}
     .ring{width:110px;height:110px;}
+    .ring .pct{font-size:28px;}
     .flip-inner{min-height:200px;}
     .mode-grid{grid-template-columns:repeat(3,1fr);}
+    .topbar{margin-bottom:14px;}
+    .result-hero{padding:16px 14px;}
   }
 
   @media(prefers-reduced-motion:reduce){
